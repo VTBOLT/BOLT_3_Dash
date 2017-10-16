@@ -2,7 +2,7 @@ import sys
 import time
 from PyQt5.QtCore import QThread, pyqtSlot, pyqtSignal
 
-DEV = True
+DEV = True #default is for fake data unitl can reading is added
 if len(sys.argv) > 1:
     if sys.argv[1] == '-d':
         DEV = True
@@ -36,6 +36,7 @@ class CanReader(QThread):
                 j=j-1
                 k = k+.01
         #else:
+        #ADD CAN READING HERE
             #while True:
                 
                     
