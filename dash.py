@@ -2,6 +2,7 @@ import sys
 import time
 from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QFrame, QAction
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, Qt, QThread, pyqtSlot
+import argparse
 
 from socGauge import Soc
 from rpmGauge import Rpm
@@ -18,11 +19,11 @@ RPM_HEIGHT = (2/3)*DASH_HEIGHT
 GAUGE_VPOS = 340
 GAUGE_HEIGHT = 140
 GAUGE_WIDTH = 200
-DEBUG = False
 
+DEMO = False
 if len(sys.argv) > 1:
-    if sys.argv[1] == "-d":
-        DEV = True
+    if any("-demo" in s for s in sys.argv):
+        DEMO = True
 
 class Dash(QMainWindow):
     def __init__(self, parent=None):
@@ -37,7 +38,8 @@ class Dash(QMainWindow):
     def initGUI(self):
         
         self.setAutoFillBackground(True)
-
+        #parser
+        #args = parser.parse_args()
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.black)
         p.setColor(self.foregroundRole(), Qt.red)
@@ -63,16 +65,20 @@ class Dash(QMainWindow):
         self.lapTimeBestGauge.move(GAUGE_WIDTH,GAUGE_VPOS+GAUGE_HEIGHT/2)
         self.lapTimeBestGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT/2)
 
-        self.tempGauge = Temp(self)
-        self.tempGauge.move(GAUGE_WIDTH*3,GAUGE_VPOS)
-        self.tempGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT)
 
-        mainMenu = self.menuBar()
-        fileMenu = mainMenu.addMenu('Debug')
-        open = QAction("Open", self)
-        debug = Debug(self)
-        fileMenu.addAction(open)
-        open.triggered.connect(debug.debug_open)
+        self.tempGauge = Temp(self)
+        self.tempGauge.resize(0,0)#find a better way to remove widgets without breaking connections in main
+        if DEMO:
+            self.tempGauge.move(GAUGE_WIDTH*3,GAUGE_VPOS)
+            self.tempGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT)
+
+        if DEMO:
+            mainMenu = self.menuBar()
+            fileMenu = mainMenu.addMenu('Debug')
+            open = QAction("Open", self)
+            debug = Debug(self)
+            fileMenu.addAction(open)
+            open.triggered.connect(debug.debug_open)
 
         #self.show()
     @pyqtSlot()

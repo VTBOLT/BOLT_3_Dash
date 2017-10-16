@@ -1,11 +1,12 @@
 import sys
 import time
 from PyQt5.QtCore import QThread, pyqtSlot, pyqtSignal
-
-DEV = True #default is for fake data unitl can reading is added
+#option to use fake data instead of reading from can bus
+DEV = True #should default to False
 if len(sys.argv) > 1:
-    if sys.argv[1] == '-d':
-        DEV = True
+    if any("-dev" in s for s in sys.argv):
+       DEV = True
+
 class CanReader(QThread):
     rpmUpdateValue = pyqtSignal(int)
     socUpdateValue = pyqtSignal(float)

@@ -49,7 +49,7 @@ class CurrentLapTime(QWidget):
     @pyqtSlot(int, int, int)
     def currentLapTime_update(self, min, sec, msec):
         self.currentLapTimeLCD.display(str(min).zfill(2) + ':' + str(sec).zfill(2) + ':' + str(msec).zfill(3))
-        upadate()
+        #self.upadate()
 
     def paintEvent(self, event):
         qp = QPainter(self)
