@@ -1,8 +1,10 @@
+__pycache__/
 canReader.py~
 dash.py~
 debug.py~
 gpsReader.py~
 lapTimePannel.py~
+main.py~
 rpmGauge.py~
 socGauge.py~
 tempGauge.py~
