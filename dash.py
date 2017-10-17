@@ -1,6 +1,6 @@
 import sys
 import time
-from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QFrame, QAction
+from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QFrame, QAction, QPushButton
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, Qt, QThread, pyqtSlot
 import argparse
 
@@ -38,7 +38,6 @@ class Dash(QMainWindow):
     def initGUI(self):
         
         self.setAutoFillBackground(True)
-        #parser
         #args = parser.parse_args()
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.black)
