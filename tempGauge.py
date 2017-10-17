@@ -14,6 +14,7 @@ class Temp(QWidget):
         self.tempGauge.move(0,10)
         self.tempGauge.resize(160,100)
         self.tempGauge.setFrameShape(QFrame.NoFrame)
+        self.tempGauge.setSegmentStyle(QLCDNumber.Flat)
         
         self.templabel = QLabel(self)
         self.templabel.setText("temp: ")

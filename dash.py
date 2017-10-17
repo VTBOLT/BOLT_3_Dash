@@ -21,10 +21,12 @@ GAUGE_HEIGHT = 140
 GAUGE_WIDTH = 200
 
 DEMO = False
+DEBUG = False
 if len(sys.argv) > 1:
     if any("-demo" in s for s in sys.argv):
         DEMO = True
-
+    if any("-debug" in s for s in sys.argv):
+        DEBUG = True
 class Dash(QMainWindow):
     def __init__(self, parent=None):
         super(Dash, self).__init__(parent)
@@ -33,7 +35,6 @@ class Dash(QMainWindow):
         self.setMinimumWidth(DASH_WIDTH)
         self.setMinimumHeight(DASH_HEIGHT)
         self.initGUI()
-
         
     def initGUI(self):
         
@@ -52,25 +53,24 @@ class Dash(QMainWindow):
         self.socGauge = Soc(self)
         self.socGauge.move(0,GAUGE_VPOS)
         self.socGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT)
-
+        
         self.lapTimeLastGauge = LastLapTime(self)
         self.lapTimeLastGauge.move(GAUGE_WIDTH,GAUGE_VPOS)
         self.lapTimeLastGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT/2)
         self.lapTimeCurrentGauge = CurrentLapTime(self)
         self.lapTimeCurrentGauge.move(GAUGE_WIDTH*2,GAUGE_VPOS)
         self.lapTimeCurrentGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT)
-
+        
         self.lapTimeBestGauge = BestLapTime(self)
         self.lapTimeBestGauge.move(GAUGE_WIDTH,GAUGE_VPOS+GAUGE_HEIGHT/2)
         self.lapTimeBestGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT/2)
 
-
         self.tempGauge = Temp(self)
-        self.tempGauge.resize(0,0)#find a better way to remove widgets without breaking connections in main
+        self.tempGauge.move(GAUGE_WIDTH*3,GAUGE_VPOS)
+        self.tempGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT)
+        self.tempGauge.hide()
         if DEMO:
-            self.tempGauge.move(GAUGE_WIDTH*3,GAUGE_VPOS)
-            self.tempGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT)
-
+            self.tempGauge.show()
         if DEMO:
             mainMenu = self.menuBar()
             fileMenu = mainMenu.addMenu('Debug')
@@ -78,7 +78,9 @@ class Dash(QMainWindow):
             debug = Debug(self)
             fileMenu.addAction(open)
             open.triggered.connect(debug.debug_open)
-
+        if DEBUG:
+            debug = Debug(self)
+            debug.show()
         #self.show()
     @pyqtSlot()
     def error_update(self):

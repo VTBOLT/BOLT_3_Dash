@@ -6,6 +6,9 @@ from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, Qt
 DEBUG_WIDTH = 600
 DEBUG_HEIGHT = 380
 
+CHANNEL_WIDTH = 100
+CHANNEL_HEIGHT = 100
+
 class Debug(QWidget):
     def __init__(self, parent):
         super(Debug, self).__init__(parent)
@@ -24,6 +27,7 @@ class Debug(QWidget):
         self.closeButton.clicked.connect(self.debug_close)
 
         self.c1 = self.channel("Example:",0, 0, 5)
+        self.c2 = self.channel("Example 2:", 100, 0, 6)
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.gray)
         p.setColor(self.foregroundRole(), Qt.blue)
@@ -32,16 +36,16 @@ class Debug(QWidget):
         self.hide()
         
     def channel(self, name, x, y, value):
-        print( x, y, value)
         self.label = QLabel(name, self)
-        self.label.resize(100,20)
+        self.label.resize(CHANNEL_WIDTH,20)
         self.label.move(x,y)
         
         self.gauge = QLCDNumber(self)
         self.gauge.display(value)
         self.gauge.move(x,y+20)
-        self.gauge.resize(100,100)
+        self.gauge.resize(CHANNEL_WIDTH, CHANNEL_HEIGHT)
         self.gauge.setFrameShape(QFrame.NoFrame)
+        self.gauge.setSegmentStyle(QLCDNumber.Flat)
         
     @pyqtSlot()
     def debug_open(self):

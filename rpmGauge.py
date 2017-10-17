@@ -14,6 +14,7 @@ class Rpm(QWidget):
         self.rpmLCD.move(200,150)
         self.rpmLCD.resize(200,100)
         self.rpmLCD.setFrameStyle(QFrame.NoFrame)
+        self.rpmLCD.setSegmentStyle(QLCDNumber.Flat)
         
         self.rpmLabel = QLabel(self)
         self.rpmLabel.setText("rpm: ")

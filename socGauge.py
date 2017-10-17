@@ -15,6 +15,7 @@ class Soc(QWidget):
         self.socGauge.move(0,10)
         self.socGauge.resize(160,100)
         self.socGauge.setFrameShape(QFrame.NoFrame)
+        self.socGauge.setSegmentStyle(QLCDNumber.Flat)
         
         self.soclabel = QLabel(self)
         self.soclabel.setText("soc: ")
