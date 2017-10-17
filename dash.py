@@ -72,12 +72,25 @@ class Dash(QMainWindow):
         if DEMO:
             self.tempGauge.show()
         if DEMO:
+            
             mainMenu = self.menuBar()
             fileMenu = mainMenu.addMenu('Debug')
             open = QAction("Open", self)
+            
+
             debug = Debug(self)
             fileMenu.addAction(open)
             open.triggered.connect(debug.debug_open)
+
+            analyzeMenu = mainMenu.addMenu('Analyze')
+            graphRpm = QAction("Graph RPM", self)
+            graphSoc = QAction("Graph SOC", self)
+            analyzeMenu.addAction(graphRpm)
+            analyzeMenu.addAction(graphSoc)
+            
+            tempMenu = mainMenu.addMenu('Temp')
+            setting = QAction("Settings", self)
+
         if DEBUG:
             debug = Debug(self)
             debug.show()

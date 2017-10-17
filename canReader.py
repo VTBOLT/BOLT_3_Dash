@@ -5,7 +5,7 @@ from PyQt5.QtCore import QThread, pyqtSlot, pyqtSignal
 DEV = True #should default to False
 if len(sys.argv) > 1:
     if any("-dev" in s for s in sys.argv):
-       DEV = True
+       DEV = False
 
 class CanReader(QThread):
     rpmUpdateValue = pyqtSignal(int)
@@ -36,11 +36,13 @@ class CanReader(QThread):
                 i=i+1
                 j=j-1
                 k = k+.01
-        #else:
-        #ADD CAN READING HERE
+            self.processEvents()
+        else:
+            print("in can reader")
+            #ADD CAN READING HERE
             #while True:
                 
                     
-        self.processEvents()
+
         self.exec()
                                                                                     

@@ -6,7 +6,7 @@ from PyQt5.QtCore import QThread, pyqtSlot, pyqtSignal
 DEV = True #should default to False
 if len(sys.argv) > 1:
     if any("-dev" in s for s in sys.argv):
-        DEV = True
+        DEV = False
 
 class GpsReader(QThread):
     #lastLapTime = pyqtSignal(int, int, int)
@@ -34,9 +34,10 @@ class GpsReader(QThread):
                     current_min=current_min+1
                     
                 current_msec = current_msec+100
-                    
-        #else:
+            self.processEvents()
+        else:
+            print("in gps reader")
         #ADD GPS READING HERE
-        self.processEvents()
+        
         self.exec()
                                                                                     
