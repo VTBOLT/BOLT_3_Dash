@@ -11,7 +11,7 @@ if len(sys.argv) > 1:
 class GpsReader(QThread):
     #lastLapTime = pyqtSignal(int, int, int)
     #bestLapTime = pyqtSignal(int, int, int)
-    currentLapTime = pyqtSignal(int, int, int)
+    currentLapTimeValue = pyqtSignal(int, int, int)
     def __init__(self):
         QThread.__init__(self)
     def run(self):
@@ -23,7 +23,7 @@ class GpsReader(QThread):
             while True:
                 time.sleep(.1)
                 #self.lastLapTime.emit(last_min, last_sec, last_msec)
-                self.currentLapTime.emit(current_min, current_sec, current_msec)
+                self.currentLapTimeValue.emit(current_min, current_sec, current_msec)
                 #self.bestLapTime.emit(best_min, best_sec, best_msec)
                 #print(current_min, current_sec, current_msec)
 

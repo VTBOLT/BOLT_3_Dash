@@ -52,32 +52,38 @@ class Dash(QMainWindow):
 
         self.socGauge = Soc(self)
         self.socGauge.move(0,GAUGE_VPOS)
-        self.socGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT)
-        
-        self.lapTimeLastGauge = LastLapTime(self)
-        self.lapTimeLastGauge.move(GAUGE_WIDTH,GAUGE_VPOS)
-        self.lapTimeLastGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT/2)
-        self.lapTimeCurrentGauge = CurrentLapTime(self)
-        self.lapTimeCurrentGauge.move(GAUGE_WIDTH*2,GAUGE_VPOS)
-        self.lapTimeCurrentGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT)
-        
-        self.lapTimeBestGauge = BestLapTime(self)
-        self.lapTimeBestGauge.move(GAUGE_WIDTH,GAUGE_VPOS+GAUGE_HEIGHT/2)
-        self.lapTimeBestGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT/2)
+        #self.socGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT)
+        self.socGauge.resize(GAUGE_WIDTH+100,GAUGE_HEIGHT)
 
+        self.currentLapTimeGauge =  CurrentLapTime(self)
+        self.currentLapTimeGauge.resize(GAUGE_WIDTH+100,GAUGE_HEIGHT)
+        if DEMO:
+            self.currentLapTimeGauge.move(GAUGE_WIDTH*2,GAUGE_VPOS)
+        else:
+            self.currentLapTimeGauge.move(GAUGE_WIDTH*2,GAUGE_VPOS-40)
+        self.lastLapTimeGauge = LastLapTime(self)
+        self.lastLapTimeGauge.move(GAUGE_WIDTH,GAUGE_VPOS)
+        self.lastLapTimeGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT/2)        
+        self.lastLapTimeGauge.hide()
+        
+        self.bestLapTimeGauge = BestLapTime(self)
+        self.bestLapTimeGauge.move(GAUGE_WIDTH,GAUGE_VPOS+GAUGE_HEIGHT/2)
+        self.bestLapTimeGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT/2)
+        self.bestLapTimeGauge.hide()
+        
         self.tempGauge = Temp(self)
         self.tempGauge.move(GAUGE_WIDTH*3,GAUGE_VPOS)
         self.tempGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT)
         self.tempGauge.hide()
         if DEMO:
             self.tempGauge.show()
-        if DEMO:
-            
+            self.lastLapTimeGauge.show()
+            self.bestLapTimeGauge.show()
+        if DEMO:            
             mainMenu = self.menuBar()
             fileMenu = mainMenu.addMenu('Debug')
             open = QAction("Open", self)
             
-
             debug = Debug(self)
             fileMenu.addAction(open)
             open.triggered.connect(debug.debug_open)
