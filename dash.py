@@ -22,11 +22,13 @@ GAUGE_WIDTH = 200
 
 DEMO = False
 DEBUG = False
+
 if len(sys.argv) > 1:
     if any("-demo" in s for s in sys.argv):
         DEMO = True
     if any("-debug" in s for s in sys.argv):
         DEBUG = True
+
 class Dash(QMainWindow):
     def __init__(self, parent=None):
         super(Dash, self).__init__(parent)
@@ -39,7 +41,6 @@ class Dash(QMainWindow):
     def initGUI(self):
         
         self.setAutoFillBackground(True)
-        #args = parser.parse_args()
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.black)
         p.setColor(self.foregroundRole(), Qt.red)
@@ -52,15 +53,16 @@ class Dash(QMainWindow):
 
         self.socGauge = Soc(self)
         self.socGauge.move(0,GAUGE_VPOS)
-        #self.socGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT)
         self.socGauge.resize(GAUGE_WIDTH+100,GAUGE_HEIGHT)
 
         self.currentLapTimeGauge =  CurrentLapTime(self)
         self.currentLapTimeGauge.resize(GAUGE_WIDTH+100,GAUGE_HEIGHT)
+
         if DEMO:
             self.currentLapTimeGauge.move(GAUGE_WIDTH*2,GAUGE_VPOS)
         else:
             self.currentLapTimeGauge.move(GAUGE_WIDTH*2,GAUGE_VPOS-40)
+
         self.lastLapTimeGauge = LastLapTime(self)
         self.lastLapTimeGauge.move(GAUGE_WIDTH,GAUGE_VPOS)
         self.lastLapTimeGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT/2)        
@@ -75,10 +77,12 @@ class Dash(QMainWindow):
         self.tempGauge.move(GAUGE_WIDTH*3,GAUGE_VPOS)
         self.tempGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT)
         self.tempGauge.hide()
+
         if DEMO:
             self.tempGauge.show()
             self.lastLapTimeGauge.show()
             self.bestLapTimeGauge.show()
+
         if DEMO:            
             mainMenu = self.menuBar()
             fileMenu = mainMenu.addMenu('Debug')
@@ -86,8 +90,8 @@ class Dash(QMainWindow):
             
             debug = Debug(self)
             fileMenu.addAction(open)
-            open.triggered.connect(debug.debug_open)
-
+            open.triggered.connect(debug.debug_open)            
+            
             analyzeMenu = mainMenu.addMenu('Analyze')
             graphRpm = QAction("Graph RPM", self)
             graphSoc = QAction("Graph SOC", self)
@@ -100,7 +104,7 @@ class Dash(QMainWindow):
         if DEBUG:
             debug = Debug(self)
             debug.show()
-        #self.show()
+
     @pyqtSlot()
     def error_update(self):
         p = self.palette()

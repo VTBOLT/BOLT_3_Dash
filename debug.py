@@ -3,6 +3,8 @@ from PyQt5.QtWidgets import QWidget, QPushButton, QLCDNumber, QLabel, QAction, Q
 from PyQt5.QtGui import QIcon, QPainter, QColor, QPen
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, Qt
 
+from gpsGauge import Gps
+
 DEBUG_WIDTH = 600
 DEBUG_HEIGHT = 380
 
@@ -20,7 +22,6 @@ class Debug(QWidget):
 
     def initDebug(self):
         self.setAutoFillBackground(True)
-        #self.setWindowTitle("test")
         self.closeButton = QPushButton("Close", self)
         self.closeButton.move(540,350)
         self.closeButton.resize(50,20)
@@ -28,6 +29,12 @@ class Debug(QWidget):
 
         self.c1 = self.channel("Example:",0, 0, 5)
         self.c2 = self.channel("Example 2:", 100, 0, 6)
+        
+        self.gpsGauge = Gps(self)
+        self.gpsGauge.move(200, 200)
+        self.gpsGauge.resize(100,100)
+        
+
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.gray)
         p.setColor(self.foregroundRole(), Qt.blue)
@@ -46,7 +53,8 @@ class Debug(QWidget):
         self.gauge.resize(CHANNEL_WIDTH, CHANNEL_HEIGHT)
         self.gauge.setFrameShape(QFrame.NoFrame)
         self.gauge.setSegmentStyle(QLCDNumber.Flat)
-        
+
+
     @pyqtSlot()
     def debug_open(self):
         self.show()

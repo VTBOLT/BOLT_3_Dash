@@ -13,9 +13,9 @@ class GpsReader(QThread):
 
     currentLapTimeValue = pyqtSignal(int, int, int)
 
-    latValue = pyqtSignal(double)
-    longValue = pyqtSignal(double)
-    rollValue = pyqtSignal(double)
+    latValue = pyqtSignal(float)
+    longValue = pyqtSignal(float)
+    rollValue = pyqtSignal(float)
 
     def __init__(self):
         QThread.__init__(self)
@@ -34,7 +34,7 @@ class GpsReader(QThread):
                 longitude = 0.0
                 roll = 90.0 # degrees
                 self.latValue.emit(latitude)
-                self.longValue.emit(longitute)
+                self.longValue.emit(longitude)
                 self.rollValue.emit(roll)
                 
                 #self.bestLapTime.emit(best_min, best_sec, best_msec)
@@ -60,15 +60,18 @@ class GpsReader(QThread):
             p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
 
             for out in iter(lambda: p.stdout.read(MESSAGE_LENGTH), ''):
+                    print(out.split(':'))
+                    '''
                 if out.split(':')[0] == 'lat':
+                    print(out.split(':'))
                     latitude = out.split(':')[1]
                     self.latValue.emit(latitude)
-                elif out.split(':'[0] == 'long':
-                    longitute = out.split(':')[1]
-                    self.longValue.emit(longitute)
-                elif out.split(':'[0] == 'roll':
+                elif out.split(':')[0] == 'long':
+                    longitude = out.split(':')[1]
+                    self.longValue.emit(longitude)
+                elif out.split(':')[0] == 'roll':
                     roll = out.split(':')[1]
                     self.rollValue.emit(roll)
-                    
+                '''
         self.exec()
                                                                                     
