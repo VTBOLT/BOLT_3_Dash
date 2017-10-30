@@ -103,3 +103,8 @@ class Gps(QWidget):
         self.pitchValue = value
         self.update()
 
+    def paintEvent(self, event):
+        qp = QPainter(self)
+        qp.setPen(Qt.white)
+
+        qp.drawRect(50, 50, 150, 150)
