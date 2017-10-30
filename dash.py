@@ -11,6 +11,7 @@ from tempGauge import Temp
 from canReader import CanReader
 from gpsReader import GpsReader
 from debug import Debug
+from debugGps import DebugGPS
 
 DASH_WIDTH = 800
 DASH_HEIGHT = 480
@@ -83,14 +84,21 @@ class Dash(QMainWindow):
             self.lastLapTimeGauge.show()
             self.bestLapTimeGauge.show()
 
+        self.debug = Debug(self)
+        self.debugGps = DebugGPS(self)
+        self.debug.hide()
+        self.debugGps.hide()
         if DEMO:            
             mainMenu = self.menuBar()
             fileMenu = mainMenu.addMenu('Debug')
-            open = QAction("Open", self)
+            open = QAction("Open Debug Window", self)
             
-            debug = Debug(self)
             fileMenu.addAction(open)
-            open.triggered.connect(debug.debug_open)            
+            open.triggered.connect(self.debug.debug_open)            
+
+            open_gps = QAction("Open GPS Window", self)
+            fileMenu.addAction(open_gps)
+            open_gps.triggered.connect(self.debugGps.debug_open)
             
             analyzeMenu = mainMenu.addMenu('Analyze')
             graphRpm = QAction("Graph RPM", self)
@@ -102,8 +110,8 @@ class Dash(QMainWindow):
             setting = QAction("Settings", self)
 
         if DEBUG:
-            debug = Debug(self)
-            debug.show()
+            #self.debug.show()
+            self.debugGps.show()
 
     @pyqtSlot()
     def error_update(self):

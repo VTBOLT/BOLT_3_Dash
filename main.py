@@ -37,6 +37,9 @@ if __name__ == '__main__':
         gpsWorker = GpsReader()
         gpsWorker.start()
         gpsWorker.currentLapTimeValue.connect(dash.currentLapTimeGauge.currentLapTime_update)
+        gpsWorker.latValue.connect(dash.debugGps.gpsGauge.lat_update)
+        gpsWorker.longValue.connect(dash.debugGps.gpsGauge.long_update)
+        #gpsWorker.rollValue.connect(
     
     print("dash thread:", app.instance().thread())
     app.processEvents()
