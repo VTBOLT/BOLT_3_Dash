@@ -16,6 +16,9 @@ class GpsReader(QThread):
     latValue = pyqtSignal(float)
     longValue = pyqtSignal(float)
     rollValue = pyqtSignal(float)
+    pitchValue = pyqtSignal(float)
+    accelValue = pyqtSignal(float, float, float)
+    gyroValue = pyqtSignal(float, float, float)
 
     def __init__(self):
         QThread.__init__(self)
@@ -27,7 +30,7 @@ class GpsReader(QThread):
         current_msec = 100
         latitude = 1.0
         longitude = 0.0
-        roll = 90.0 # degrees
+        roll = 0.0 # degrees
         if DEV:
             while True:
                 time.sleep(.1)
@@ -57,21 +60,25 @@ class GpsReader(QThread):
             MESSAGE_LENGTH = 100
             #need to add error checking to make sure the executable exitsts
             p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-
+            buf = ""
             #for out in iter(lambda: p.stdout.read(MESSAGE_LENGTH), '\n'):
             for out in iter(lambda: p.stdout.read(1), ''):
-                #print(out.decode().split(':')) 
-                if out.decode().split(':')[0] == 'lat':#spits identifier from string, .decode() convers from bytes to string
-                    print(out.decode().split(':')[1])
-                    latitude = out.decode().split(':')[1]
-                    self.latValue.emit(float(latitude))
-                elif out.decode().split(':')[0] == 'long':
-                    longitude = out.decode().split(':')[1]
-                    self.longValue.emit(float(longitude))
-                elif out.decode().split(':')[0] == 'roll':
-                    print("roll:", out.decode().split(':')[1])
-                    roll = out.decode().split(':')[1]
-                    self.rollValue.emit(float(roll))
-                
+                if out.decode() != '\n':
+                    buf = buf + str(out.decode())
+                else:
+                    if buf.split(':')[0] == 'lat':
+                        latitude = buf.split(':')[1]
+                        self.latValue.emit(float(latitude))
+                    elif buf.split(':')[0] == 'long':
+                        longitude = buf.split(':')[1]
+                        self.longValue.emit(float(longitude))
+                    elif buf.split(':')[0] == 'roll':
+                        roll = buf.split(':')[1]
+                        self.rollValue.emit(float(roll))
+                    elif buf.split(':')[0] == 'pitch':
+                        pitch = buf.split(':')[1]
+                        self.pitchValue.emit(float(pitch))                                              
+                    buf = ""
+
         self.exec()
                                                                                     
