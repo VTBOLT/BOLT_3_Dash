@@ -41,7 +41,10 @@ if __name__ == '__main__':
         gpsWorker.longValue.connect(dash.debugGps.gpsGauge.long_update)
         gpsWorker.rollValue.connect(dash.debugGps.gpsGauge.roll_update)
         gpsWorker.pitchValue.connect(dash.debugGps.gpsGauge.pitch_update)
-        #gpsWorker.rollValue.connect(
+        gpsWorker.gForceValue.connect(dash.debug.c1.channel_update)
+        #gpsWorker.accelValue.connect(
+        #gpsWorker.gyroValue.connect(
+        #gpsWorker.velValue.connect(
     
     print("dash thread:", app.instance().thread())
     app.processEvents()

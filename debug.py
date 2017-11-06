@@ -27,8 +27,8 @@ class Debug(QWidget):
         self.closeButton.resize(50,20)
         self.closeButton.clicked.connect(self.debug_close)
 
-        self.c1 = self.channel("Example:",0, 0, 5)
-        self.c2 = self.channel("Example 2:", 100, 0, 6)
+        self.c1 = Channel(self, "Example:",0, 0, 5)
+        self.c2 = Channel(self, "Example 2:", 100, 0, 6)
         
 
         p = self.palette()
@@ -37,8 +37,19 @@ class Debug(QWidget):
         self.setPalette(p)
 
         self.hide()
+
+    @pyqtSlot()
+    def debug_open(self):
+        self.show()
+
+    @pyqtSlot()
+    def debug_close(self):
+        self.close()
+
+class Channel(QWidget):
+    def __init__(self, parent, name, x, y, value):
+        super(Channel, self).__init__(parent)
         
-    def channel(self, name, x, y, value):
         self.label = QLabel(name, self)
         self.label.resize(CHANNEL_WIDTH,20)
         self.label.move(x,y)
@@ -50,12 +61,32 @@ class Debug(QWidget):
         self.gauge.setFrameShape(QFrame.NoFrame)
         self.gauge.setSegmentStyle(QLCDNumber.Flat)
 
+    @pyqtSlot(float)
+    def channel_update(self, value):
+        self.gauge.display(value)
+        self.value = value
+        self.update()
 
-    @pyqtSlot()
-    def debug_open(self):
-        self.show()
 
-    @pyqtSlot()
-    def debug_close(self):
-        self.close()
+#channel to display x,y,z data points
+class Channel3(QWidget):
+    def __init__(self, parent, name, x, y, value):
+        super(Channel3, self).__init__(parent)
+        
+        self.label = QLabel(name, self)
+        self.label.resize(CHANNEL_WIDTH,20)
+        self.label.move(x,y)
+        
+        self.gauge = QLCDNumber(self)
+        self.gauge.display(value)
+        self.gauge.move(x,y+20)
+        self.gauge.resize(CHANNEL_WIDTH, CHANNEL_HEIGHT)
+        self.gauge.setFrameShape(QFrame.NoFrame)
+        self.gauge.setSegmentStyle(QLCDNumber.Flat)
+
+    @pyqtSlot(float)
+    def channel_update(self, value):
+        self.gauge.display(value)
+        self.value = value
+        self.update()        
 

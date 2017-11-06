@@ -18,7 +18,7 @@ class CanReader(QThread):
         if DEV:
             print("can worker thread:", self.currentThread())
             i = 0
-            j = 99.0
+            j = 19.0
             k = 93.0
             while True:
                 time.sleep(.1)
@@ -33,7 +33,7 @@ class CanReader(QThread):
                 time.sleep(.001)
                 self.socUpdateValue.emit(j)
                 self.tempUpdateValue.emit(k)
-                i=i+100
+                i=i+10
                 j=j-0.1
                 k = k+0.01
             self.processEvents()

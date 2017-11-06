@@ -17,9 +17,11 @@ class GpsReader(QThread):
     longValue = pyqtSignal(float)
     rollValue = pyqtSignal(float)
     pitchValue = pyqtSignal(float)
+    gForceValue = pyqtSignal(float)
     accelValue = pyqtSignal(float, float, float)
     gyroValue = pyqtSignal(float, float, float)
-
+    velValue = pyqtSignal(float, float, float)
+    
     def __init__(self):
         QThread.__init__(self)
 
@@ -38,6 +40,11 @@ class GpsReader(QThread):
                 self.latValue.emit(latitude)
                 self.longValue.emit(longitude)
                 self.rollValue.emit(roll)
+                self.pitchValue.emit(0)
+                self.gForceValue.emit(0.0)
+                self.accelValue.emit(0,0,0)
+                self.gyroValue.emit(0,0,0)
+                self.velValue.emit(0,0,0)
                 
                 if current_msec >= 999:
                     current_sec=current_sec+1
@@ -61,7 +68,6 @@ class GpsReader(QThread):
             #need to add error checking to make sure the executable exitsts
             p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
             buf = ""
-            #for out in iter(lambda: p.stdout.read(MESSAGE_LENGTH), '\n'):
             for out in iter(lambda: p.stdout.read(1), ''):
                 if out.decode() != '\n':
                     buf = buf + str(out.decode())
@@ -77,7 +83,25 @@ class GpsReader(QThread):
                         self.rollValue.emit(float(roll))
                     elif buf.split(':')[0] == 'pitch':
                         pitch = buf.split(':')[1]
-                        self.pitchValue.emit(float(pitch))                                              
+                        self.pitchValue.emit(float(pitch))
+                    elif buf.split(':')[0] == 'gForce':
+                        gForce = buf.split(':')[1]
+                        self.gForceValue.emit(float(pitch))
+                    elif buf.split(':')[0] == 'accel':
+                        accelX = buf.split(':')[1]
+                        accelY = buf.split(':')[2]
+                        accelZ = buf.split(':')[3]
+                        self.accelValue.emit(float(accelX), float(accelY), float(accelZ))
+                    elif buf.split(':')[0] == 'gyro':
+                        gyroX = buf.split(':')[1]
+                        gyroY = buf.split(':')[2]
+                        gyroZ = buf.split(':')[3]
+                        self.gyroValue.emit(float(gyroX), float(gyroY), float(gyroZ))
+                    elif buf.split(':')[0] == 'velocity':
+                        velX = buf.split(':')[1]
+                        velY = buf.split(':')[2]
+                        velZ = buf.split(':')[3]
+                        self.velValue.emit(float(velX), float(velY), float(velZ))
                     buf = ""
 
         self.exec()
