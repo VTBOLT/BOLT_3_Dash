@@ -41,7 +41,7 @@ class GpsReader(QThread):
                 self.longValue.emit(longitude)
                 self.rollValue.emit(roll)
                 self.pitchValue.emit(0)
-                self.gForceValue.emit(0.0)
+                self.gForceValue.emit(roll)
                 self.accelValue.emit(0,0,0)
                 self.gyroValue.emit(0,0,0)
                 self.velValue.emit(0,0,0)

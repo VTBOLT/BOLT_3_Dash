@@ -12,6 +12,7 @@ from canReader import CanReader
 from gpsReader import GpsReader
 from debug import Debug
 from debugGps import DebugGPS
+from fileWriter import FileWriter
 
 DASH_WIDTH = 800
 DASH_HEIGHT = 480
@@ -113,6 +114,8 @@ class Dash(QMainWindow):
             #self.debug.show()
             self.debugGps.show()
 
+        self.fileWriter = FileWriter(self)
+        
     @pyqtSlot()
     def error_update(self):
         p = self.palette()

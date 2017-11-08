@@ -17,7 +17,7 @@ class Rpm(QWidget):
         self.rpmValue = 0
         
         self.rpmLCD = QLCDNumber(self)
-        self.rpmLCD.display(str(self.rpmValue/1000).zfill(4))
+        self.rpmLCD.display(str(self.rpmValue).zfill(4))
         self.rpmLCD.move(200,150)
         self.rpmLCD.resize(300,200)
         self.rpmLCD.setFrameStyle(QFrame.NoFrame)

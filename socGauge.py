@@ -26,7 +26,7 @@ class Soc(QWidget):
         self.socLabel.setText("soc: ")
         self.socLabel.move(0,0)
         self.socLabel.hide()
-        
+
         if DEMO:
             self.socLCD.show()
             self.socLabel.show()
