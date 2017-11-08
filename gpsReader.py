@@ -1,12 +1,7 @@
 import sys
 import time
 from PyQt5.QtCore import QThread, pyqtSlot, pyqtSignal
-
-#option to use fake data instaed of reading from gps
-DEV = True #should default to False
-if len(sys.argv) > 1:
-    if any("-dev" in s for s in sys.argv):
-        DEV = False
+from args import Arg_Class
 
 class GpsReader(QThread):
     #lastLapTime = pyqtSignal(int, int, int)
@@ -15,11 +10,12 @@ class GpsReader(QThread):
     def __init__(self):
         QThread.__init__(self)
     def run(self):
+        arguments = Arg_Class()
         print("gps worker thread:", self.currentThread())
         current_min = 0
         current_sec = 0
         current_msec = 100
-        if DEV:
+        if arguments.Args.dev:
             while True:
                 time.sleep(.1)
                 #self.lastLapTime.emit(last_min, last_sec, last_msec)

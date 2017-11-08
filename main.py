@@ -1,5 +1,4 @@
 import sys
-import argparse
 
 from PyQt5.QtWidgets import QApplication
 
@@ -8,24 +7,16 @@ from dash import Dash
 from canReader import CanReader
 from gpsReader import GpsReader
 from debug import Debug
-#import parseArguments
-
-CAN = True
-GPS = True
-if len(sys.argv) > 1:
-    if any("-canoff" in s for s in sys.argv):
-        CAN = False
-    if any("-gpsoff" in s for s in sys.argv):
-        GPS = False
+from args import Arg_Class
 
 if __name__ == '__main__':
-    #args = parseArguments.ParseArguments()
     
     app = QApplication(sys.argv)
+    arguments = Arg_Class()
     dash = Dash()
     dash.show()
 
-    if CAN == True:
+    if arguments.Args.canoff == True:
         canWorker =CanReader()
         canWorker.start()
         canWorker.rpmUpdateValue.connect(dash.rpmGauge.rpm_update)
@@ -33,7 +24,7 @@ if __name__ == '__main__':
         canWorker.tempUpdateValue.connect(dash.tempGauge.temp_update)
         canWorker.errorSignal.connect(dash.error_update)
 
-    if GPS == True:
+    if arguments.Args.canoff == True:
         gpsWorker = GpsReader()
         gpsWorker.start()
         gpsWorker.currentLapTime.connect(dash.lapTimeCurrentGauge.currentLapTime_update)

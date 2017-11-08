@@ -2,11 +2,7 @@ import sys
 from PyQt5.QtWidgets import QWidget, QPushButton, QLCDNumber, QLabel, QAction, QFrame
 from PyQt5.QtGui import QIcon, QPainter, QColor, QPen
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, Qt
-
-DEMO = False
-if len(sys.argv) > 1:
-    if any("-demo" in s for s in sys.argv):
-        DEMO = True
+from args import Arg_Class
 
 class LastLapTime(QWidget):
     def __init__(self, parent):
@@ -59,8 +55,9 @@ class CurrentLapTime(QWidget):
         #self.upadate()
 
     def paintEvent(self, event):
+        arguments = Arg_Class()
         qp = QPainter(self)
-        if DEMO:
+        if arguments.Args.demo:
             qp.setPen(Qt.white)
             qp.drawRect(40,70, 90, 50)
             qp.drawRect(50, 80, 70, 30)

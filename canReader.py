@@ -1,11 +1,7 @@
 import sys
 import time
 from PyQt5.QtCore import QThread, pyqtSlot, pyqtSignal
-#option to use fake data instead of reading from can bus
-DEV = True #should default to False
-if len(sys.argv) > 1:
-    if any("-dev" in s for s in sys.argv):
-       DEV = False
+from args import Arg_Class
 
 class CanReader(QThread):
     rpmUpdateValue = pyqtSignal(int)
@@ -15,7 +11,8 @@ class CanReader(QThread):
     def __init__(self):
         QThread.__init__(self)
     def run(self):
-        if DEV:
+        arguments = Arg_Class()
+        if arguments.Args.dev:
             print("can worker thread:", self.currentThread())
             i = 1
             j = 99.0

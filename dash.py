@@ -2,7 +2,7 @@ import sys
 import time
 from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QFrame, QAction, QPushButton
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, Qt, QThread, pyqtSlot
-import argparse
+
 
 from socGauge import Soc
 from rpmGauge import Rpm
@@ -11,6 +11,7 @@ from tempGauge import Temp
 from canReader import CanReader
 from gpsReader import GpsReader
 from debug import Debug
+from args import Arg_Class
 
 DASH_WIDTH = 800
 DASH_HEIGHT = 480
@@ -20,13 +21,6 @@ GAUGE_VPOS = 340
 GAUGE_HEIGHT = 140
 GAUGE_WIDTH = 200
 
-DEMO = False
-DEBUG = False
-if len(sys.argv) > 1:
-    if any("-demo" in s for s in sys.argv):
-        DEMO = True
-    if any("-debug" in s for s in sys.argv):
-        DEBUG = True
 class Dash(QMainWindow):
     def __init__(self, parent=None):
         super(Dash, self).__init__(parent)
@@ -39,7 +33,7 @@ class Dash(QMainWindow):
     def initGUI(self):
         
         self.setAutoFillBackground(True)
-        #args = parser.parse_args()
+        arguments = Arg_Class()
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.black)
         p.setColor(self.foregroundRole(), Qt.red)
@@ -69,9 +63,9 @@ class Dash(QMainWindow):
         self.tempGauge.move(GAUGE_WIDTH*3,GAUGE_VPOS)
         self.tempGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT)
         self.tempGauge.hide()
-        if DEMO:
+        if arguments.Args.demo:
             self.tempGauge.show()
-        if DEMO:
+        if arguments.Args.demo:
             
             mainMenu = self.menuBar()
             fileMenu = mainMenu.addMenu('Debug')
@@ -91,7 +85,7 @@ class Dash(QMainWindow):
             tempMenu = mainMenu.addMenu('Temp')
             setting = QAction("Settings", self)
 
-        if DEBUG:
+        if arguments.Args.debug:
             debug = Debug(self)
             debug.show()
         #self.show()
