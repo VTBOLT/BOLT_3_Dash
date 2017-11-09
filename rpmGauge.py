@@ -17,7 +17,7 @@ class Rpm(QWidget):
         self.rpmValue = 0
         
         self.rpmLCD = QLCDNumber(self)
-        self.rpmLCD.display(str(self.rpmValue/1000).zfill(4))
+        self.rpmLCD.display(str(self.rpmValue).zfill(4))
         self.rpmLCD.move(200,150)
         self.rpmLCD.resize(300,200)
         self.rpmLCD.setFrameStyle(QFrame.NoFrame)
@@ -103,11 +103,11 @@ class Rpm(QWidget):
                 qp.drawRect(740,40,40,40)
                         
         else:
-            qp.drawRect(20,20,760,80)
+            qp.drawRect(20,40,760,80)
             if self.rpmValue < 6000:
                 qp.setBrush(Qt.green)
             elif self.rpmValue >= 6000:
                 qp.setBrush(Qt.red)
-            qp.drawRect(20,20, 760*(self.rpmValue/8000) ,80) #repaints rect every time self.update() is called
+            qp.drawRect(20,40, 760*(self.rpmValue/8000) ,80) #repaints rect every time self.update() is called
 
         

@@ -26,14 +26,10 @@ class GpsReader(QThread):
         current_min = 0
         current_sec = 0
         current_msec = 100
-<<<<<<< HEAD
-        if arguments.Args.dev:
-=======
         latitude = 1.0
         longitude = 0.0
         roll = 0.0 # degrees
-        if DEV:
->>>>>>> a964b01adfa240132fb190b2bb219609589959c6
+        if arguments.Args.dev:
             while True:
                 time.sleep(.1)
                 self.currentLapTimeValue.emit(current_min, current_sec, current_msec) 
@@ -41,7 +37,7 @@ class GpsReader(QThread):
                 self.longValue.emit(longitude)
                 self.rollValue.emit(roll)
                 self.pitchValue.emit(0)
-                self.gForceValue.emit(0.0)
+                self.gForceValue.emit(roll)
                 self.accelValue.emit(0,0,0)
                 self.gyroValue.emit(0,0,0)
                 self.velValue.emit(0,0,0)
