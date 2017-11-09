@@ -19,7 +19,7 @@ class CanReader(QThread):
             print("can worker thread:", self.currentThread())
             i = 0
             j = 19.0
-            k = 93.0
+            k = 98.0
             while True:
                 time.sleep(.1)
                 if i >= 8000:

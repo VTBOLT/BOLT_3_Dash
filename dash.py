@@ -24,13 +24,16 @@ GAUGE_WIDTH = 200
 
 DEMO = False
 DEBUG = False
+LOG = False
 
 if len(sys.argv) > 1:
     if any("-demo" in s for s in sys.argv):
         DEMO = True
     if any("-debug" in s for s in sys.argv):
         DEBUG = True
-
+    if any("-log" in s for s in sys.argv):
+        LOG = True
+        
 class Dash(QMainWindow):
     def __init__(self, parent=None):
         super(Dash, self).__init__(parent)
@@ -114,7 +117,8 @@ class Dash(QMainWindow):
             #self.debug.show()
             self.debugGps.show()
 
-        self.fileWriter = FileWriter(self)
+        if LOG:
+            self.fileWriter = FileWriter(self)
         
     @pyqtSlot()
     def error_update(self):
