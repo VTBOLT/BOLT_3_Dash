@@ -6,7 +6,9 @@ from args import Arg_Class
 class CanReader(QThread):
     rpmUpdateValue = pyqtSignal(int)
     socUpdateValue = pyqtSignal(float)
-    tempUpdateValue = pyqtSignal(float)
+    mcTempUpdateValue = pyqtSignal(float)
+    motorTempUpdateValue = pyqtSignal(float)
+    cellTempUpdateValue = pyqtSignal(float)
     errorSignal = pyqtSignal()
     def __init__(self):
         QThread.__init__(self)
@@ -29,7 +31,7 @@ class CanReader(QThread):
                 self.rpmUpdateValue.emit(i)
                 time.sleep(.001)
                 self.socUpdateValue.emit(j)
-                self.tempUpdateValue.emit(k)
+                self.mcTempUpdateValue.emit(k)
                 i=i+10
                 j=j-0.1
                 k = k+0.01

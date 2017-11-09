@@ -15,8 +15,8 @@ from args import Arg_Class
 from debugGps import DebugGPS
 from fileWriter import FileWriter
 
-DASH_WIDTH = 800
-DASH_HEIGHT = 480
+DASH_WIDTH = 1000
+DASH_HEIGHT = 550
 
 RPM_HEIGHT = (2/3)*DASH_HEIGHT
 GAUGE_VPOS = 340
@@ -50,34 +50,12 @@ class Dash(QMainWindow):
         self.socGauge.move(0,GAUGE_VPOS)
         self.socGauge.resize(GAUGE_WIDTH+100,GAUGE_HEIGHT)
 
-        self.currentLapTimeGauge =  CurrentLapTime(self)
-        self.currentLapTimeGauge.resize(GAUGE_WIDTH+100,GAUGE_HEIGHT)
-
-        if arguments.Args.demo:
-            self.currentLapTimeGauge.move(GAUGE_WIDTH*2,GAUGE_VPOS)
-        else:
-            self.currentLapTimeGauge.move(GAUGE_WIDTH*2,GAUGE_VPOS-40)
-
-        self.lastLapTimeGauge = LastLapTime(self)
-        self.lastLapTimeGauge.move(GAUGE_WIDTH,GAUGE_VPOS)
-        self.lastLapTimeGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT/2)        
-        self.lastLapTimeGauge.hide()
-        
-        self.bestLapTimeGauge = BestLapTime(self)
-        self.bestLapTimeGauge.move(GAUGE_WIDTH,GAUGE_VPOS+GAUGE_HEIGHT/2)
-        self.bestLapTimeGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT/2)
-        self.bestLapTimeGauge.hide()
-        
         self.tempGauge = Temp(self)
-        self.tempGauge.move(GAUGE_WIDTH*3,GAUGE_VPOS)
-        self.tempGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT)
+        self.tempGauge.move(GAUGE_WIDTH*3,GAUGE_VPOS-150)
+        self.tempGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT*2)
         self.tempGauge.hide()
-        if arguments.Args.demo:
-            self.tempGauge.show()
-        if arguments.Args.demo: 
-            self.tempGauge.show()
-            self.lastLapTimeGauge.show()
-            self.bestLapTimeGauge.show()
+        #if arguments.Args.demo:
+        self.tempGauge.show()
 
         self.debug = Debug(self)
         self.debugGps = DebugGPS(self)
@@ -117,8 +95,8 @@ class Dash(QMainWindow):
             #self.debug.show()
             self.debugGps.show()
 
-        if arguments.Args.log:
-            self.fileWriter = FileWriter(self)
+        #if arguments.Args.log:
+        self.fileWriter = FileWriter(self)
         
     @pyqtSlot()
     def error_update(self):

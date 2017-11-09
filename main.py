@@ -20,24 +20,27 @@ if __name__ == '__main__':
         canWorker.start()
         canWorker.rpmUpdateValue.connect(dash.rpmGauge.rpm_update)
         canWorker.socUpdateValue.connect(dash.socGauge.soc_update)
-        canWorker.tempUpdateValue.connect(dash.tempGauge.temp_update)
+
+        canWorker.mcTempUpdateValue.connect(dash.tempGauge.mcTemp_update)
+        canWorker.motorTempUpdateValue.connect(dash.tempGauge.motorTemp_update)
+        canWorker.cellTempUpdateValue.connect(dash.tempGauge.cellTemp_update)
+        
         canWorker.errorSignal.connect(dash.error_update)
-    if arguments.Args.canoff == True:
-        canWorker.rpmUpdateValue.connect(dash.fileWriter.rpm_write)
-        canWorker.socUpdateValue.connect(dash.fileWriter.soc_write)
-        canWorker.tempUpdateValue.connect(dash.fileWriter.temp_write)
-                
+        if arguments.Args.log == True:
+            canWorker.rpmUpdateValue.connect(dash.fileWriter.rpm_write)
+            canWorker.socUpdateValue.connect(dash.fileWriter.soc_write)
+            canWorker.mcTempUpdateValue.connect(dash.fileWriter.mcTemp_write)
+            canWorker.motorTempUpdateValue.connect(dash.fileWriter.motorTemp_write)
+            canWorker.cellTempUpdateValue.connect(dash.fileWriter.cellTemp_write)
+            
+    if arguments.Args.gpsoff == True:
         gpsWorker = GpsReader()
         gpsWorker.start()
-        gpsWorker.currentLapTimeValue.connect(dash.currentLapTimeGauge.currentLapTime_update)
+        #gpsWorker.currentLapTimeValue.connect(dash.currentLapTimeGauge.currentLapTime_update)
         gpsWorker.latValue.connect(dash.debugGps.gpsGauge.lat_update)
-
         gpsWorker.longValue.connect(dash.debugGps.gpsGauge.long_update)
-
         gpsWorker.rollValue.connect(dash.debugGps.gpsGauge.roll_update)
-
         gpsWorker.pitchValue.connect(dash.debugGps.gpsGauge.pitch_update)
-        
         gpsWorker.gForceValue.connect(dash.debug.c1.channel_update)
         
         if arguments.Args.log == True:

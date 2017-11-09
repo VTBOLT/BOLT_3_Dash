@@ -18,9 +18,19 @@ class FileWriter(QWidget):
     @pyqtSlot(float)
     def soc_write(self, value):
         self.f.write("soc, "+str(time.time())+', '+str(value)+'\n')
+
+    ## tempatures
     @pyqtSlot(float)
-    def temp_write(self, value):
-        self.f.write("temp, "+str(time.time())+', '+str(value)+'\n')
+    def mcTemp_write(self, value):
+        self.f.write("mcTemp, "+str(time.time())+', '+str(value)+'\n')
+    @pyqtSlot(float)
+    def motorTemp_write(self, value):
+        self.f.write("motorTemp, "+str(time.time())+', '+str(value)+'\n')
+    @pyqtSlot(float)
+    def cellTemp_write(self, value):
+        self.f.write("cellTemp, "+str(time.time())+', '+str(value)+'\n')
+
+    ## GPS values
     @pyqtSlot(float)
     def lat_write(self, value):
         self.f.write("lat, "+str(time.time())+', '+str(value)+'\n')
