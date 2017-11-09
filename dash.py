@@ -92,27 +92,32 @@ class Dash(QMainWindow):
         self.debugGps = DebugGPS(self)
         self.debug.hide()
         self.debugGps.hide()
-        if DEMO:            
-            mainMenu = self.menuBar()
-            fileMenu = mainMenu.addMenu('Debug')
-            open = QAction("Open Debug Window", self)
-            
-            fileMenu.addAction(open)
-            open.triggered.connect(self.debug.debug_open)            
+        
+        self.mainMenu = self.menuBar()
+        
+        self.mainMenu.setStyleSheet("QMenuBar::item { color: rgb(255,0,0);}")
+        self.mainMenu.setStyleSheet("QMenuBar::item { background-color: rgb(255,255,255);}")
 
-            open_gps = QAction("Open GPS Window", self)
-            fileMenu.addAction(open_gps)
-            open_gps.triggered.connect(self.debugGps.debug_open)
-            
-            analyzeMenu = mainMenu.addMenu('Analyze')
-            graphRpm = QAction("Graph RPM", self)
-            graphSoc = QAction("Graph SOC", self)
-            analyzeMenu.addAction(graphRpm)
-            analyzeMenu.addAction(graphSoc)
-            
-            tempMenu = mainMenu.addMenu('Temp')
-            setting = QAction("Settings", self)
 
+        self.fileMenu = self.mainMenu.addMenu('Debug')
+        open = QAction("Open Debug Window", self)
+        
+        self.fileMenu.addAction(open)
+        open.triggered.connect(self.debug.debug_open)            
+
+        self.open_gps = QAction("Open GPS Window", self)
+        self.fileMenu.addAction(self.open_gps)
+        self.open_gps.triggered.connect(self.debugGps.debug_open)
+        
+        self.analyzeMenu = self.mainMenu.addMenu('Analyze')
+        self.graphRpm = QAction("Graph RPM", self)
+        self.graphSoc = QAction("Graph SOC", self)
+        self.analyzeMenu.addAction(self.graphRpm)
+        self.analyzeMenu.addAction(self.graphSoc)
+        
+        self.tempMenu = self.mainMenu.addMenu('Temp')
+        self.setting = QAction("Settings", self)
+        
         if DEBUG:
             #self.debug.show()
             self.debugGps.show()
