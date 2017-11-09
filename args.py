@@ -8,4 +8,5 @@ class Arg_Class(object):
         parser.add_argument('-gpsoff', action='store_false', help='gpsoff help')
         # option to use fake data instead of reading from can bus
         parser.add_argument('-dev', action='store_false', help='dev help')
+        parser.add_argument('-log', action='store_false', help='log help')
         self.Args = parser.parse_args()

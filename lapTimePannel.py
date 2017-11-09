@@ -40,19 +40,25 @@ class CurrentLapTime(QWidget):
         self.currentLapTimeLCD.setDigitCount(9)
         self.currentLapTimeLCD.display(self.currentLapTimeValue)
         self.currentLapTimeLCD.move(0, 20)
-        self.currentLapTimeLCD.resize(170,40)
+        if DEMO:
+            self.currentLapTimeLCD.resize(170,40)
+        else:
+            self.currentLapTimeLCD.resize(270,140)
+            self.currentLapTimeLCD.move(0,0)
         self.currentLapTimeLCD.setFrameShape(QFrame.NoFrame)
         self.currentLapTimeLCD.setSegmentStyle(QLCDNumber.Flat)
         
         self.currentLapTimeLabel = QLabel(self)
         self.currentLapTimeLabel.setText("Current Lap Time:")
         self.currentLapTimeLabel.move(0,0)
-        
+        self.currentLapTimeLabel.hide()
+        if DEMO:
+            self.currentLapTimeLabel.show()
         
     @pyqtSlot(int, int, int)
     def currentLapTime_update(self, min, sec, msec):
         self.currentLapTimeLCD.display(str(min).zfill(2) + ':' + str(sec).zfill(2) + ':' + str(msec).zfill(3))
-        #self.upadate()
+        
 
     def paintEvent(self, event):
         arguments = Arg_Class()

@@ -11,7 +11,11 @@ from tempGauge import Temp
 from canReader import CanReader
 from gpsReader import GpsReader
 from debug import Debug
+<<<<<<< HEAD
 from args import Arg_Class
+=======
+from debugGps import DebugGPS
+>>>>>>> a964b01adfa240132fb190b2bb219609589959c6
 
 DASH_WIDTH = 800
 DASH_HEIGHT = 480
@@ -21,6 +25,18 @@ GAUGE_VPOS = 340
 GAUGE_HEIGHT = 140
 GAUGE_WIDTH = 200
 
+<<<<<<< HEAD
+=======
+DEMO = False
+DEBUG = False
+
+if len(sys.argv) > 1:
+    if any("-demo" in s for s in sys.argv):
+        DEMO = True
+    if any("-debug" in s for s in sys.argv):
+        DEBUG = True
+
+>>>>>>> a964b01adfa240132fb190b2bb219609589959c6
 class Dash(QMainWindow):
     def __init__(self, parent=None):
         super(Dash, self).__init__(parent)
@@ -33,7 +49,10 @@ class Dash(QMainWindow):
     def initGUI(self):
         
         self.setAutoFillBackground(True)
+<<<<<<< HEAD
         arguments = Arg_Class()
+=======
+>>>>>>> a964b01adfa240132fb190b2bb219609589959c6
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.black)
         p.setColor(self.foregroundRole(), Qt.red)
@@ -46,36 +65,59 @@ class Dash(QMainWindow):
 
         self.socGauge = Soc(self)
         self.socGauge.move(0,GAUGE_VPOS)
-        self.socGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT)
-        
-        self.lapTimeLastGauge = LastLapTime(self)
-        self.lapTimeLastGauge.move(GAUGE_WIDTH,GAUGE_VPOS)
-        self.lapTimeLastGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT/2)
-        self.lapTimeCurrentGauge = CurrentLapTime(self)
-        self.lapTimeCurrentGauge.move(GAUGE_WIDTH*2,GAUGE_VPOS)
-        self.lapTimeCurrentGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT)
-        
-        self.lapTimeBestGauge = BestLapTime(self)
-        self.lapTimeBestGauge.move(GAUGE_WIDTH,GAUGE_VPOS+GAUGE_HEIGHT/2)
-        self.lapTimeBestGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT/2)
+        self.socGauge.resize(GAUGE_WIDTH+100,GAUGE_HEIGHT)
 
+        self.currentLapTimeGauge =  CurrentLapTime(self)
+        self.currentLapTimeGauge.resize(GAUGE_WIDTH+100,GAUGE_HEIGHT)
+
+        if DEMO:
+            self.currentLapTimeGauge.move(GAUGE_WIDTH*2,GAUGE_VPOS)
+        else:
+            self.currentLapTimeGauge.move(GAUGE_WIDTH*2,GAUGE_VPOS-40)
+
+        self.lastLapTimeGauge = LastLapTime(self)
+        self.lastLapTimeGauge.move(GAUGE_WIDTH,GAUGE_VPOS)
+        self.lastLapTimeGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT/2)        
+        self.lastLapTimeGauge.hide()
+        
+        self.bestLapTimeGauge = BestLapTime(self)
+        self.bestLapTimeGauge.move(GAUGE_WIDTH,GAUGE_VPOS+GAUGE_HEIGHT/2)
+        self.bestLapTimeGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT/2)
+        self.bestLapTimeGauge.hide()
+        
         self.tempGauge = Temp(self)
         self.tempGauge.move(GAUGE_WIDTH*3,GAUGE_VPOS)
         self.tempGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT)
         self.tempGauge.hide()
+<<<<<<< HEAD
         if arguments.Args.demo:
             self.tempGauge.show()
         if arguments.Args.demo:
             
+=======
+
+        if DEMO:
+            self.tempGauge.show()
+            self.lastLapTimeGauge.show()
+            self.bestLapTimeGauge.show()
+
+        self.debug = Debug(self)
+        self.debugGps = DebugGPS(self)
+        self.debug.hide()
+        self.debugGps.hide()
+        if DEMO:            
+>>>>>>> a964b01adfa240132fb190b2bb219609589959c6
             mainMenu = self.menuBar()
             fileMenu = mainMenu.addMenu('Debug')
-            open = QAction("Open", self)
+            open = QAction("Open Debug Window", self)
             
-
-            debug = Debug(self)
             fileMenu.addAction(open)
-            open.triggered.connect(debug.debug_open)
+            open.triggered.connect(self.debug.debug_open)            
 
+            open_gps = QAction("Open GPS Window", self)
+            fileMenu.addAction(open_gps)
+            open_gps.triggered.connect(self.debugGps.debug_open)
+            
             analyzeMenu = mainMenu.addMenu('Analyze')
             graphRpm = QAction("Graph RPM", self)
             graphSoc = QAction("Graph SOC", self)
@@ -85,10 +127,17 @@ class Dash(QMainWindow):
             tempMenu = mainMenu.addMenu('Temp')
             setting = QAction("Settings", self)
 
+<<<<<<< HEAD
         if arguments.Args.debug:
             debug = Debug(self)
             debug.show()
         #self.show()
+=======
+        if DEBUG:
+            #self.debug.show()
+            self.debugGps.show()
+
+>>>>>>> a964b01adfa240132fb190b2bb219609589959c6
     @pyqtSlot()
     def error_update(self):
         p = self.palette()
