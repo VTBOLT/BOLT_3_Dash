@@ -33,14 +33,14 @@ class CurrentLapTime(QWidget):
     def __init__(self, parent):
         super(CurrentLapTime, self).__init__(parent)
         
-        
+        arguments = Arg_Class() 
         self.currentLapTimeValue = "00:00:000"
         
         self.currentLapTimeLCD = QLCDNumber(self)
         self.currentLapTimeLCD.setDigitCount(9)
         self.currentLapTimeLCD.display(self.currentLapTimeValue)
         self.currentLapTimeLCD.move(0, 20)
-        if DEMO:
+        if arguments.Args.demo:
             self.currentLapTimeLCD.resize(170,40)
         else:
             self.currentLapTimeLCD.resize(270,140)
@@ -52,7 +52,7 @@ class CurrentLapTime(QWidget):
         self.currentLapTimeLabel.setText("Current Lap Time:")
         self.currentLapTimeLabel.move(0,0)
         self.currentLapTimeLabel.hide()
-        if DEMO:
+        if arguments.Args.demo:
             self.currentLapTimeLabel.show()
         
     @pyqtSlot(int, int, int)

@@ -15,7 +15,7 @@ if __name__ == '__main__':
     arguments = Arg_Class()
     dash = Dash()
     dash.show()
-    if arguments.Args.canoff == True    
+    if arguments.Args.canoff == True:
         canWorker =CanReader()
         canWorker.start()
         canWorker.rpmUpdateValue.connect(dash.rpmGauge.rpm_update)
