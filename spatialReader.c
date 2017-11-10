@@ -45,34 +45,23 @@ int main(){
 	    double longitude = system_state_packet.longitude* RADIANS_TO_DEGREES;
 	    double roll = system_state_packet.orientation[0] * RADIANS_TO_DEGREES;
 	    double pitch = system_state_packet.orientation[1] * RADIANS_TO_DEGREES;
-	    double gForce = sysetem_state_packet.g_force;
+	    double gForce = system_state_packet.g_force;
 	    //velocity
-	    double vX = system_state_packet_velocity[0];
-	    double vY = system_state_packet_velocity[1];
-	    double vZ = system_state_packet_velocity[2];
+	    double vX = system_state_packet.velocity[0];
+	    double vY = system_state_packet.velocity[1];
+	    double vZ = system_state_packet.velocity[2];
+	    //body acceleration
+	    double abX = system_state_packet.body_acceleration[0];
+	    double abY = system_state_packet.body_acceleration[1];
+	    double abZ = system_state_packet.body_acceleration[2];
 	    
-	    cout << setprecision(8) << "lat:" << lat << endl;
-	    cout << setprecision(8) << "long:"<< longitude << endl;
+	    cout << setprecision(15) << "lat:" << lat << endl;
+	    cout << setprecision(15) << "long:"<< longitude << endl;
 	    cout << setprecision(8) << "roll:" << roll << endl;
 	    cout << setprecision(8) << "pitch:" << pitch << endl;
 	    cout << setprecision(8) << "gForce:" << gForce << endl;
-	    cout << setprecision(8) << "velocity:" << vX ":" << vY << ":" << vZ << endl;
-	  }
-	  else if(an_packet.id == packet_id_raw_sensors){
-	    raw_sensors_packet_t raw_sensors_packet;
-	     if(decode_raw_sensors_packet(&raw_sensors_packet, &an_packet) == 0){
-	       //Accelerometer data
-	       double aX = raw_sensors_packet.accelerometers[0] * RADIANS_TO_DEGREES;
-	       double aY = raw_sensors_packet.accelerometers[1] * RADIANS_TO_DEGREES;
-	       double aZ = raw_sensors_packet.accelerometers[2] * RADIANS_TO_DEGREES;
-	       cout << setprecision(8) << "accel:" << aX << ":" << aY << ":" << aZ << endl;
-	       //Gyroscopes
-
-	       double gX = raw_sensors_packet.gyroscopes[0] * RADIANS_TO_DEGREES;
-	       double gY = raw_sensors_packet.gyroscopes[1] * RADIANS_TO_DEGREES;
-	       double gZ = raw_sensors_packet.gyroscopes[2] * RADIANS_TO_DEGREES;
-	       cout << setprecision(8) << "gyro:"<< gX << ":" << gY << ":" << gZ << endl;
-	     }
+	    cout << setprecision(8) << "velocity:" << vX << ":" << vY << ":" << vZ << endl;
+	    cout << setprecision(8) << "body_accel:" << abX << ":" << abY << ":" << abZ << endl;
 	  }
 	}
       }

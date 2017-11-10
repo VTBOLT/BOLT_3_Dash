@@ -47,11 +47,8 @@ class FileWriter(QWidget):
     def gForce_write(self, value):
         self.f.write("gForce, "+str(time.time())+', '+str(value)+'\n')
     @pyqtSlot(float, float, float)
-    def accel_write(self, x, y, z):
-        self.f.write("accelerometer, "+str(time.time())+', '+str(x)+', '+str(y)+', '+str(z)+'\n')
-    @pyqtSlot(float, float, float)
-    def gyro_write(self, x, y, z):
-        self.f.write("gyroscope, "+str(time.time())+', '+str(x)+', '+str(y)+','+str(z)+'\n')
+    def bodyAccel_write(self, x, y, z):
+        self.f.write("body_accelerometer, "+str(time.time())+', '+str(x)+', '+str(y)+', '+str(z)+'\n')
     @pyqtSlot(float, float, float)
     def vel_write(self, x, y, z):
         self.f.write("velocity, "+str(time.time())+', '+str(x)+', '+str(y)+','+str(z)+'\n')

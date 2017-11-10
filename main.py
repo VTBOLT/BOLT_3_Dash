@@ -45,8 +45,7 @@ if __name__ == '__main__':
         gpsWorker.gForceValue.connect(dash.debug.c1.channel_update)
         
         if arguments.Args.log == True:
-            gpsWorker.accelValue.connect(dash.fileWriter.accel_write)
-            gpsWorker.gyroValue.connect(dash.fileWriter.gyro_write)
+            gpsWorker.bodyAccelValue.connect(dash.fileWriter.bodyAccel_write)
             gpsWorker.velValue.connect(dash.fileWriter.vel_write)
             
             gpsWorker.latValue.connect(dash.fileWriter.lat_write)
