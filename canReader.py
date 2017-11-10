@@ -1,28 +1,27 @@
 import sys
 import time
 from PyQt5.QtCore import QThread, pyqtSlot, pyqtSignal
-#option to use fake data instead of reading from can bus
-DEV = True #should default to False
-if len(sys.argv) > 1:
-    if any("-dev" in s for s in sys.argv):
-       DEV = False
+from args import Arg_Class
 
 class CanReader(QThread):
     rpmUpdateValue = pyqtSignal(int)
     socUpdateValue = pyqtSignal(float)
-    tempUpdateValue = pyqtSignal(float)
+    mcTempUpdateValue = pyqtSignal(float)
+    motorTempUpdateValue = pyqtSignal(float)
+    cellTempUpdateValue = pyqtSignal(float)
     errorSignal = pyqtSignal()
     def __init__(self):
         QThread.__init__(self)
     def run(self):
-        if DEV:
+        arguments = Arg_Class()
+        if arguments.Args.dev:
             print("can worker thread:", self.currentThread())
-            i = 1
-            j = 99.0
-            k = 93.0
+            i = 0
+            j = 19.0
+            k = 98.0
             while True:
-                time.sleep(.5)
-                if i >= 100:
+                time.sleep(.1)
+                if i >= 8000:
                     i = 0
                     self.errorSignal.emit()
                 if j <= 0:
@@ -32,10 +31,10 @@ class CanReader(QThread):
                 self.rpmUpdateValue.emit(i)
                 time.sleep(.001)
                 self.socUpdateValue.emit(j)
-                self.tempUpdateValue.emit(k)
-                i=i+1
-                j=j-1
-                k = k+.01
+                self.mcTempUpdateValue.emit(k)
+                i=i+10
+                j=j-0.1
+                k = k+0.01
             self.processEvents()
         else:
             print("in can reader")

@@ -2,11 +2,7 @@ import sys
 from PyQt5.QtWidgets import QWidget, QPushButton, QLCDNumber, QLabel, QAction, QFrame
 from PyQt5.QtGui import QIcon, QPainter, QColor, QPen
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, Qt
-
-DEMO = False
-if len(sys.argv) > 1:
-    if any("-demo" in s for s in sys.argv):
-        DEMO = True
+from args import Arg_Class
 
 class LastLapTime(QWidget):
     def __init__(self, parent):
@@ -37,30 +33,37 @@ class CurrentLapTime(QWidget):
     def __init__(self, parent):
         super(CurrentLapTime, self).__init__(parent)
         
-        
+        arguments = Arg_Class() 
         self.currentLapTimeValue = "00:00:000"
         
         self.currentLapTimeLCD = QLCDNumber(self)
         self.currentLapTimeLCD.setDigitCount(9)
         self.currentLapTimeLCD.display(self.currentLapTimeValue)
         self.currentLapTimeLCD.move(0, 20)
-        self.currentLapTimeLCD.resize(170,40)
+        if arguments.Args.demo:
+            self.currentLapTimeLCD.resize(170,40)
+        else:
+            self.currentLapTimeLCD.resize(270,140)
+            self.currentLapTimeLCD.move(0,0)
         self.currentLapTimeLCD.setFrameShape(QFrame.NoFrame)
         self.currentLapTimeLCD.setSegmentStyle(QLCDNumber.Flat)
         
         self.currentLapTimeLabel = QLabel(self)
         self.currentLapTimeLabel.setText("Current Lap Time:")
         self.currentLapTimeLabel.move(0,0)
-        
+        self.currentLapTimeLabel.hide()
+        if arguments.Args.demo:
+            self.currentLapTimeLabel.show()
         
     @pyqtSlot(int, int, int)
     def currentLapTime_update(self, min, sec, msec):
         self.currentLapTimeLCD.display(str(min).zfill(2) + ':' + str(sec).zfill(2) + ':' + str(msec).zfill(3))
-        #self.upadate()
+        
 
     def paintEvent(self, event):
+        arguments = Arg_Class()
         qp = QPainter(self)
-        if DEMO:
+        if arguments.Args.demo:
             qp.setPen(Qt.white)
             qp.drawRect(40,70, 90, 50)
             qp.drawRect(50, 80, 70, 30)
