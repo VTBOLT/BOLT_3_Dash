@@ -51,7 +51,7 @@ class Dash(QMainWindow):
         self.socGauge.resize(GAUGE_WIDTH+100,GAUGE_HEIGHT)
 
         self.tempGauge = Temp(self)
-        self.tempGauge.move(GAUGE_WIDTH*3,GAUGE_VPOS-150)
+        self.tempGauge.move(800,GAUGE_VPOS-150)
         self.tempGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT*2)
         self.tempGauge.hide()
         #if arguments.Args.demo:
@@ -61,15 +61,13 @@ class Dash(QMainWindow):
         self.debugGps = DebugGPS(self)
         self.debug.hide()
         self.debugGps.hide() 
+
         if arguments.Args.debug:
-            debug = Debug(self)
-            debug.show()
-        #self.show()
-        
-        self.mainMenu = self.menuBar()
-        
-        self.mainMenu.setStyleSheet("QMenuBar::item { color: rgb(255,0,0);}")
-        self.mainMenu.setStyleSheet("QMenuBar::item { background-color: rgb(255,255,255);}")
+            self.debug.show()
+
+        self.mainMenu = self.menuBar()        
+        self.mainMenu.setStyleSheet("QMenuBar::item { color: rgb(255,0,0);}") #sets text color
+        self.mainMenu.setStyleSheet("QMenuBar::item { background-color: rgb(255,255,255);}") # sets button color
 
 
         self.fileMenu = self.mainMenu.addMenu('Debug')

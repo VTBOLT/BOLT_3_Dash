@@ -41,6 +41,7 @@ if __name__ == '__main__':
         gpsWorker.longValue.connect(dash.debugGps.gpsGauge.long_update)
         gpsWorker.rollValue.connect(dash.debugGps.gpsGauge.roll_update)
         gpsWorker.pitchValue.connect(dash.debugGps.gpsGauge.pitch_update)
+        gpsWorker.gForceValue.connect(dash.debugGps.gpsGauge.gForce_update)
         gpsWorker.gForceValue.connect(dash.debug.c1.channel_update)
         
         if arguments.Args.log == True:

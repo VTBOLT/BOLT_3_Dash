@@ -68,6 +68,19 @@ class Gps(QWidget):
         self.pitchLabel.setText("Pitch: ")
         self.pitchLabel.move(300,0)
         self.pitchLabel.hide()
+
+        self.gForceLCD = QLCDNumber(self)
+        self.gForceLCD.display(self.longValue)
+        self.gForceLCD.setFrameShape(QFrame.NoFrame)
+        self.gForceLCD.setSegmentStyle(QLCDNumber.Flat)
+        self.gForceLCD.move(380,10)
+        self.gForceLCD.resize(70,50)
+        self.gForceLCD.hide()
+        
+        self.gForceLabel = QLabel(self)
+        self.gForceLabel.setText("Pitch: ")
+        self.gForceLabel.move(380,0)
+        self.gForceLabel.hide()
         
         if DEMO:
             self.latLCD.show()
@@ -102,9 +115,15 @@ class Gps(QWidget):
         self.pitchLCD.display(value)
         self.pitchValue = value
         self.update()
+        
+    @pyqtSlot(float)
+    def gForce_update(self, value):
+        self.gForceLCD.display(value)
+        self.gForceValue = value
+        self.update()
 
     def paintEvent(self, event):
         qp = QPainter(self)
         qp.setPen(Qt.white)
 
-        qp.drawRect(50, 50, 150, 150)
+        #qp.drawRect(50, 50, 150, 150)
