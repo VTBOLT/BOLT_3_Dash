@@ -41,8 +41,42 @@ class CanReader(QThread):
             print("in can reader")
             #ADD CAN READING HERE
             #while True:
-                
+            '''          
+            sudo modprobe can
+            # Create a can network interface with a specific name
+            sudo ip link add dev can0 type can
+            sudo ip link set can0 up
+            sudo ip link set can0 up type can bitrate 500000000 #5k bitrate
+            #sudo ifconfig can0 txqueuelen 100
+
+            import can
+            can_interface = 'can0'
+            bus = can.interface.Bus(can_interface, bustype='socketcan_native')
+
+            idFilterList = [{'can_id': 0xA5, 'can_mask': 0x11},
+                            {'can_id': 0x183, 'can_mask': 0x11}, 
+                            {'can_id': 0x181, 'can_mask': 0x11}]  #in order RPM, SOC, highcellTemp
+                          
+            can0.set_filters(idFilterList) 
+
+            while True:
+                message = can0.recv(0.0) # choose a timeout in seconds, 0.0 means non-blocking
+
+                if message is None: 
+                    print('Timeout occured, no data from can bus.')
+                else:
                     
+                    if message is idFilterList["can_id"]: #RPM
+
+                        self.rpmUpdateValue.emit()
+
+                    elif message is idFilterList["can_id"]: #SOC
+                        self.socUpdateValue.emit()
+
+                    elif message is idFilterList["can_id"]: #highCellTemp
+                        self.tempUpdateValue.emit()
+                
+            '''                        
 
         self.exec()
                                                                                     
