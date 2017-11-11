@@ -94,7 +94,7 @@ class GpsReader(QThread):
                         velZ = buf.split(':')[3]
                         self.velValue.emit(float(velX), float(velY), float(velZ))
                     else:
-                        print(buf)
+                        print("ERROR: Parsing missed:", buf)
                     buf = ""
 
         self.exec()

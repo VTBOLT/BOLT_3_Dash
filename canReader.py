@@ -1,6 +1,9 @@
 import sys
 import time
+import subprocess
+
 from PyQt5.QtCore import QThread, pyqtSlot, pyqtSignal
+
 from args import Arg_Class
 
 class CanReader(QThread):
@@ -37,7 +40,6 @@ class CanReader(QThread):
                 k = k+0.01
             self.processEvents()
         else:
-            print("in can reader")
             #ADD CAN READING HERE
             #while True:
             '''          
@@ -75,7 +77,24 @@ class CanReader(QThread):
                     elif message is idFilterList["can_id"]: #highCellTemp
                         self.tempUpdateValue.emit()
                 
-            '''                        
-
+            '''
+            '''
+            #ALTERNATE METHOD
+            p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+            buf = ""
+            for out in iter(lambda: p.stdout.read(1), ''):
+                if out.decode() != '\n':
+                    buf = buf + str(out.decode())
+                else:
+                    if buf.split(":")[0] == 'rpm':
+                        rpm = buf.split(':')[1]
+                        self.rpmUpdateValue.emit(float(rpm)
+                    elif buf.split(":")[0] == 'soc':
+                        soc = buf.split(':')[1]
+                        self.socUpdateValue.emit(float(soc)
+                    else:
+                        print("ERROR: Parsing missed:", buf)
+                    buf = ""
+        '''
         self.exec()
                                                                                     
