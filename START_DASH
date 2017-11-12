@@ -1,0 +1,10 @@
+## compiles gps and can code
+
+g++ spatialReader.c -o spatialReader -lboost_system spatial/an_packet_protoco\
+l.c spatial/spatial_packets.c
+
+g++ canreader.cpp -o canReader can/canrecieve.cpp
+
+## Runs dash
+
+python3 main.py -dev 
