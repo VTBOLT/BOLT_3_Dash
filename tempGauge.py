@@ -22,41 +22,41 @@ class Temp(QWidget):
         self.mcTempGauge.setSegmentStyle(QLCDNumber.Flat)
         
         self.mcTemplabel = QLabel(self)
-        self.mcTemplabel.setText("temp: ")
+        self.mcTemplabel.setText("highest mc temp: ")
         self.mcTemplabel.move(0,0)
 
         self.motorTempGauge = QLCDNumber(self)
-        self.motorTempGauge.display(str(self.mcTempValue).zfill(1))
+        self.motorTempGauge.display(str(self.motorTempValue).zfill(1))
         self.motorTempGauge.move(0,60)
         self.motorTempGauge.resize(100,50)
         self.motorTempGauge.setFrameShape(QFrame.NoFrame)
         self.motorTempGauge.setSegmentStyle(QLCDNumber.Flat)
         
         self.motorTemplabel = QLabel(self)
-        self.motorTemplabel.setText("temp: ")
+        self.motorTemplabel.setText("motor temp: ")
         self.motorTemplabel.move(0,50)
 
         self.cellTempGauge = QLCDNumber(self)
-        self.cellTempGauge.display(str(self.mcTempValue).zfill(1))
+        self.cellTempGauge.display(str(self.cellTempValue).zfill(1))
         self.cellTempGauge.move(0,100)
         self.cellTempGauge.resize(100,50)
         self.cellTempGauge.setFrameShape(QFrame.NoFrame)
         self.cellTempGauge.setSegmentStyle(QLCDNumber.Flat)
         
         self.cellTemplabel = QLabel(self)
-        self.cellTemplabel.setText("temp: ")
+        self.cellTemplabel.setText("highest cell temp: ")
         self.cellTemplabel.move(0,90)
         
     @pyqtSlot(float)
     def mcTemp_update(self, value):
         self.mcTempGauge.display(value)
-
     @pyqtSlot(float)
     def motorTemp_update(self, value):
-        1+1
+        self.motorTempGauge.display(vale)
     @pyqtSlot(float)
     def cellTemp_update(self, value):
-        1+1
+        self.cellTempGauge.display(value)
+        
     '''
     def paintEvent(self, event):
         qp = QPainter(self)
