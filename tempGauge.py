@@ -16,7 +16,7 @@ class Temp(QWidget):
         
         self.mcTempGauge = QLCDNumber(self)
         self.mcTempGauge.display(str(self.mcTempValue).zfill(1))
-        self.mcTempGauge.move(0,10)
+        self.mcTempGauge.move(0,0)
         self.mcTempGauge.resize(100,100)
         self.mcTempGauge.setFrameShape(QFrame.NoFrame)
         self.mcTempGauge.setSegmentStyle(QLCDNumber.Flat)
@@ -27,25 +27,36 @@ class Temp(QWidget):
 
         self.motorTempGauge = QLCDNumber(self)
         self.motorTempGauge.display(str(self.motorTempValue).zfill(1))
-        self.motorTempGauge.move(0,110)
+        self.motorTempGauge.move(0,80)
         self.motorTempGauge.resize(100,100)
         self.motorTempGauge.setFrameShape(QFrame.NoFrame)
         self.motorTempGauge.setSegmentStyle(QLCDNumber.Flat)
         
         self.motorTemplabel = QLabel(self)
         self.motorTemplabel.setText("motor temp: ")
-        self.motorTemplabel.move(0,100)
+        self.motorTemplabel.move(0,80)
+
+        self.highMotorTempGauge = QLCDNumber(self)
+        self.highMotorTempGauge.display(str(self.motorTempValue).zfill(1))
+        self.highMotorTempGauge.move(0,180)
+        self.highMotorTempGauge.resize(100,100)
+        self.highMotorTempGauge.setFrameShape(QFrame.NoFrame)
+        self.highMotorTempGauge.setSegmentStyle(QLCDNumber.Flat)
+        
+        self.highMotorTemplabel = QLabel(self)
+        self.highMotorTemplabel.setText("highest motor temp: ")
+        self.highMotorTemplabel.move(0,180)
 
         self.cellTempGauge = QLCDNumber(self)
         self.cellTempGauge.display(str(self.cellTempValue).zfill(1))
-        self.cellTempGauge.move(0,210)
+        self.cellTempGauge.move(0,280)
         self.cellTempGauge.resize(100,100)
         self.cellTempGauge.setFrameShape(QFrame.NoFrame)
         self.cellTempGauge.setSegmentStyle(QLCDNumber.Flat)
         
         self.cellTemplabel = QLabel(self)
         self.cellTemplabel.setText("highest cell temp: ")
-        self.cellTemplabel.move(0,200)
+        self.cellTemplabel.move(0,280)
         
     @pyqtSlot(float)
     def mcTemp_update(self, value):

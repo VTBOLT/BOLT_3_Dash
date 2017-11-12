@@ -38,7 +38,6 @@ class GpsReader(QThread):
                 self.pitchValue.emit(0)
                 self.gForceValue.emit(roll)
                 self.bodyAccelValue.emit(0,0,0)
-                self.gyroValue.emit(0,0,0)
                 self.velValue.emit(0,0,0)
                 
                 if current_msec >= 999:

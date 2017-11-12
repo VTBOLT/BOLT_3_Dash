@@ -52,7 +52,7 @@ class Dash(QMainWindow):
 
         self.tempGauge = Temp(self)
         self.tempGauge.move(800,GAUGE_VPOS-150)
-        self.tempGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT*2)
+        self.tempGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT*2.5)
         self.tempGauge.hide()
         #if arguments.Args.demo:
         self.tempGauge.show()
@@ -71,14 +71,13 @@ class Dash(QMainWindow):
 
 
         self.fileMenu = self.mainMenu.addMenu('Debug')
-        open = QAction("Open Debug Window", self)
-        
-        self.fileMenu.addAction(open)
-        open.triggered.connect(self.debug.debug_open)            
+        self.openDebug = QAction("Open Debug Window", self)
+        self.fileMenu.addAction(self.openDebug)
+        self.openDebug.triggered.connect(self.debug.debug_open)            
 
-        self.open_gps = QAction("Open GPS Window", self)
-        self.fileMenu.addAction(self.open_gps)
-        self.open_gps.triggered.connect(self.debugGps.debug_open)
+        self.openGPS = QAction("Open GPS Window", self)
+        self.fileMenu.addAction(self.openGPS)
+        self.openGPS.triggered.connect(self.debugGps.debug_open)
         
         self.analyzeMenu = self.mainMenu.addMenu('Analyze')
         self.graphRpm = QAction("Graph RPM", self)
@@ -87,7 +86,16 @@ class Dash(QMainWindow):
         self.analyzeMenu.addAction(self.graphSoc)
         
         self.tempMenu = self.mainMenu.addMenu('Temp')
-        self.setting = QAction("Settings", self)
+        self.settingMenu = self.mainMenu.addMenu('Settings')
+        ### Reopen temp dispaly
+        self.tempOn = QAction("Open Temp Display:", self)
+        self.settingMenu.addAction(self.tempOn)
+        self.tempOn.triggered.connect(self.temp_open)
+        ### Close temp display
+        self.tempOff = QAction("Close Temp Display:", self)
+        self.settingMenu.addAction(self.tempOff)
+        self.tempOff.triggered.connect(self.temp_close)
+
         
         if arguments.Args.debug:
             #self.debug.show()
@@ -104,3 +112,11 @@ class Dash(QMainWindow):
         self.setPalette(p)
         self.update()
         print("ERROR")
+
+    @pyqtSlot()
+    def temp_close(self):
+        self.tempGauge.hide()
+    @pyqtSlot()
+    def temp_open(self):
+        self.tempGauge.show()
+        
