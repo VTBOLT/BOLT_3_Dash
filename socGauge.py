@@ -18,8 +18,8 @@ class Soc(QWidget):
         self.socLCD.display(str(int(self.socValue)).zfill(4)+'.'+str((self.socValue - int(self.socValue))*10).zfill(4))
         self.socLCD.setFrameShape(QFrame.NoFrame)
         self.socLCD.setSegmentStyle(QLCDNumber.Flat)
-        self.socLCD.move(0,10)
-        self.socLCD.resize(160,100)
+        self.socLCD.move(200,10)
+        self.socLCD.resize(160,120)
         self.socLCD.hide()
         
         self.socLabel = QLabel(self)
@@ -27,9 +27,8 @@ class Soc(QWidget):
         self.socLabel.move(0,0)
         self.socLabel.hide()
 
-        
-        if DEMO:
-            self.socLCD.show()
+        self.socLCD.show()
+        if DEMO:            
             self.socLabel.show()
         
     @pyqtSlot(float)
@@ -46,8 +45,8 @@ class Soc(QWidget):
             qp.drawRect(60,110, 60, 20)
             qp.drawRect(57,117, 2, 5)
         else:
-            qp.drawRect(60,0, 150, 60)
-            qp.drawRect(53,20, 7, 20)
+            qp.drawRect(60,40, 150, 60)
+            qp.drawRect(53,60, 7, 20)
 
         if self.socValue < 20:
             qp.setBrush(Qt.red)
@@ -56,6 +55,6 @@ class Soc(QWidget):
         if DEMO:
             qp.drawRect(60+(60*(1-(self.socValue/100))), 110, ((60*self.socValue/100)),20)
         else:
-            qp.drawRect(60+(150*(1-(self.socValue/100))), 0, ((150*self.socValue/100)),60)
+            qp.drawRect(60+(150*(1-(self.socValue/100))), 40, ((150*self.socValue/100)),60)
             
 

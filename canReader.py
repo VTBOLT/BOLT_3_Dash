@@ -20,7 +20,7 @@ class CanReader(QThread):
         if arguments.Args.dev:
             print("can worker thread:", self.currentThread())
             i = 0
-            j = 19.0
+            j = 98.0
             k = 98.0
             while True:
                 time.sleep(.1)
@@ -54,14 +54,14 @@ class CanReader(QThread):
                     elif buf.split(":")[0] == 'soc':
                         soc = buf.split(':')[1]
                         self.socUpdateValue.emit(float(soc))
-                    elif buf.split(":"[0] == 'mcTemp':
-                        mcTemp = buf.split(':'[1]
+                    elif buf.split(":"[0] == 'mcTemp'):
+                        mcTemp = buf.split(':')[1]
                         self.mcTempUpdateValue.emit(float(mcTemp))
-                    elif buf.split(":"[0] == 'motorTemp':
-                        motorTemp = buf.split(':'[1]
+                    elif buf.split(":"[0] == 'motorTemp'):
+                        motorTemp = buf.split(':')[1]
                         self.motorTempUpdateValue.emit(float(motorTemp))
-                    elif buf.split(":"[0] == 'highCellTemp':
-                        cellTemp = buf.split(':'[1]
+                    elif buf.split(":"[0] == 'highCellTemp'):
+                        cellTemp = buf.split(':')[1]
                         self.cellTempUpdateValue.emit(float(cellTemp))
                     else:
                         print("ERROR: Parsing missed:", buf)
