@@ -29,7 +29,7 @@ class DebugGPS(QWidget):
 
         self.gpsGauge = Gps(self)
         self.gpsGauge.move(0, 0)
-        self.gpsGauge.resize(400,200)
+        self.gpsGauge.resize(400,400)
         
 
         p = self.palette()

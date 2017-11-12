@@ -99,8 +99,17 @@ void CanReader::run()
 		      SOC = (int16_t)(( frame_rd.data[5] << 8 ) + ( frame_rd.data[4] )) * 0.5;
 		      std::cout << "soc:" << SOC << std::endl;
 		      break;
-			
-                    default:
+		      /*
+		    case :
+		      delta = (int16_t)((frame_rd.data[5] << 8 ) + (frame_rd.data[4] )) * 0.5;
+		      std::cout << "cellDelta:" << delta << std::endl;
+		      break;
+		      		    case :
+		      delta = (int16_t)((frame_rd.data[5] << 8 ) + (frame_rd.data[4] )) * 0.5;
+		      std::cout << "cellDelta:" << delta << std::endl;
+		      break;
+		      */
+                    default:		
 		      std::cout << "defualt condition, can_id: " << frame_rd.can_id << std::endl;
 		      break;
                     }
