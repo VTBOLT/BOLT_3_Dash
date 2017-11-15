@@ -2,16 +2,16 @@ import sys
 from PyQt5.QtWidgets import QWidget, QPushButton, QLCDNumber, QLabel, QAction, QFrame
 from PyQt5.QtGui import QIcon, QPainter, QColor, QPen
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, Qt
-DEMO = False
-if len(sys.argv) > 1:
-    if any("-demo" in s for s in sys.argv):
-        DEMO = True
+
+from args import Arg_Class
 
 class Soc(QWidget):
     def __init__(self, parent):
 
         super(Soc, self).__init__(parent)
-                 
+
+        arguments = Arg_Class()
+        
         self.socValue = 0.0
         
         self.socLCD = QLCDNumber(self)
@@ -41,7 +41,7 @@ class Soc(QWidget):
     def paintEvent(self, event):
         qp = QPainter(self)
         qp.setPen(Qt.white)
-        if DEMO:
+        if arguments.Args.demo:
             qp.drawRect(60,110, 60, 20)
             qp.drawRect(57,117, 2, 5)
         else:
@@ -52,7 +52,7 @@ class Soc(QWidget):
             qp.setBrush(Qt.red)
         else:
             qp.setBrush(Qt.green)
-        if DEMO:
+        if arguments.Args.demo:
             qp.drawRect(60+(60*(1-(self.socValue/100))), 110, ((60*self.socValue/100)),20)
         else:
             qp.drawRect(60+(150*(1-(self.socValue/100))), 40, ((150*self.socValue/100)),60)

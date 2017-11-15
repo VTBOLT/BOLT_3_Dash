@@ -10,11 +10,12 @@ from debug import Debug
 from args import Arg_Class
 
 if __name__ == '__main__':
-    
     app = QApplication(sys.argv)
     arguments = Arg_Class()
     dash = Dash()
-    dash.show()
+    #dash.show()
+    dash.showFullScreen()
+    
     if arguments.Args.canoff == True:
         canWorker =CanReader()
         canWorker.start()
@@ -42,17 +43,15 @@ if __name__ == '__main__':
         gpsWorker.rollValue.connect(dash.debugGps.gpsGauge.roll_update)
         gpsWorker.pitchValue.connect(dash.debugGps.gpsGauge.pitch_update)
         gpsWorker.gForceValue.connect(dash.debugGps.gpsGauge.gForce_update)
-        #gpsWorker.gForceValue.connect(dash.debug.c1.channel_update)
         
-        if arguments.Args.log == True:
-            gpsWorker.bodyAccelValue.connect(dash.fileWriter.bodyAccel_write)
-            gpsWorker.velValue.connect(dash.fileWriter.vel_write)
-            
+        if arguments.Args.log == True:                        
             gpsWorker.latValue.connect(dash.fileWriter.lat_write)
             gpsWorker.longValue.connect(dash.fileWriter.long_write)
             gpsWorker.rollValue.connect(dash.fileWriter.roll_write)
             gpsWorker.pitchValue.connect(dash.fileWriter.pitch_write)
             gpsWorker.gForceValue.connect(dash.fileWriter.gForce_write)
+            gpsWorker.bodyAccelValue.connect(dash.fileWriter.bodyAccel_write)
+            gpsWorker.velValue.connect(dash.fileWriter.vel_write)
         
     print("dash thread:", app.instance().thread())
     app.processEvents()

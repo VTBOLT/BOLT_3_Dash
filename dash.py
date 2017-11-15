@@ -3,7 +3,6 @@ import time
 from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QFrame, QAction, QPushButton
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, Qt, QThread, pyqtSlot
 
-
 from socGauge import Soc
 from rpmGauge import Rpm
 from lapTimePannel import LastLapTime, CurrentLapTime, BestLapTime
@@ -53,8 +52,6 @@ class Dash(QMainWindow):
         self.tempGauge = Temp(self)
         self.tempGauge.move(800,GAUGE_VPOS-150)
         self.tempGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT*2.5)
-        self.tempGauge.hide()
-        #if arguments.Args.demo:
         self.tempGauge.show()
 
         self.debug = Debug(self)
@@ -69,7 +66,6 @@ class Dash(QMainWindow):
         self.mainMenu.setStyleSheet("QMenuBar::item { color: rgb(255,0,0);}") #sets text color
         self.mainMenu.setStyleSheet("QMenuBar::item { background-color: rgb(255,255,255);}") # sets button color
 
-
         self.fileMenu = self.mainMenu.addMenu('Debug')
         self.openDebug = QAction("Open Debug Window", self)
         self.fileMenu.addAction(self.openDebug)
@@ -78,7 +74,8 @@ class Dash(QMainWindow):
         self.openGPS = QAction("Open GPS Window", self)
         self.fileMenu.addAction(self.openGPS)
         self.openGPS.triggered.connect(self.debugGps.debug_open)
-        
+
+        #### Option to display graphs of data, not implemented yet
         self.analyzeMenu = self.mainMenu.addMenu('Analyze')
         self.graphRpm = QAction("Graph RPM", self)
         self.graphSoc = QAction("Graph SOC", self)
@@ -87,7 +84,7 @@ class Dash(QMainWindow):
         
         self.tempMenu = self.mainMenu.addMenu('Temp')
         self.settingMenu = self.mainMenu.addMenu('Settings')
-        ### Reopen temp dispaly
+        ### Open temp dispaly
         self.tempOn = QAction("Open Temp Display:", self)
         self.settingMenu.addAction(self.tempOn)
         self.tempOn.triggered.connect(self.temp_open)

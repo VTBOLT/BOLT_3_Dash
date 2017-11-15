@@ -3,16 +3,13 @@ from PyQt5.QtWidgets import QWidget, QPushButton, QLCDNumber, QLabel, QAction, Q
 from PyQt5.QtGui import QIcon, QPainter, QColor, QPen
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, Qt, QRect
 
-DEMO = False
-DOTS = False
-if len(sys.argv) > 1:
-    if any("-demo" in s for s in sys.argv):
-        DEMO = True
-    if any("-dots" in s for s in sys.argv):
-        DOTS = True
+from args import Arg_Class
+
 class Rpm(QWidget):
     def __init__(self, parent):
         super(Rpm, self).__init__(parent)
+
+        arguments = Arg_Class()
         
         self.rpmValue = 0
         
@@ -28,7 +25,7 @@ class Rpm(QWidget):
         self.rpmLabel.move(250,130)
         self.rpmLabel.hide()
         
-        if DEMO:
+        if arguments.Args.demo:
             self.rpmLabel.show()
 
     @pyqtSlot(int)
@@ -44,7 +41,7 @@ class Rpm(QWidget):
         qp.setPen(Qt.white)
         size = self.size()
 
-        if DOTS:
+        if arguments.Args.dots:
             qp.drawRect(40,40,40,40)
             qp.drawRect(140,40,40,40)
             qp.drawRect(240,40,40,40)

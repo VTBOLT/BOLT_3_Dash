@@ -3,15 +3,19 @@ import time
 from datetime import datetime as dt
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, Qt
+from args import Arg_Class
 
 class FileWriter(QWidget):
     def __init__(self, parent):
         super(FileWriter, self).__init__(parent)
-        
-        filename = 'dash_log_'+str(dt.now().year)+'_'+str(dt.now().month)+'_'+str(dt.now().day)+'_'+str(dt.now().hour)+'_'+str(dt.now().minute)
+        arguments = Arg_Class()
+        if arguments.Args.log:
+            ## Creates unique file name
+            filename = 'dash_log_'+str(dt.now().year)+'_'+str(dt.now().month)+'_'+str(dt.now().day)+'_'+str(dt.now().hour)+'_'+str(dt.now().minute)
+            ## Opens file for logging
+            self.f = open('/home/vbox/logs/'+filename, 'w')
 
-        self.f = open('/home/vbox/logs/'+filename, 'w')
-        
+    ######## Logging Slots ######    
     @pyqtSlot(float)
     def rpm_write(self, value):
         self.f.write("rpm, "+str(time.time())+', '+str(value)+'\n')
