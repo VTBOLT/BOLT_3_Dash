@@ -20,8 +20,8 @@ class CanReader(QThread):
     def __init__(self):
         QThread.__init__(self)
     def run(self):
-        arguments = Arg_Class()
-        if arguments.Args.dev:
+        self.arguments = Arg_Class()
+        if self.arguments.Args.dev:
             print("can worker thread:", self.currentThread())
             i = 0
             j = 98.0

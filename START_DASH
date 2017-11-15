@@ -7,4 +7,4 @@ g++ canInterface.cpp -o canInterface can/canrecieve.cpp
 
 ## Runs dash
 
-python3 main.py -dev 
+python3 main.py -dev -fullscreen -log

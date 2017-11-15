@@ -9,7 +9,7 @@ class Rpm(QWidget):
     def __init__(self, parent):
         super(Rpm, self).__init__(parent)
 
-        arguments = Arg_Class()
+        self.arguments = Arg_Class()
         
         self.rpmValue = 0
         
@@ -25,7 +25,7 @@ class Rpm(QWidget):
         self.rpmLabel.move(250,130)
         self.rpmLabel.hide()
         
-        if arguments.Args.demo:
+        if self.arguments.Args.demo:
             self.rpmLabel.show()
 
     @pyqtSlot(int)
@@ -41,7 +41,7 @@ class Rpm(QWidget):
         qp.setPen(Qt.white)
         size = self.size()
 
-        if arguments.Args.dots:
+        if self.arguments.Args.dots:
             qp.drawRect(40,40,40,40)
             qp.drawRect(140,40,40,40)
             qp.drawRect(240,40,40,40)

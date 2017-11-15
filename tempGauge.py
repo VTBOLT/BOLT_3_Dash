@@ -9,7 +9,9 @@ class Temp(QWidget):
     def __init__(self, parent):
 
         super(Temp, self).__init__(parent)
-                 
+
+        self.arguments = Arg_Class()
+        
         self.mcTempValue = 0
         self.motorTempValue = 0
         self.cellTempValue = 0

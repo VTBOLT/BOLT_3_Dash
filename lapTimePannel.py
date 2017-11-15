@@ -33,7 +33,7 @@ class CurrentLapTime(QWidget):
     def __init__(self, parent):
         super(CurrentLapTime, self).__init__(parent)
         
-        arguments = Arg_Class() 
+        self.arguments = Arg_Class() 
         self.currentLapTimeValue = "00:00:000"
         
         self.currentLapTimeLCD = QLCDNumber(self)
@@ -61,9 +61,8 @@ class CurrentLapTime(QWidget):
         
 
     def paintEvent(self, event):
-        arguments = Arg_Class()
         qp = QPainter(self)
-        if arguments.Args.demo:
+        if self.arguments.Args.demo:
             qp.setPen(Qt.white)
             qp.drawRect(40,70, 90, 50)
             qp.drawRect(50, 80, 70, 30)

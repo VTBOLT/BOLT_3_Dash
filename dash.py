@@ -34,7 +34,7 @@ class Dash(QMainWindow):
     def initGUI(self):
         
         self.setAutoFillBackground(True)
-        arguments = Arg_Class()
+        self.arguments = Arg_Class()
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.black)
         p.setColor(self.foregroundRole(), Qt.red)
@@ -59,7 +59,7 @@ class Dash(QMainWindow):
         self.debug.hide()
         self.debugGps.hide() 
 
-        if arguments.Args.debug:
+        if self.arguments.Args.debug:
             self.debug.show()
 
         self.mainMenu = self.menuBar()        
@@ -94,11 +94,11 @@ class Dash(QMainWindow):
         self.tempOff.triggered.connect(self.temp_close)
 
         
-        if arguments.Args.debug:
+        if self.arguments.Args.debug:
             #self.debug.show()
             self.debugGps.show()
 
-        #if arguments.Args.log:
+        #if self.arguments.Args.log:
         self.fileWriter = FileWriter(self)
         
     @pyqtSlot()

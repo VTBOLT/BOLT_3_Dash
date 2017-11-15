@@ -13,8 +13,10 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     arguments = Arg_Class()
     dash = Dash()
-    #dash.show()
-    dash.showFullScreen()
+    if arguments.Args.fullscreen:
+        dash.showFullScreen()
+    else:
+        dash.show()
     
     if arguments.Args.canoff == True:
         canWorker =CanReader()
