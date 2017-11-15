@@ -1,13 +1,13 @@
-// g++ canreader.cpp -o canReader can/canrecieve.cpp
+// g++ canInterface.cpp -o canInterface can/canrecieve.cpp
 
-#include "canreader.h"
+#include "canInterface.h"
 
 CanReader::CanReader()
 {
-  std::cout << "constructor called" << std::endl;
-  system("sudo ifconfig can0 down");
-  system("sudo ip link set can0 up type can bitrate 500000");
-  system("sudo ifconfig can0 txqueuelen 100");//sets the buffer size to 100
+  
+  //system("sudo ifconfig can0 down");
+  //system("sudo ip link set can0 up type can bitrate 500000");
+  //system("sudo ifconfig can0 txqueuelen 100");//sets the buffer size to 100
   
     openPort("can0");
     abort = false;
@@ -33,7 +33,7 @@ bool CanReader::init()
 
 void CanReader::run()
 {
-  std::cout<< "run called" << std::endl;
+  //std::cout<< "run called" << std::endl;
     struct can_frame frame_rd;
     int recvbytes = 0;
     //std::list<int> mtrCntrlTemps;
@@ -58,8 +58,7 @@ void CanReader::run()
       FD_SET(this->soc, &readSet);
       if (select((this->soc + 1), &readSet, NULL, NULL, &timeout) >= 0)
         {
-	  //if (FD_ISSET(this->soc, &readSet))
-	  if (1)
+	  if (FD_ISSET(this->soc, &readSet))
             {
 	      recvbytes = read(this->soc, &frame_rd, sizeof(struct can_frame));
 	      if(recvbytes)
@@ -71,27 +70,22 @@ void CanReader::run()
 		      moduleA         = (int16_t)(( frame_rd.data[1] << 8 ) + ( frame_rd.data[0] )) * 0.1;
 		      moduleB         = (int16_t)(( frame_rd.data[3] << 8 ) + ( frame_rd.data[2] )) * 0.1;
 		      moduleC         = (int16_t)(( frame_rd.data[5] << 8 ) + ( frame_rd.data[4] )) * 0.1;
-		      gateDrvrBrd     = (int16_t)(( frame_rd.data[7] << 8 ) + ( frame_rd.data[6] )) * 0.1;
-		      
-		      std::cout << "mcTemp:" << max(moduleA, moduleB, moduleC, gateDrvrBrd) << std::endl;
-		      
+		      gateDrvrBrd     = (int16_t)(( frame_rd.data[7] << 8 ) + ( frame_rd.data[6] )) * 0.1;		      
+		      std::cout << "mcTemp:" << max(moduleA, moduleB, moduleC, gateDrvrBrd) << std::endl;		    
 		      break;
 		      
                     case 0xA2:
 		      mtrTemp = (int16_t)(( frame_rd.data[5] << 8 ) + ( frame_rd.data[4] )) * 0.1;
-		      std::cout << "motorTemp:" << mtrTemp << std::endl;
-		      
+		      std::cout << "motorTemp:" << mtrTemp << std::endl;	      
 		      break;
 		      
                     case 0xA5:
 		      RPM = (int16_t)(( frame_rd.data[3] << 8 ) + ( frame_rd.data[2] ));
-		      std::cout << "rpm:" << RPM << std::endl;
-		      
+		      std::cout << "rpm:" << RPM << std::endl;		      
 		      break;
 		      
                     case 0x181:
-		      highCellTemp = (int16_t)(( frame_rd.data[2] << 8 ) + ( frame_rd.data[1] )) * 0.1;
-                      
+		      highCellTemp = (int16_t)(( frame_rd.data[2] << 8 ) + ( frame_rd.data[1] )) * 0.1;                      
 		      std::cout << "highCellTemp:" << highCellTemp << std::endl;
 		      break;
 		      
@@ -104,13 +98,13 @@ void CanReader::run()
 		      delta = (int16_t)((frame_rd.data[5] << 8 ) + (frame_rd.data[4] )) * 0.5;
 		      std::cout << "cellDelta:" << delta << std::endl;
 		      break;
-		      		    case :
+		      case :
 		      delta = (int16_t)((frame_rd.data[5] << 8 ) + (frame_rd.data[4] )) * 0.5;
 		      std::cout << "cellDelta:" << delta << std::endl;
 		      break;
 		      */
                     default:		
-		      std::cout << "defualt condition, can_id: " << frame_rd.can_id << std::endl;
+		      std::cout << "defualt condition, can_id:" << frame_rd.can_id << std::endl;
 		      break;
                     }
                 }

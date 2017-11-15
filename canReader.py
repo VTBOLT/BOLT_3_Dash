@@ -45,7 +45,7 @@ class CanReader(QThread):
             self.processEvents()
         else:
             #ALTERNATE METHOD
-            cmd = "./canReader"
+            cmd = "./canreader"
             p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
             buf = ""
             for out in iter(lambda: p.stdout.read(1), ''):
@@ -64,10 +64,10 @@ class CanReader(QThread):
                     elif buf.split(":")[0] == 'motorTemp':
                         motorTemp = buf.split(':')[1]
                         self.motorTempUpdateValue.emit(float(motorTemp))
+                        #sets the highest temp
                         if motorTemp > highMotorTemp:
                             highMotorTemp = motorTemp
-                        self.highMotorTempUpdateValue.emit(float(highMotorTemp))
-                        
+                        self.highMotorTempUpdateValue.emit(float(highMotorTemp))                        
                     elif buf.split(":"[0] == 'highCellTemp'):
                         cellTemp = buf.split(':')[1]
                         self.cellTempUpdateValue.emit(float(cellTemp))
