@@ -62,7 +62,8 @@ class GpsReader(QThread):
             cmd = '/home/pi/BOLT_3_Dash/spatialReader'
             if not Path(cmd).exists():
                 #if Path('./spatialReader').exists():
-                cmd = './spatialReader'
+                cmd = './spatialReader'            
+            
             #    else:
             #        exit(0)
             #else:

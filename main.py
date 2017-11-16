@@ -3,7 +3,6 @@ import sys
 
 from PyQt5.QtWidgets import QApplication
 
-
 from dash import Dash
 from canReader import CanReader
 from gpsReader import GpsReader
@@ -22,8 +21,13 @@ if __name__ == '__main__':
         dash.show()
     
     if arguments.Args.canoff == True:
-        canWorker =CanReader()
-        canWorker.start()
+        try:
+            canWorker =CanReader()
+            canWorker.start()
+        except: # not execting clenaing
+            exit(0)
+        
+
         canWorker.rpmUpdateValue.connect(dash.rpmGauge.rpm_update)
         canWorker.socUpdateValue.connect(dash.socGauge.soc_update)
 
@@ -41,8 +45,11 @@ if __name__ == '__main__':
             canWorker.cellTempUpdateValue.connect(dash.fileWriter.cellTemp_write)
             
     if arguments.Args.gpsoff == True:
-        gpsWorker = GpsReader()
-        gpsWorker.start()
+        try:
+            gpsWorker = GpsReader()
+            gpsWorker.start()
+        except:   # not exiting correctly
+            exit(0)
         #gpsWorker.currentLapTimeValue.connect(dash.currentLapTimeGauge.currentLapTime_update)
         gpsWorker.latValue.connect(dash.debugGps.gpsGauge.lat_update)
         gpsWorker.longValue.connect(dash.debugGps.gpsGauge.long_update)

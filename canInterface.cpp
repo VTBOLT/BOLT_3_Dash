@@ -8,8 +8,14 @@ CanReader::CanReader()
   //system("sudo ifconfig can0 down");
   //system("sudo ip link set can0 up type can bitrate 500000");
   //system("sudo ifconfig can0 txqueuelen 100");//sets the buffer size to 100
-  
+  try{
     openPort("can0");
+  }
+  catch(...){
+    std::cout << "ERROR: NO CAN BUS FOUND" << std::endl;
+    std::exit(0);
+    abort = true;
+  }
     abort = false;
 }
 
@@ -50,6 +56,7 @@ void CanReader::run()
     while(1)
     {
       if ( this->abort )
+	exit(0);
 	return;
       
       struct timeval timeout = {1, 0};

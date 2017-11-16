@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <net/if.h>
+#include <cstdlib>
 #include <linux/can.h>
 #include <linux/can/raw.h>
 #include <linux/can/error.h>
