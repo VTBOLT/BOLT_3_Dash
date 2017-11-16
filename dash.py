@@ -47,7 +47,7 @@ class Dash(QMainWindow):
 
         self.socGauge = Soc(self)
         self.socGauge.move(0,GAUGE_VPOS)
-        self.socGauge.resize(GAUGE_WIDTH+100,GAUGE_HEIGHT)
+        self.socGauge.resize(GAUGE_WIDTH+200,GAUGE_HEIGHT)
 
         self.tempGauge = Temp(self)
         self.tempGauge.move(800,GAUGE_VPOS-150)

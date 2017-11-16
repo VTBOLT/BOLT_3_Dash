@@ -18,18 +18,15 @@ class Soc(QWidget):
         self.socLCD.display(str(int(self.socValue)).zfill(4)+'.'+str((self.socValue - int(self.socValue))*10).zfill(4))
         self.socLCD.setFrameShape(QFrame.NoFrame)
         self.socLCD.setSegmentStyle(QLCDNumber.Flat)
-        self.socLCD.move(200,10)
+        self.socLCD.move(150,10)
         self.socLCD.resize(160,120)
-        self.socLCD.hide()
+        #self.socLCD.hide()
         
         self.socLabel = QLabel(self)
         self.socLabel.setText("soc: ")
-        self.socLabel.move(0,0)
-        self.socLabel.hide()
-
+        self.socLabel.move(30,0)
         self.socLCD.show()
-        if self.arguments.Args.demo:            
-            self.socLabel.show()
+        self.socLabel.show()
         
     @pyqtSlot(float)
     def soc_update(self, value):

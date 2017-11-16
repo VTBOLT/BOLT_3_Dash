@@ -21,12 +21,8 @@ if __name__ == '__main__':
         dash.show()
     
     if arguments.Args.canoff == True:
-        try:
-            canWorker =CanReader()
-            canWorker.start()
-        except: # not execting clenaing
-            exit(0)
-        
+        canWorker =CanReader()
+        canWorker.start()
 
         canWorker.rpmUpdateValue.connect(dash.rpmGauge.rpm_update)
         canWorker.socUpdateValue.connect(dash.socGauge.soc_update)

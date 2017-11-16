@@ -51,7 +51,7 @@ class FileWriter(QThread):
             
             csvWriter = open(path + filename, 'w')
             writer = csv.writer(csvWriter, lineterminator='\n')
-
+            
             self.startTime = time.time()
             pastTime = 0.0
             currentTime = 0.0
@@ -69,7 +69,7 @@ class FileWriter(QThread):
                                               
         self.exec()
                                                                                     
-    @pyqtSlot(float)
+    @pyqtSlot(int)
     def rpm_write(self, value):
         self.rpm = value        
             

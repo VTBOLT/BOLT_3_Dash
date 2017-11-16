@@ -65,7 +65,7 @@ class Temp(QWidget):
         self.mcTempGauge.display(value)
     @pyqtSlot(float)
     def motorTemp_update(self, value):
-        self.motorTempGauge.display(vale)
+        self.motorTempGauge.display(value)
     @pyqtSlot(float)
     def cellTemp_update(self, value):
         self.cellTempGauge.display(value)

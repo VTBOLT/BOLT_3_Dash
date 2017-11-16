@@ -18,6 +18,7 @@ class CanReader(QThread):
     highMotorTemp = 0
     
     def __init__(self):
+        self.highMotorTemp = 0.0
         QThread.__init__(self)
     def run(self):
         self.arguments = Arg_Class()
@@ -45,7 +46,7 @@ class CanReader(QThread):
             self.processEvents()
         else:
             #ALTERNATE METHOD
-            cmd = "./canreader"
+            cmd = "/home/pi/BOLT_3_Dash/canInterface"
             p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
             buf = ""
             for out in iter(lambda: p.stdout.read(1), ''):
@@ -65,10 +66,10 @@ class CanReader(QThread):
                         motorTemp = buf.split(':')[1]
                         self.motorTempUpdateValue.emit(float(motorTemp))
                         #sets the highest temp
-                        if motorTemp > highMotorTemp:
-                            highMotorTemp = motorTemp
-                        self.highMotorTempUpdateValue.emit(float(highMotorTemp))                        
-                    elif buf.split(":"[0] == 'highCellTemp'):
+                        if float(motorTemp) > float(self.highMotorTemp):
+                            self.highMotorTemp = motorTemp
+                        self.highMotorTempUpdateValue.emit(float(self.highMotorTemp))                        
+                    elif buf.split(":")[0] == 'highCellTemp':
                         cellTemp = buf.split(':')[1]
                         self.cellTempUpdateValue.emit(float(cellTemp))
                     else:
