@@ -13,7 +13,7 @@
 using namespace boost;
 using namespace std;
 
-#define RADIANS_TO_DEGREES (180.0/3.14)
+#define RADIANS_TO_DEGREES (180.0/M_PI)
 #define MESSAGE_BUFFER_SIZE (10)
 
 int main(){
