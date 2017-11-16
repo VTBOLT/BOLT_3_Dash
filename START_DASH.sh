@@ -10,4 +10,5 @@
 #python3 main.py -dev -fullscreen -log
 
 ### Testing mode displaying fake data
-sudo python3 /home/pi/BOLT_3_Dash/main.py 
+sudo python3 /home/pi/BOLT_3_Dash/main.py -dev -canoff -log
+

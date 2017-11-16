@@ -57,7 +57,8 @@ class GpsReader(QThread):
             #subprocess reads from that
             #should use boost or embedding and exending
 
-            cmd = './spatialReader'
+            #cmd = './spatialReader'
+            cmd = '/home/pi/BOLT_3_Dash/spatialReader'
             #MESSAGE_LENGTH = 100
             
             #need to add error checking to make sure the executable exitsts
@@ -77,11 +78,11 @@ class GpsReader(QThread):
                         roll = buf.split(':')[1]
                         self.rollValue.emit(float(roll))
                     elif buf.split(':')[0] == 'pitch':
-                        pitch = buf.split(':')[1]
+                        pitch = buf.split(':')[1]                        
                         self.pitchValue.emit(float(pitch))
                     elif buf.split(':')[0] == 'gForce':
                         gForce = buf.split(':')[1]
-                        self.gForceValue.emit(float(pitch))
+                        self.gForceValue.emit(float(gForce))
                     elif buf.split(':')[0] == 'body_accel':
                         accelX = buf.split(':')[1]
                         accelY = buf.split(':')[2]

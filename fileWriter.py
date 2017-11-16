@@ -37,9 +37,21 @@ class FileWriter(QThread):
 
         if arguments.Args.log:
 
-            filename = 'dash_log_'+str(dt.now().year)+'_'+str(dt.now().month)+'_'+str(dt.now().day)+'_'+str(dt.now().hour)+'_'+str(dt.now().minute)+'.csv'
+            vbox_path = '/home/vbox/logs/'
+            pi_path = '/home/pi/logs/'
+            '''
+            if pi_path.exists():
+                path = pi_path
+            elif vbox_path.exists():
+                path = vbox_path
+            print (path)
+            '''
+            path = pi_path
             
-            csvWriter = open('/home/vbox/logs/'+ filename, 'w')
+            filename = 'dash_log_'+str(dt.now().year)+'_'+str(dt.now().month)+'_'+str(dt.now().day)+'_'+str(dt.now().hour)+'_'+str(dt.now().minute)+'.csv'
+
+            
+            csvWriter = open(path + filename, 'w')
             writer = csv.writer(csvWriter, lineterminator='\n')
 
             self.startTime = time.time()

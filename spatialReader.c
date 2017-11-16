@@ -1,4 +1,4 @@
-//g++ spatialReader.c -o spatialReader -lboost_system spatial/an_packet_protocol.c spatial/spatial_packets.c
+//g++ spatialReader.c -o spatialReader -lpthread -lboost_system spatial/an_packet_protocol.c spatial/spatial_packets.c
 
 //executable must be called spatialReader so gpsReader.py can call it
 #include <boost/asio/serial_port.hpp>
