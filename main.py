@@ -9,11 +9,13 @@ from canReader import CanReader
 from gpsReader import GpsReader
 from debug import Debug
 from args import Arg_Class
+from fileWriter import FileWriter
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     arguments = Arg_Class()
     dash = Dash()
+    print("Dash thread started:", app.instance().thread())
     if arguments.Args.fullscreen:
         dash.showFullScreen()
     else:
@@ -30,7 +32,8 @@ if __name__ == '__main__':
         canWorker.cellTempUpdateValue.connect(dash.tempGauge.cellTemp_update)
         
         canWorker.errorSignal.connect(dash.error_update)
-        if arguments.Args.log == True:
+        #if arguments.Args.log == True:
+        if 0:
             canWorker.rpmUpdateValue.connect(dash.fileWriter.rpm_write)
             canWorker.socUpdateValue.connect(dash.fileWriter.soc_write)
             canWorker.mcTempUpdateValue.connect(dash.fileWriter.mcTemp_write)
@@ -47,7 +50,8 @@ if __name__ == '__main__':
         gpsWorker.pitchValue.connect(dash.debugGps.gpsGauge.pitch_update)
         gpsWorker.gForceValue.connect(dash.debugGps.gpsGauge.gForce_update)
         
-        if arguments.Args.log == True:                        
+        #if arguments.Args.log == True:
+        if 0:
             gpsWorker.latValue.connect(dash.fileWriter.lat_write)
             gpsWorker.longValue.connect(dash.fileWriter.long_write)
             gpsWorker.rollValue.connect(dash.fileWriter.roll_write)
@@ -55,8 +59,23 @@ if __name__ == '__main__':
             gpsWorker.gForceValue.connect(dash.fileWriter.gForce_write)
             gpsWorker.bodyAccelValue.connect(dash.fileWriter.bodyAccel_write)
             gpsWorker.velValue.connect(dash.fileWriter.vel_write)
+    if arguments.Args.log:
+        fileWriter = FileWriter()
+        fileWriter.start()
+        canWorker.rpmUpdateValue.connect(fileWriter.rpm_write)
+        canWorker.socUpdateValue.connect(fileWriter.soc_write)
+        canWorker.mcTempUpdateValue.connect(fileWriter.mcTemp_write)
+        canWorker.motorTempUpdateValue.connect(fileWriter.motorTemp_write)
+        canWorker.cellTempUpdateValue.connect(fileWriter.cellTemp_write)
+        gpsWorker.latValue.connect(fileWriter.lat_write)
+        gpsWorker.longValue.connect(fileWriter.long_write)
+        gpsWorker.rollValue.connect(fileWriter.roll_write)
+        gpsWorker.pitchValue.connect(fileWriter.pitch_write)
+        gpsWorker.gForceValue.connect(fileWriter.gForce_write)
+        gpsWorker.bodyAccelValue.connect(fileWriter.bodyAccel_write)
+        gpsWorker.velValue.connect(fileWriter.vel_write)
+
         
-    print("dash thread:", app.instance().thread())
     app.processEvents()
     sys.exit(app.exec_())
                                                                 

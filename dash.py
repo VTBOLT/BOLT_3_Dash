@@ -99,7 +99,7 @@ class Dash(QMainWindow):
             self.debugGps.show()
 
         #if self.arguments.Args.log:
-        self.fileWriter = FileWriter(self)
+        #self.fileWriter = FileWriter(self)
         
     @pyqtSlot()
     def error_update(self):
