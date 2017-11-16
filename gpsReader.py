@@ -1,6 +1,7 @@
 import sys
 import time
 import subprocess
+from pathlib import Path
 from PyQt5.QtCore import QThread, pyqtSlot, pyqtSignal
 from args import Arg_Class
 
@@ -57,9 +58,15 @@ class GpsReader(QThread):
             #subprocess reads from that
             #should use boost or embedding and exending
 
-            #cmd = './spatialReader'
+            #cmd = './spatialReader'        
             cmd = '/home/pi/BOLT_3_Dash/spatialReader'
-            #MESSAGE_LENGTH = 100
+            if not Path(cmd).exists():
+                #if Path('./spatialReader').exists():
+                cmd = './spatialReader'
+            #    else:
+            #        exit(0)
+            #else:
+            #    exit(0)
             
             #need to add error checking to make sure the executable exitsts
             p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)

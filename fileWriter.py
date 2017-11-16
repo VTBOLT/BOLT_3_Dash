@@ -2,6 +2,7 @@ import sys
 import time
 import csv
 from datetime import datetime as dt
+from pathlib import Path
 import subprocess
 from PyQt5.QtCore import QThread, pyqtSlot, pyqtSignal
 from args import Arg_Class
@@ -39,14 +40,11 @@ class FileWriter(QThread):
 
             vbox_path = '/home/vbox/logs/'
             pi_path = '/home/pi/logs/'
-            '''
-            if pi_path.exists():
+            
+            if Path(pi_path).exists():
                 path = pi_path
-            elif vbox_path.exists():
+            elif Path(vbox_path).exists():
                 path = vbox_path
-            print (path)
-            '''
-            path = pi_path
             
             filename = 'dash_log_'+str(dt.now().year)+'_'+str(dt.now().month)+'_'+str(dt.now().day)+'_'+str(dt.now().hour)+'_'+str(dt.now().minute)+'.csv'
 
@@ -68,9 +66,7 @@ class FileWriter(QThread):
                     pastTime = currentTime
 
                     writer.writerow([currentTime, self.rpm, self.soc, self.mcTemp, self.motorTemp, self.highMotorTemp, self.cellTemp, self.latitude, self.longitude, self.roll, self.pitch, self.gForce, self.bodyAccelx, self.bodyAccely, self.bodyAccelz, self.velx, self.vely, self.velz])
-                
-                
-                
+                                              
         self.exec()
                                                                                     
     @pyqtSlot(float)

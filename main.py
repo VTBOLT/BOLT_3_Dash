@@ -62,19 +62,20 @@ if __name__ == '__main__':
     if arguments.Args.log:
         fileWriter = FileWriter()
         fileWriter.start()
-        canWorker.rpmUpdateValue.connect(fileWriter.rpm_write)
-        canWorker.socUpdateValue.connect(fileWriter.soc_write)
-        canWorker.mcTempUpdateValue.connect(fileWriter.mcTemp_write)
-        canWorker.motorTempUpdateValue.connect(fileWriter.motorTemp_write)
-        canWorker.cellTempUpdateValue.connect(fileWriter.cellTemp_write)
-        gpsWorker.latValue.connect(fileWriter.lat_write)
-        gpsWorker.longValue.connect(fileWriter.long_write)
-        gpsWorker.rollValue.connect(fileWriter.roll_write)
-        gpsWorker.pitchValue.connect(fileWriter.pitch_write)
-        gpsWorker.gForceValue.connect(fileWriter.gForce_write)
-        gpsWorker.bodyAccelValue.connect(fileWriter.bodyAccel_write)
-        gpsWorker.velValue.connect(fileWriter.vel_write)
-
+        if arguments.Args.canoff == True:
+            canWorker.rpmUpdateValue.connect(fileWriter.rpm_write)
+            canWorker.socUpdateValue.connect(fileWriter.soc_write)
+            canWorker.mcTempUpdateValue.connect(fileWriter.mcTemp_write)
+            canWorker.motorTempUpdateValue.connect(fileWriter.motorTemp_write)
+            canWorker.cellTempUpdateValue.connect(fileWriter.cellTemp_write)
+        if arguments.Args.gpsoff == True:
+            gpsWorker.latValue.connect(fileWriter.lat_write)
+            gpsWorker.longValue.connect(fileWriter.long_write)
+            gpsWorker.rollValue.connect(fileWriter.roll_write)
+            gpsWorker.pitchValue.connect(fileWriter.pitch_write)
+            gpsWorker.gForceValue.connect(fileWriter.gForce_write)
+            gpsWorker.bodyAccelValue.connect(fileWriter.bodyAccel_write)
+            gpsWorker.velValue.connect(fileWriter.vel_write)
         
     app.processEvents()
     sys.exit(app.exec_())
