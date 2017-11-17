@@ -111,7 +111,7 @@ void CanReader::run()
 		      break;
 		      */
                     default:		
-		      std::cout << "defualt condition, can_id:" << frame_rd.can_id << std::endl;
+		      //std::cout << "defualt condition, can_id:" << frame_rd.can_id << std::endl;
 		      break;
                     }
                 }

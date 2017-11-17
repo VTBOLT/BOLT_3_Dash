@@ -53,16 +53,18 @@ class FileWriter(QThread):
             writer = csv.writer(csvWriter, lineterminator='\n')
             
             self.startTime = time.time()
-            pastTime = 0.0
-            currentTime = 0.0
+            pastTime = 0
+            currentTime = 0
 
             ## Header
             writer.writerow(['currentTime', 'rpm', 'soc', 'mcTemp', 'motorTemp', 'highMotorTemp', 'cellTemp', 'latitude', 'longitude', 'roll', 'pitch', 'gForce', 'bodyAccelx', 'bodyAccely', 'bodyAccelz', 'velx', 'vely', 'velz'])
             
             while True:                
-                currentTime = "{0:.2f}".format(float(time.time())-self.startTime)
+                #currentTime = "{0:.2f}".format(float(time.time())-self.startTime)
+                currentTime = int(time.time())
                 if currentTime != pastTime:
-                    currentTime = "{0:.2f}".format(float(time.time())-self.startTime)
+                    #currentTime = "{0:.2f}".format(float(time.time())-self.startTime)
+                    currentTime = int(time.time())
                     pastTime = currentTime
 
                     writer.writerow([currentTime, self.rpm, self.soc, self.mcTemp, self.motorTemp, self.highMotorTemp, self.cellTemp, self.latitude, self.longitude, self.roll, self.pitch, self.gForce, self.bodyAccelx, self.bodyAccely, self.bodyAccelz, self.velx, self.vely, self.velz])

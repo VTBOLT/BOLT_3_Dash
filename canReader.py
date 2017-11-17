@@ -72,8 +72,8 @@ class CanReader(QThread):
                     elif buf.split(":")[0] == 'highCellTemp':
                         cellTemp = buf.split(':')[1]
                         self.cellTempUpdateValue.emit(float(cellTemp))
-                    else:
-                        print("ERROR: Parsing missed:", buf)
+                    #else:
+                        #print("ERROR: Parsing missed:", buf)
                     buf = ""
         
 
