@@ -29,6 +29,7 @@ if __name__ == '__main__':
 
         canWorker.mcTempUpdateValue.connect(dash.tempGauge.mcTemp_update)
         canWorker.motorTempUpdateValue.connect(dash.tempGauge.motorTemp_update)
+        canWorker.highMotorTempUpdateValue.connect(dash.tempGauge.motorTemp_update)
         canWorker.cellTempUpdateValue.connect(dash.tempGauge.cellTemp_update)
         
         canWorker.errorSignal.connect(dash.error_update)
@@ -38,6 +39,7 @@ if __name__ == '__main__':
             canWorker.socUpdateValue.connect(dash.fileWriter.soc_write)
             canWorker.mcTempUpdateValue.connect(dash.fileWriter.mcTemp_write)
             canWorker.motorTempUpdateValue.connect(dash.fileWriter.motorTemp_write)
+            canWorker.highMotorTempUpdateValue.connect(dash.fileWriter.motorTemp_write)
             canWorker.cellTempUpdateValue.connect(dash.fileWriter.cellTemp_write)
             
     if arguments.Args.gpsoff == True:
