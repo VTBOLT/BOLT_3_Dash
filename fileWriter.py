@@ -37,7 +37,7 @@ class FileWriter(QThread):
         self.velz = 0.0
 
         if arguments.Args.log:
-
+            
             vbox_path = '/home/vbox/logs/'
             pi_path = '/home/pi/logs/'
             
@@ -50,25 +50,39 @@ class FileWriter(QThread):
 
             
             csvWriter = open(path + filename, 'w')
-            writer = csv.writer(csvWriter, lineterminator='\n')
+            #writer = csv.writer(csvWriter, lineterminator='\n')
             
             self.startTime = time.time()
             pastTime = 0
             currentTime = 0
 
-            ## Header
-            writer.writerow(['currentTime', 'rpm', 'soc', 'mcTemp', 'motorTemp', 'highMotorTemp', 'cellTemp', 'latitude', 'longitude', 'roll', 'pitch', 'gForce', 'bodyAccelx', 'bodyAccely', 'bodyAccelz', 'velx', 'vely', 'velz'])
+            count = 0
+            #temp = []
+            temp = ""
             
-            while True:                
-                #currentTime = "{0:.2f}".format(float(time.time())-self.startTime)
-                currentTime = int(time.time())
+            ## Header
+            #writer.writerow(['currentTime', 'rpm', 'soc', 'mcTemp', 'motorTemp', 'highMotorTemp', 'cellTemp', 'latitude', 'longitude', 'roll', 'pitch', 'gForce', 'bodyAccelx', 'bodyAccely', 'bodyAccelz', 'velx', 'vely', 'velz'])
+            
+            while True:
+                startTimer = time.time()
+                currentTime = "{0:.2f}".format(float(time.time())-self.startTime)
+                #currentTime = float(time.time()-self.startTime)
+                #print (currentTime, "{0:.2f}".format(float(time.time())))
                 if currentTime != pastTime:
-                    #currentTime = "{0:.2f}".format(float(time.time())-self.startTime)
-                    currentTime = int(time.time())
+                    currentTime = "{0:.2f}".format(float(time.time())-self.startTime)
+                    #currentTime = float(time.time()-self.startTime)
                     pastTime = currentTime
-
-                    writer.writerow([currentTime, self.rpm, self.soc, self.mcTemp, self.motorTemp, self.highMotorTemp, self.cellTemp, self.latitude, self.longitude, self.roll, self.pitch, self.gForce, self.bodyAccelx, self.bodyAccely, self.bodyAccelz, self.velx, self.vely, self.velz])
-                                              
+                    if count < 10:
+                        #temp.append(str(currentTime)+','+str(self.rpm)+','+str(self.soc)+','+str(self.mcTemp)+','+str(self.motorTemp)+','+str(self.highMotorTemp)+','+str(self.cellTemp)+','+str(self.latitude)+','+str(self.longitude)+','+str(self.roll)+','+str(self.pitch)+','+str(self.gForce)+','+str(self.bodyAccelx)+','+str(self.bodyAccely)+','+str(self.bodyAccelz)+'.'+str(self.velx)+','+str(self.vely)+','+str(self.velz)+'\n')
+                        temp = temp + str(currentTime)+','+str(self.rpm)+','+str(self.soc)+','+str(self.mcTemp)+','+str(self.motorTemp)+','+str(self.highMotorTemp)+','+str(self.cellTemp)+','+str(self.latitude)+','+str(self.longitude)+','+str(self.roll)+','+str(self.pitch)+','+str(self.gForce)+','+str(self.bodyAccelx)+','+str(self.bodyAccely)+','+str(self.bodyAccelz)+'.'+str(self.velx)+','+str(self.vely)+','+str(self.velz)+'\n'
+                        count=count+1
+                    else:
+                        csvWriter.write(temp)
+                        count = 0
+                        temp = ""
+                    #writer.writerow([currentTime, self.rpm, self.soc, self.mcTemp, self.motorTemp, self.highMotorTemp, self.cellTemp, self.latitude, self.longitude, self.roll, self.pitch, self.gForce, self.bodyAccelx, self.bodyAccely, self.bodyAccelz, self.velx, self.vely, self.velz])
+                time.sleep(.5)
+                #print(time.time()-startTimer) #timer
         self.exec()
                                                                                     
     @pyqtSlot(int)

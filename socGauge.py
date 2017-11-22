@@ -18,7 +18,7 @@ class Soc(QWidget):
         self.socLCD.display(str(int(self.socValue)).zfill(4)+'.'+str((self.socValue - int(self.socValue))*10).zfill(4))
         self.socLCD.setFrameShape(QFrame.NoFrame)
         self.socLCD.setSegmentStyle(QLCDNumber.Flat)
-        self.socLCD.move(150,10)
+        self.socLCD.move(170,10)
         self.socLCD.resize(160,120)
         #self.socLCD.hide()
         

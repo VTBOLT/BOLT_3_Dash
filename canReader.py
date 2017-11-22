@@ -81,15 +81,14 @@ class CanReader(QThread):
                             #print("ERROR: Parsing missed:", buf)
                         buf = ""
             else:
-                while True:
-                      
-                sudo modprobe can
-                # Create a can network interface with a specific name
-                sudo ip link add dev can0 type can
-                sudo ip link set can0 up
-                sudo ip link set can0 up type can bitrate 500000000 #5k bitrate
-                #sudo ifconfig can0 txqueuelen 100
-
+                '''
+                while True:                      
+                    sudo modprobe can
+                    # Create a can network interface with a specific name
+                    sudo ip link add dev can0 type can
+                    sudo ip link set can0 up
+                    sudo ip link set can0 up type can bitrate 500000000 #5k bitrate
+                    #sudo ifconfig can0 txqueuelen 100                    
                 import can
                 can_interface = 'can0'
                 bus = can.interface.Bus(can_interface, bustype='socketcan_native')
@@ -116,6 +115,6 @@ class CanReader(QThread):
 
                         elif message is idFilterList["cellTemp"]: #highCellTemp
                             self.tempUpdateValue.emit()
-            
+            '''
         self.exec()
                                                                                     
