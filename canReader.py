@@ -47,10 +47,10 @@ class CanReader(QThread):
         else:
             C = True
             if C == True:
-                #os.system('sudo ifconfig can0 down')
-                #os.system('sudo ip link set can0 up type can bitrate 500000000')
-                #os.system('sudo ifconfig can0 txqueuelen 100')#sets buffer size
-                #os.system('sudo ifconfig can0 up')
+                os.system('sudo ifconfig can0 down')
+                os.system('sudo ip link set can0 up type can bitrate 500000000')
+                os.system('sudo ifconfig can0 txqueuelen 100')#sets buffer size
+                os.system('sudo ifconfig can0 up')
                 cmd = "/home/pi/BOLT_3_Dash/canInterface"
                 p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
                 buf = ""

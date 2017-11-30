@@ -1,6 +1,5 @@
 import sys
 import time
-import csv
 from datetime import datetime as dt
 from pathlib import Path
 import subprocess
@@ -48,32 +47,26 @@ class FileWriter(QThread):
             
             filename = 'dash_log_'+str(dt.now().year)+'_'+str(dt.now().month)+'_'+str(dt.now().day)+'_'+str(dt.now().hour)+'_'+str(dt.now().minute)+'.csv'
 
-            
+            #use traditional file writing, the python csv libary is slow
             csvWriter = open(path + filename, 'w')
-            #writer = csv.writer(csvWriter, lineterminator='\n')
             
             self.startTime = time.time()
             pastTime = 0
             currentTime = 0
 
             count = 0
-            #temp = []
             temp = ""
-            
-            ## Header
-            #writer.writerow(['currentTime', 'rpm', 'soc', 'mcTemp', 'motorTemp', 'highMotorTemp', 'cellTemp', 'latitude', 'longitude', 'roll', 'pitch', 'gForce', 'bodyAccelx', 'bodyAccely', 'bodyAccelz', 'velx', 'vely', 'velz'])
+
+            #creates a header
+            temp = 'currentTime, '+ 'rpm, '+ 'soc, '+ 'mcTemp, '+ 'motorTemp, '+ 'highMotorTemp, '+ 'cellTemp, '+ 'latitude, '+ 'longitude, '+'roll, '+ 'pitch, '+ 'gForce, '+ 'bodyAccelx, '+ 'bodyAccely, '+ 'bodyAccelz, '+ 'velx, '+ 'vely, '+ 'velz, '
             
             while True:
                 startTimer = time.time()
                 currentTime = "{0:.2f}".format(float(time.time())-self.startTime)
-                #currentTime = float(time.time()-self.startTime)
-                #print (currentTime, "{0:.2f}".format(float(time.time())))
                 if currentTime != pastTime:
                     currentTime = "{0:.2f}".format(float(time.time())-self.startTime)
-                    #currentTime = float(time.time()-self.startTime)
                     pastTime = currentTime
-                    if count < 10:
-                        #temp.append(str(currentTime)+','+str(self.rpm)+','+str(self.soc)+','+str(self.mcTemp)+','+str(self.motorTemp)+','+str(self.highMotorTemp)+','+str(self.cellTemp)+','+str(self.latitude)+','+str(self.longitude)+','+str(self.roll)+','+str(self.pitch)+','+str(self.gForce)+','+str(self.bodyAccelx)+','+str(self.bodyAccely)+','+str(self.bodyAccelz)+'.'+str(self.velx)+','+str(self.vely)+','+str(self.velz)+'\n')
+                    if count < 20:#waits for a block of 20 data collections before writing to the file
                         temp = temp + str(currentTime)+','+str(self.rpm)+','+str(self.soc)+','+str(self.mcTemp)+','+str(self.motorTemp)+','+str(self.highMotorTemp)+','+str(self.cellTemp)+','+str(self.latitude)+','+str(self.longitude)+','+str(self.roll)+','+str(self.pitch)+','+str(self.gForce)+','+str(self.bodyAccelx)+','+str(self.bodyAccely)+','+str(self.bodyAccelz)+'.'+str(self.velx)+','+str(self.vely)+','+str(self.velz)+'\n'
                         count=count+1
                     else:
