@@ -4,18 +4,7 @@
 
 CanReader::CanReader()
 {
-  
-  //system("sudo ifconfig can0 down");
-  //system("sudo ip link set can0 up type can bitrate 500000");
-  //system("sudo ifconfig can0 txqueuelen 100");//sets the buffer size to 100
-  //try{
     openPort("can0");
-    //}
-    //catch(...){
-    // std::cout << "ERROR: NO CAN BUS FOUND" << std::endl;
-    //std::exit(0);
-    //abort = true;
-    //}
     abort = false;
 }
 
@@ -25,7 +14,6 @@ CanReader::~CanReader()
     abort = true;
 
     sleep(1000);
-    //system("sudo ip link set can0 down");
 }
 
 bool CanReader::init()
@@ -39,10 +27,8 @@ bool CanReader::init()
 
 void CanReader::run()
 {
-  //std::cout<< "run called" << std::endl;
   struct can_frame frame_rd;
   int recvbytes = 0;
-  //std::list<int> mtrCntrlTemps;
 
   int RPM             = 0;
   int SOC             = 0;
@@ -90,23 +76,26 @@ void CanReader::run()
     	      case 0x180:
               //BMS VOLTAGES
               //high low cell delta
+		break;
             case 0x181:
               //BMS Tempatures
               //possilby 1-3?? need to test
       	      highCellTemp = (int16_t)(( frame_rd.data[2] << 8 ) + ( frame_rd.data[1] )) * 0.1;
-              lowCellTemp = (int16_5)(( frame_rd.data[5] << 8 ) + (frame_rd.data[4] )) * 0.1;                      
+              //lowCellTemp = (int16_5)(( frame_rd.data[5] << 8 ) + (frame_rd.data[4] )) * 0.1;          
       	      std::cout << "highCellTemp:" << highCellTemp << std::endl;
               //std::cout << "lowCellTemp:" << lowCellTemp << std::endl;
       	      break;
-    	      case 0x182:
+    	    case 0x182:
               //BMS Isolations
+	      break;
             case 0x183:
               //BMS information
       	      SOC = (int16_t)(( frame_rd.data[5] << 8 ) + ( frame_rd.data[4] )) * 0.5;
       	      std::cout << "soc:" << SOC << std::endl;
-      	      break;
-    	      case 0x202:
-              //BMS Current Limits
+	      break;
+	    case 0xAB:
+	      std::cout << "ERROR" << std::endl;
+	      break;
             default:		
       	      //std::cout << "defualt condition, can_id:" << frame_rd.can_id << std::endl;
       	      break;
