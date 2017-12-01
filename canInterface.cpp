@@ -38,7 +38,19 @@ void CanReader::run()
   int moduleC         = 0;
   int gateDrvrBrd     = 0;
   int highCellTemp    = 0;
-  int error = 0;
+  int post_lo_fault = 0;
+  int post_hi_fault = 0;
+  int run_lo_fault = 0;
+  int run_hi_fault = 0;
+
+  int VSM_state       = 0; 
+  int inverter_state  = 0;
+  int relay_state     = 0;
+  int inverter_run_state = 0;
+  int inverter_cmd_state = 0;  
+  int inverter_enable_state = 0;
+  int direction_state = 0;
+  
   while(1)
   {
     if ( this->abort )
@@ -92,9 +104,25 @@ void CanReader::run()
       	      SOC = (int16_t)(( frame_rd.data[5] << 8 ) + ( frame_rd.data[4] )) * 0.5;
       	      std::cout << "soc:" << SOC << std::endl;
 	      break;
+	    case 0xAA:
+	      //Internal State of MC
+	      VSM_state = (int16_t)(( frame_rd.data[1] << 8 ) + ( frame_rd.data[0] ));
+	      inverter_state = (int16_t)(( frame_rd.data[2] ));
+	      relay_state = (int16_t)(( frame_rd.data[3] ));
+	      inverter_run_state = (int16_t)(( frame_rd.data[4] ));
+	      inverter_cmd_state = (int16_t)(( frame_rd.data[5] ));
+	      inverter_enable_state = (int16_t)(( frame_rd.data[6] ));
+	      direction_state = (int16_t)(( frame_rd.data[7] ));
+
+	      std::cout << "states:" << VSM_state << "_" << inverter_state << "_" << relay_state << "_" << inverter_run_state << "_" << inverter_cmd_state << "_" << inverter_enable_state << "_" << direction_state << std::endl;
+	      
 	    case 0xAB:
-	      error = (int16_t)(( frame_rd.data));
-	      std::cout << "ERROR" << error << std::endl;
+	      //MC Errors
+	      post_lo_fault = (int16_t)(( frame_rd.data[1] << 8 ) + ( frame_rd.data[0] ));
+	      post_hi_fault = (int16_t)(( frame_rd.data[3] << 8 ) + ( frame_rd.data[2] ));
+	      run_lo_fault = (int16_t)(( frame_rd.data[5] << 8 ) + ( frame_rd.data[4] ));
+	      run_hi_fault = (int16_t)(( frame_rd.data[7] << 8 ) + ( frame_rd.data[6] ));
+	      std::cout << post_lo_fault << "_" << post_hi_fault << "_" << run_lo_fault << "_" << run_hi_fault << std::endl;
 	      break;
             default:		
       	      //std::cout << "defualt condition, can_id:" << frame_rd.can_id << std::endl;

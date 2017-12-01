@@ -35,6 +35,8 @@ class FileWriter(QThread):
         self.vely = 0.0
         self.velz = 0.0
 
+        self.error = 0
+        
         if arguments.Args.log:
             
             vbox_path = '/home/vbox/logs/'
@@ -62,20 +64,18 @@ class FileWriter(QThread):
             
             while True:
                 startTimer = time.time()
-                currentTime = "{0:.2f}".format(float(time.time())-self.startTime)
-                if currentTime != pastTime:
-                    currentTime = "{0:.2f}".format(float(time.time())-self.startTime)
+                self.currentTime = "{0:.2f}".format(float(time.time())-self.startTime) #reduces precision of time and sets up time from start
+                if self.currentTime != pastTime:
+                    self.currentTime = "{0:.2f}".format(float(time.time())-self.startTime)
                     pastTime = currentTime
                     if count < 20:#waits for a block of 20 data collections before writing to the file
-                        temp = temp + str(currentTime)+','+str(self.rpm)+','+str(self.soc)+','+str(self.mcTemp)+','+str(self.motorTemp)+','+str(self.highMotorTemp)+','+str(self.cellTemp)+','+str(self.latitude)+','+str(self.longitude)+','+str(self.roll)+','+str(self.pitch)+','+str(self.gForce)+','+str(self.bodyAccelx)+','+str(self.bodyAccely)+','+str(self.bodyAccelz)+'.'+str(self.velx)+','+str(self.vely)+','+str(self.velz)+'\n'
+                        temp = temp + str(self.currentTime)+','+str(self.rpm)+','+str(self.soc)+','+str(self.mcTemp)+','+str(self.motorTemp)+','+str(self.highMotorTemp)+','+str(self.cellTemp)+','+str(self.latitude)+','+str(self.longitude)+','+str(self.roll)+','+str(self.pitch)+','+str(self.gForce)+','+str(self.bodyAccelx)+','+str(self.bodyAccely)+','+str(self.bodyAccelz)+'.'+str(self.velx)+','+str(self.vely)+','+str(self.velz)+'\n'
                         count=count+1
                     else:
                         csvWriter.write(temp)
                         count = 0
                         temp = ""
-                    #writer.writerow([currentTime, self.rpm, self.soc, self.mcTemp, self.motorTemp, self.highMotorTemp, self.cellTemp, self.latitude, self.longitude, self.roll, self.pitch, self.gForce, self.bodyAccelx, self.bodyAccely, self.bodyAccelz, self.velx, self.vely, self.velz])
-                time.sleep(.5)
-                #print(time.time()-startTimer) #timer
+                time.sleep(.5)# slows down file writing to reduce lag
         self.exec()
                                                                                     
     @pyqtSlot(int)
@@ -134,3 +134,9 @@ class FileWriter(QThread):
         self.vely = y
         self.velz = z
         
+    @pyqtSlot(int)
+    def error_write(self, value):
+        self.error = value
+        temp = str(self.currentTime)+','+str(self.error)+'\n'
+        print("Error from CAN bus:", value)
+        csvWriter.write(temp)

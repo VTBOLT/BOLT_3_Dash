@@ -32,7 +32,7 @@ if __name__ == '__main__':
         canWorker.highMotorTempUpdateValue.connect(dash.tempGauge.motorTemp_update)
         canWorker.cellTempUpdateValue.connect(dash.tempGauge.cellTemp_update)
         
-        #canWorker.errorSignal.connect(dash.error_update)
+        canWorker.errorSignal.connect(dash.error_update)
 
     if arguments.Args.gpsoff == True:
         try:
@@ -56,6 +56,7 @@ if __name__ == '__main__':
             canWorker.mcTempUpdateValue.connect(fileWriter.mcTemp_write)
             canWorker.motorTempUpdateValue.connect(fileWriter.motorTemp_write)
             canWorker.cellTempUpdateValue.connect(fileWriter.cellTemp_write)
+            canWorker.errorSignal.connect(fileWriter.error_write)
         if arguments.Args.gpsoff == True:
             gpsWorker.latValue.connect(fileWriter.lat_write)
             gpsWorker.longValue.connect(fileWriter.long_write)
