@@ -38,7 +38,7 @@ void CanReader::run()
   int moduleC         = 0;
   int gateDrvrBrd     = 0;
   int highCellTemp    = 0;
-
+  int error = 0;
   while(1)
   {
     if ( this->abort )
@@ -79,9 +79,8 @@ void CanReader::run()
 		break;
             case 0x181:
               //BMS Tempatures
-              //possilby 1-3?? need to test
       	      highCellTemp = (int16_t)(( frame_rd.data[2] << 8 ) + ( frame_rd.data[1] )) * 0.1;
-              //lowCellTemp = (int16_5)(( frame_rd.data[5] << 8 ) + (frame_rd.data[4] )) * 0.1;          
+              //lowCellTemp = (int16_5)(( frame_rd.data[5] << 8 ) + (frame_rd.data[4] )) * 0.1;
       	      std::cout << "highCellTemp:" << highCellTemp << std::endl;
               //std::cout << "lowCellTemp:" << lowCellTemp << std::endl;
       	      break;
@@ -94,7 +93,8 @@ void CanReader::run()
       	      std::cout << "soc:" << SOC << std::endl;
 	      break;
 	    case 0xAB:
-	      std::cout << "ERROR" << std::endl;
+	      error = (int16_t)(( frame_rd.data));
+	      std::cout << "ERROR" << error << std::endl;
 	      break;
             default:		
       	      //std::cout << "defualt condition, can_id:" << frame_rd.can_id << std::endl;
