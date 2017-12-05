@@ -30,7 +30,6 @@ class Debug(QWidget):
         self.c1 = Channel(self, "Example:",0, 0, 5)
         self.c2 = Channel(self, "Example 2:", 100, 0, 6)
         
-
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.gray)
         p.setColor(self.foregroundRole(), Qt.blue)

@@ -69,7 +69,7 @@ class FileWriter(QThread):
                     self.currentTime = "{0:.2f}".format(float(time.time())-self.startTime)
                     pastTime = currentTime
                     if count < 20:#waits for a block of 20 data collections before writing to the file
-                        temp = temp + str(self.currentTime)+','+str(self.rpm)+','+str(self.soc)+','+str(self.mcTemp)+','+str(self.motorTemp)+','+str(self.highMotorTemp)+','+str(self.cellTemp)+','+str(self.latitude)+','+str(self.longitude)+','+str(self.roll)+','+str(self.pitch)+','+str(self.gForce)+','+str(self.bodyAccelx)+','+str(self.bodyAccely)+','+str(self.bodyAccelz)+'.'+str(self.velx)+','+str(self.vely)+','+str(self.velz)+'\n'
+                        temp = temp + str(self.currentTime)+','+str(self.rpm)+','+str(self.soc)+','+str(self.mcTemp)+','+str(self.motorTemp)+','+str(self.highMotorTemp)+','+str(self.cellTemp)+','+str(self.latitude)+','+str(self.longitude)+','+str(self.roll)+','+str(self.pitch)+','+str(self.gForce)+','+str(self.bodyAccelx)+','+str(self.bodyAccely)+','+str(self.bodyAccelz)+','+str(self.velx)+','+str(self.vely)+','+str(self.velz)+'\n'
                         count=count+1
                     else:
                         csvWriter.write(temp)
@@ -108,7 +108,7 @@ class FileWriter(QThread):
         
     @pyqtSlot(float)
     def long_write(self, value):
-        self.longititude = value
+        self.longitude = value
         
     @pyqtSlot(float)
     def roll_write(self, value):

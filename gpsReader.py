@@ -26,8 +26,8 @@ class GpsReader(QThread):
         current_min = 0
         current_sec = 0
         current_msec = 100
-        latitude = 1.0
-        longitude = 0.0
+        latitude = 37.0
+        longitude = 38.0
         roll = 0.0 # degrees
         if arguments.Args.dev:
             while True:
