@@ -122,7 +122,7 @@ void CanReader::run()
 	      post_hi_fault = (int16_t)(( frame_rd.data[3] << 8 ) + ( frame_rd.data[2] ));
 	      run_lo_fault = (int16_t)(( frame_rd.data[5] << 8 ) + ( frame_rd.data[4] ));
 	      run_hi_fault = (int16_t)(( frame_rd.data[7] << 8 ) + ( frame_rd.data[6] ));
-	      std::cout << post_lo_fault << "_" << post_hi_fault << "_" << run_lo_fault << "_" << run_hi_fault << std::endl;
+	      std::cout << "ERROR:" << post_lo_fault << "_" << post_hi_fault << "_" << run_lo_fault << "_" << run_hi_fault << std::endl;
 	      break;
             default:		
       	      //std::cout << "defualt condition, can_id:" << frame_rd.can_id << std::endl;

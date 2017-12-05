@@ -78,7 +78,7 @@ class GpsReader(QThread):
                 else:
                     if buf.split(':')[0] == 'lat':
                         latitude = buf.split(':')[1]
-                        self.latValue.emit(float(latitude))
+                        self.latValue.emit(float(latitude))                        
                     elif buf.split(':')[0] == 'long':
                         longitude = buf.split(':')[1]
                         self.longValue.emit(float(longitude))

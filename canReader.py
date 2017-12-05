@@ -78,6 +78,10 @@ class CanReader(QThread):
                             cellTemp = buf.split(':')[1]
                             self.cellTempUpdateValue.emit(float(cellTemp))
                         elif buf.split(':')[0] == 'ERROR':
+                            #post_lo_fault =
+                            #post_hi_fault =
+                            #run_lo_fault =
+                            #run_hi_fault = buf.split('
                             self.errorSignal.emit()
                         #else:
                             #print("ERROR: Parsing missed:", buf)

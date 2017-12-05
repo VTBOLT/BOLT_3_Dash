@@ -134,8 +134,9 @@ class FileWriter(QThread):
         self.vely = y
         self.velz = z
         
-    @pyqtSlot(int)
-    def error_write(self, value):
+    @pyqtSlot()
+    def error_write(self):
+        value = 0
         self.error = value
         temp = str(self.currentTime)+','+str(self.error)+'\n'
         print("Error from CAN bus:", value)

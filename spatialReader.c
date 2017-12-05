@@ -31,10 +31,11 @@ int main(){
   asio::io_service io;
   asio::serial_port port(io);
 
-  try{
-  port.open("/dev/ttyUSB0");
-  port.set_option(asio::serial_port_base::baud_rate(115200));
-  } catch(...) { // catches all exceptions and kills program
+  try {
+    port.open("/dev/ttyUSB0");
+    port.set_option(asio::serial_port_base::baud_rate(115200));
+  }
+  catch(...) { // catches all exceptions and kills program
     std::cout << "ERROR: NO GPS FOUND" << endl;
     exit(0);
   }
