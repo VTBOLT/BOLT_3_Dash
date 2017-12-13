@@ -114,7 +114,7 @@ void CanReader::run()
 	      inverter_enable_state = (int16_t)(( frame_rd.data[6] ));
 	      direction_state = (int16_t)(( frame_rd.data[7] ));
 
-	      std::cout << "states:" << VSM_state << "_" << inverter_state << "_" << relay_state << "_" << inverter_run_state << "_" << inverter_cmd_state << "_" << inverter_enable_state << "_" << direction_state << std::endl;
+	      std::cout << "states:" << VSM_state << ":" << inverter_state << ":" << relay_state << ":" << inverter_run_state << ":" << inverter_cmd_state << ":" << inverter_enable_state << ":" << direction_state << std::endl;
 	      
 	    case 0xAB:
 	      //MC Errors
@@ -122,10 +122,10 @@ void CanReader::run()
 	      post_hi_fault = (int16_t)(( frame_rd.data[3] << 8 ) + ( frame_rd.data[2] ));
 	      run_lo_fault = (int16_t)(( frame_rd.data[5] << 8 ) + ( frame_rd.data[4] ));
 	      run_hi_fault = (int16_t)(( frame_rd.data[7] << 8 ) + ( frame_rd.data[6] ));
-	      std::cout << "ERROR:" << post_lo_fault << "_" << post_hi_fault << "_" << run_lo_fault << "_" << run_hi_fault << std::endl;
+	      std::cout << "ERROR:" << post_lo_fault << ":" << post_hi_fault << ":" << run_lo_fault << ":" << run_hi_fault << std::endl;
 	      break;
             default:		
-      	      //std::cout << "defualt condition, can_id:" << frame_rd.can_id << std::endl;
+      	      std::cout << "defualt condition, can_id:" << frame_rd.can_id << std::endl;
       	      break;
           }
         }
