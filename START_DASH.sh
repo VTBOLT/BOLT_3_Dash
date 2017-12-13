@@ -10,5 +10,7 @@
 #python3 main.py -dev -fullscreen -log
 
 ### Testing mode displaying fake data
-#sudo killall python3 
-sudo python3 /home/pi/BOLT_3_Dash/main.py -dev -log > /home/pi/logs/dash_start_log_$(date "+%H_%M_%S").txt 2>&1
+#sudo killall python3
+
+sleep 4
+sudo python3 /home/pi/BOLT_3_Dash/main.py -dev -gpsoff -log> /home/pi/logs/dash_start_log_$(date "+%H_%M_%S").txt 2>&1

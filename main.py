@@ -33,7 +33,7 @@ if __name__ == '__main__':
         canWorker.cellTempUpdateValue.connect(dash.tempGauge.cellTemp_update)
         
         canWorker.errorSignal.connect(dash.error_update)
-
+        
     if arguments.Args.gpsoff == True:
         try:
             gpsWorker = GpsReader()

@@ -138,6 +138,8 @@ class FileWriter(QThread):
     def error_write(self):
         value = 0
         self.error = value
-        temp = str(self.currentTime)+','+str(self.error)+'\n'
+        temp = "ERROR, " + str(self.currentTime)+','+str(self.error)+'\n'
         print("Error from CAN bus:", value)
         csvWriter.write(temp)
+
+        

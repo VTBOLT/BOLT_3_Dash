@@ -1,7 +1,7 @@
 import os, sys
 import time
 import subprocess
-
+import can
 from PyQt5.QtCore import QThread, pyqtSlot, pyqtSignal
 
 from args import Arg_Class
@@ -86,19 +86,19 @@ class CanReader(QThread):
                         #else:
                             #print("ERROR: Parsing missed:", buf)
                         buf = ""
-            else:
-                '''
-                while True:                      
-                    sudo modprobe can
+            else:                
+                #while True:                      
+                    #sudo modprobe can
                     # Create a can network interface with a specific name
-                    sudo ip link add dev can0 type can
-                    sudo ip link set can0 up
-                    sudo ip link set can0 up type can bitrate 500000000 #5k bitrate
+                    #sudo ip link add dev can0 type can
+                    #sudo ip link set can0 up
+                    #sudo ip link set can0 up type can bitrate 500000000 #5k bitrate
                     #sudo ifconfig can0 txqueuelen 100                    
-                import can
-                can_interface = 'can0'
-                bus = can.interface.Bus(can_interface, bustype='socketcan_native')
 
+                can_interface = 'can0'
+                def producer(id):
+                    bus = can.interface.Bus(can_interface, bustype='socketcan_native')
+                producer(0x183)
                 idFilterList = [{'rpm': 0xA5, 'can_mask': 0x11},
                                 {'soc': 0x183, 'can_mask': 0x11}, 
                                 {'cellTemp': 0x181, 'can_mask': 0x11}]  #in order RPM, SOC, highcellTemp
@@ -121,6 +121,6 @@ class CanReader(QThread):
 
                         elif message is idFilterList["cellTemp"]: #highCellTemp
                             self.tempUpdateValue.emit()
-            '''
+            
         self.exec()
                                                                                     
