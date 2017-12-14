@@ -101,14 +101,14 @@ class Dash(QMainWindow):
         #if self.arguments.Args.log:
         #self.fileWriter = FileWriter(self)
         
-    @pyqtSlot()
-    def error_update(self):
+    @pyqtSlot(int, int, int, int)
+    def error_update(self, v1, v2, v3, v4):
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.red)
         p.setColor(self.foregroundRole(), Qt.black)
         self.setPalette(p)
         self.update()
-        print("ERROR")
+        print("ERROR:", v1, v2, v3, v4)
 
     @pyqtSlot()
     def temp_close(self):

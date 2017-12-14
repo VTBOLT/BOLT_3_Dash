@@ -47,10 +47,11 @@ class FileWriter(QThread):
             elif Path(vbox_path).exists():
                 path = vbox_path
             
-            filename = 'dash_log_'+str(dt.now().year)+'_'+str(dt.now().month)+'_'+str(dt.now().day)+'_'+str(dt.now().hour)+'_'+str(dt.now().minute)+'.csv'
+            filename_time = 'dash_log_'+str(dt.now().year)+'_'+str(dt.now().month)+'_'+str(dt.now().day)+'_'+str(dt.now().hour)+'_'+str(dt.now().minute)+'.csv'
 
+            self.filename = path+filename_time
             #use traditional file writing, the python csv libary is slow
-            csvWriter = open(path + filename, 'w')
+            csvWriter = open(self.filename, 'a')
             
             self.startTime = time.time()
             pastTime = 0
@@ -134,12 +135,12 @@ class FileWriter(QThread):
         self.vely = y
         self.velz = z
         
-    @pyqtSlot()
-    def error_write(self):
-        value = 0
-        self.error = value
-        temp = "ERROR, " + str(self.currentTime)+','+str(self.error)+'\n'
-        print("Error from CAN bus:", value)
-        csvWriter.write(temp)
+    @pyqtSlot(int, int, int, int)
+    def error_write(self, v1, v2, v3, v4):
+        self.error = v1
+        temp = "ERROR," + str(self.currentTime)+','+str(v1)+','+str(v2)+','+str(v3)+','+str(v4)+'\n'
+        print("Error from CAN bus:", v1, v2, v3, v4)
+        csvWriter_error = open(self.filename, 'a')
+        csvWriter_error.write(temp)
 
         

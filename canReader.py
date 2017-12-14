@@ -13,7 +13,7 @@ class CanReader(QThread):
     motorTempUpdateValue = pyqtSignal(float)
     highMotorTempUpdateValue = pyqtSignal(float)
     cellTempUpdateValue = pyqtSignal(float)
-    errorSignal = pyqtSignal()
+    errorSignal = pyqtSignal(int, int, int, int)
 
     highMotorTemp = 0
     
@@ -29,9 +29,9 @@ class CanReader(QThread):
             k = 98.0
             while True:
                 time.sleep(.1)
-                if i >= 8000:
+                if i >= 2000:
                     i = 0
-                    self.errorSignal.emit()
+                    self.errorSignal.emit(1,2,3,4)
                 if j <= 0:
                     j = 99.0
                 if k <= 0:
@@ -82,7 +82,7 @@ class CanReader(QThread):
                             post_hi_fault = buf.split(':')[2]
                             run_lo_fault = buf.split(':')[3]
                             run_hi_fault = buf.split(':')[4]
-                            self.errorSignal.emit()
+                            self.errorSignal.emit(post_lo_fault, post_hi_fault, run_lo_fault, run_hi_fault)
                         #else:
                             #print("ERROR: Parsing missed:", buf)
                         buf = ""
