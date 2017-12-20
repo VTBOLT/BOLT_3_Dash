@@ -34,9 +34,11 @@ canReader.py    fileWriter.py     main.py             tempGauge.py
 DEPENDENCIES
 ------------------
 pyqt5: graphics
-subprocess: communication between c and python
-socketCan: reading from can bus
-boost: reading from spatial gps
+subprocess: communication between c and python.
+socketCan: reading from can bus.
+boost: reading from spatial gps.
+/can: files to support reading from a CAN bus
+/spatial: files to support reading spatial GPS packets
 
 ------------------------
 Description of each file
