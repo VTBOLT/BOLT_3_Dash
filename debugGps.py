@@ -1,3 +1,14 @@
+############################################################################################################
+## Description: displays debug gps values for testing in a seperate window
+## Values displayed: defined in gpsGauge.py
+## Written for: BOLT Senior Design Team
+## Author: Henry Trease
+## Written: Fall 2017
+## Modified: Fall 2017
+## Notes: 
+## TODO: combine with gpsGauge.py
+############################################################################################################
+
 import sys
 from PyQt5.QtWidgets import QWidget, QPushButton, QLCDNumber, QLabel, QAction, QFrame, QApplication, QPushButton
 from PyQt5.QtGui import QIcon, QPainter, QColor, QPen

@@ -1,16 +1,18 @@
 #!/bin/sh
-# compiles gps and can code
 
+#################################################################################
+## Description: shell script to run the dashboard and log startup/ runtime errors
+## Written for: BOLT Senior Design Team
+## Author: Henry Trease
+## Written: Fall 2017
+## Notes:
+#################################################################################
+
+##compiles GPS and CAN code
 #g++ spatialReader.c -o spatialReader -lboost_system spatial/an_packet_protocol.c spatial/spatial_packets.c
-
 #g++ canInterface.cpp -o canInterface can/canrecieve.cpp
 
-## Runs dash
-### Race mode with logging, can and gps enabled
-#python3 main.py -dev -fullscreen -log
+sleep 4 ## sleep is necessary to run on startup
 
-### Testing mode displaying fake data
-#sudo killall python3
-
-sleep 4
+## creates a log file with a unique filename everytime it is run
 sudo python3 /home/pi/BOLT_3_Dash/main.py -dev -gpsoff -log> /home/pi/logs/dash_start_log_$(date "+%H_%M_%S").txt 2>&1

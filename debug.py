@@ -1,3 +1,13 @@
+############################################################################################################
+## Description: Displays debug values for testing in a seperate window
+## Values displayed: channels which can display any value based on parameters passed in
+## Written for: BOLT Senior Design Team
+## Author: Henry Trease
+## Written: Fall 2017
+## Modified: Fall 2017
+## Notes:
+############################################################################################################
+
 import sys
 from PyQt5.QtWidgets import QWidget, QPushButton, QLCDNumber, QLabel, QAction, QFrame, QApplication, QPushButton
 from PyQt5.QtGui import QIcon, QPainter, QColor, QPen
@@ -45,6 +55,7 @@ class Debug(QWidget):
     def debug_close(self):
         self.close()
 
+# channel to limit code duplication 
 class Channel(QWidget):
     def __init__(self, parent, name, x, y, value):
         super(Channel, self).__init__(parent)
@@ -67,7 +78,7 @@ class Channel(QWidget):
         self.update()
 
 
-#channel to display x,y,z data points
+# channel to display x,y,z data points
 class Channel3(QWidget):
     def __init__(self, parent, name, x, y, value):
         super(Channel3, self).__init__(parent)

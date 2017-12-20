@@ -1,3 +1,13 @@
+##############################################################################################
+## Description: displays tempature values
+## Values displayed: Motor controller, motor, highest motor temp, and highest cell tempatures
+## Units: Celsius
+## Written for: BOLT Senior Design Team
+## Author: Henry Trease
+## Written: Fall 2017
+## Modified: Fall 2017
+##############################################################################################
+
 import sys
 from PyQt5.QtWidgets import QWidget, QPushButton, QLCDNumber, QLabel, QAction, QFrame
 from PyQt5.QtGui import QIcon, QPainter, QColor, QPen

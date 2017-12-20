@@ -1,4 +1,14 @@
+#############################################################################
+## Description: Sets up a python library called argparse that handles command line arguments
+## Written for: BOLT Senior Design Team
+## Author: Matt Verghese
+## Written: Fall 2017
+## Last Upadated: Fall 2017
+## Notes: 
+#############################################################################
+
 import argparse
+
 class Arg_Class(object):
     def __init__(self):
         parser = argparse.ArgumentParser(description='arg parse lets go')

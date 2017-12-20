@@ -1,3 +1,13 @@
+###################################################################################################################
+## Description: Creates main window, places all gauges in main window, displays errors to rider, handles file menu options
+## Values displayed: rpmGuage, socGauge, tempGuage, lapTimePannel (currently removed) debug window, gpsDebug window
+## Written for: BOLT Senior Design Team
+## Author: Henry Trease
+## Written: Fall 2017
+## Modified: Fall 2017
+## Notes:
+####################################################################################################################
+
 import sys
 import time
 from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QFrame, QAction, QPushButton

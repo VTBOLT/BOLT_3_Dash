@@ -1,3 +1,13 @@
+############################################################################################################
+## Description: Logs data to a file
+## Written for: BOLT Senior Design Team
+## Author: Henry Trease
+## Written: Fall 2017
+## Modified: Fall 2017
+## Notes: Currently saves data in memory for 10 seconds then writes to file
+## TODO: Find faster way of writing to file and log more often
+##       Also write data to mongodb
+############################################################################################################
 import sys
 import time
 from datetime import datetime as dt

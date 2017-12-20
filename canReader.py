@@ -1,3 +1,12 @@
+############################################################################################################
+## Description: Reads CAN data from standard out which canInterface wrote to std out, sends to gauges
+## Written for: BOLT Senior Design Team
+## Author: Henry Trease
+## Written: Fall 2017
+## Modified: Fall 2017
+## Notes
+############################################################################################################
+
 import os, sys
 import time
 import subprocess

@@ -1,6 +1,16 @@
-//g++ spatialReader.c -o spatialReader -lpthread -lboost_system spatial/an_packet_protocol.c spatial/spatial_packets.c
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Reads in spatial packets over serial from the advanced nav gps unit
+// Written for: BOLT Senior Design Team
+// Author: Henry Trease
+// Example code provided by Advanced Nav
+// Written: Fall 2017
+// Modified: Fall 2017
+// Compile command: g++ spatialReader.c -o spatialReader -lpthread -lboost_system spatial/an_packet_protocol.c spatial/spatial_packets.c
+// Notes: executable must be called "spatialReader" so gpsReader.py can call it
+//		  requries boost libaray
+//		  requries Advanced Nav's provided files stored in a file called "spatial" in the same directory as spatialReader.c
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//executable must be called spatialReader so gpsReader.py can call it
 #include <boost/asio/serial_port.hpp>
 #include <boost/asio.hpp>
 #include <iostream>

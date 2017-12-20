@@ -1,3 +1,12 @@
+############################################################################################################
+## Description: displays rpm values
+## Values displayed: RPM, tachometer
+## Written for: BOLT Senior Design Team
+## Author: Henry Trease
+## Written: Fall 2017
+## Modified: Fall 2017
+############################################################################################################
+
 import sys
 from PyQt5.QtWidgets import QWidget, QPushButton, QLCDNumber, QLabel, QAction, QFrame
 from PyQt5.QtGui import QIcon, QPainter, QColor, QPen

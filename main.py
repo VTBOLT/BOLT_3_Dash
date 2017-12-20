@@ -1,4 +1,15 @@
 #!/usr/bin/env python
+
+############################################################################################################
+## Description: starts all threads, creates connections between signals and slots
+## Threads: dash, can, gps, and filewritter threads
+## Written for: BOLT Senior Design Team
+## Author: Henry Trease
+## Written: Fall 2017
+## Modified: Fall 2017
+## Notes:
+############################################################################################################
+
 import sys
 
 from PyQt5.QtWidgets import QApplication

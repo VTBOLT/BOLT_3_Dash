@@ -1,3 +1,13 @@
+############################################################################################################
+## Description: Reads GPS information written to standard out by spatialReader.c, sends to gpsGauge.py
+## Written for: BOLT Senior Design Team
+## Author: Henry Trease
+## Written: Fall 2017
+## Modified: Fall 2017
+## Notes: 
+## TODO: needs error checking if spatialReader executable does not exist
+############################################################################################################
+
 import sys
 import time
 import subprocess
