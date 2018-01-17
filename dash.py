@@ -51,7 +51,7 @@ class Dash(QMainWindow):
 
         self.setPalette(p)
 
-        self.rpmGauge = Rpm(self)
+        self.rpmGauge = Rpm(self, DASH_WIDTH,RPM_HEIGHT)
         self.rpmGauge.move(0,0)
         self.rpmGauge.resize(DASH_WIDTH,RPM_HEIGHT)
 

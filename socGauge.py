@@ -48,8 +48,10 @@ class Soc(QWidget):
         qp = QPainter(self)
         qp.setPen(Qt.white)
         if self.arguments.Args.demo:
-            qp.drawRect(60,110, 60, 20)
-            qp.drawRect(57,117, 2, 5)
+            #qp.drawRect(60,110, 60, 20)
+            #qp.drawRect(57,117, 2, 5)
+            qp.drawRect(60,40, 150, 60)
+            qp.drawRect(53,60, 7, 20)
         else:
             qp.drawRect(60,40, 150, 60)
             qp.drawRect(53,60, 7, 20)
@@ -59,7 +61,8 @@ class Soc(QWidget):
         else:
             qp.setBrush(Qt.green)
         if self.arguments.Args.demo:
-            qp.drawRect(60+(60*(1-(self.socValue/100))), 110, ((60*self.socValue/100)),20)
+            #qp.drawRect(60+(60*(1-(self.socValue/100))), 110, ((60*self.socValue/100)),20)
+            qp.drawRect(60+(150*(1-(self.socValue/100))), 40, ((150*self.socValue/100)),60)
         else:
             qp.drawRect(60+(150*(1-(self.socValue/100))), 40, ((150*self.socValue/100)),60)
             

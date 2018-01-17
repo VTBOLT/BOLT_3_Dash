@@ -5,7 +5,7 @@
 ## Author: Henry Trease
 ## Written: Fall 2017
 ## Modified: Winter 2017
-## TODO: add white box around tachometer, add flag for antialiasing
+## TODO: add white box around tachometer, add flag for antialiasing, add lowpass filter on rpm
 ############################################################################################################
 
 import sys
@@ -16,9 +16,8 @@ from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, Qt, QRect
 from args import Arg_Class
 
 class Rpm(QWidget):
-    def __init__(self, parent):
+    def __init__(self, parent, x, y):
         super(Rpm, self).__init__(parent)
-
         self.arguments = Arg_Class()
         
         self.rpmValue = 0
@@ -32,12 +31,8 @@ class Rpm(QWidget):
         
         self.rpmLabel = QLabel(self)
         self.rpmLabel.setText("rpm (x1000): ")
-        self.rpmLabel.move(3100,130)
-        self.rpmLabel.hide()
-
+        self.rpmLabel.move(280,160)
         self.rpmLabel.show()
-        if self.arguments.Args.demo:
-            self.rpmLabel.show()
 
     @pyqtSlot(int)
     def rpm_update(self, value):
@@ -60,9 +55,9 @@ class Rpm(QWidget):
         MAX_RPM = 8500
         ARC_TO_TOTAL_RATIO = 2
         ARC_WIDTH = 500
-        ARC_HEIGHT = 150
+        ARC_HEIGHT = 200
         ARC_HPOS = 150
-        ARC_VPOS = 160
+        ARC_VPOS = 120
         BRUSH_WIDTH = ARC_WIDTH*.1
         GRADIENT_ANGLE = 0.0
 
@@ -91,7 +86,7 @@ class Rpm(QWidget):
             rectLength = 0
 
         gradArc = QConicalGradient(ARC_HPOS+50, ARC_VPOS+50, 0)
-        if self.rpmValue > 6500:
+        if self.rpmValue > 7000:
             gradArc.setColorAt(0, QColor(redValue,greenValue,blueValue))
             gradArc.setColorAt(1, QColor(255,255,255))
         else:
