@@ -31,7 +31,7 @@ class Rpm(QWidget):
         
         self.rpmLabel = QLabel(self)
         self.rpmLabel.setText("rpm (x1000): ")
-        self.rpmLabel.move(280,160)
+        self.rpmLabel.move(320,170)
         self.rpmLabel.show()
 
     @pyqtSlot(int)

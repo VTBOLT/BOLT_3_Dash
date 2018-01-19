@@ -31,7 +31,7 @@ class CanReader(QThread):
         QThread.__init__(self)
     def run(self):
         self.arguments = Arg_Class()
-        if self.arguments.Args.dev:
+        if not self.arguments.Args.dev:
             print("can worker thread:", self.currentThread())
             i = 1000
             j = 98.0
@@ -54,7 +54,7 @@ class CanReader(QThread):
                 k = k+0.01
             self.processEvents()
         else:
-            C = True
+            C = True # Flag for which can do use, python or c++, defualts to c++
             if C == True:
                 os.system('sudo ifconfig can0 down')
                 os.system('sudo ip link set can0 up type can bitrate 500000000')

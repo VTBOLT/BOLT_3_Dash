@@ -33,7 +33,7 @@ class Soc(QWidget):
         
         self.socLabel = QLabel(self)
         self.socLabel.setText("soc: ")
-        self.socLabel.move(30,0)
+        self.socLabel.move(220,20)
         self.socLCD.show()
         self.socLabel.show()
         
