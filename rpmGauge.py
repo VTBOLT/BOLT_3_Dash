@@ -16,7 +16,7 @@ from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, Qt, QRect
 from args import Arg_Class
 
 class Rpm(QWidget):
-    def __init__(self, parent, x, y):
+    def __init__(self, parent):
         super(Rpm, self).__init__(parent)
         self.arguments = Arg_Class()
         
