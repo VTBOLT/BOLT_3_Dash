@@ -50,11 +50,9 @@ class CurrentLapTime(QWidget):
         self.currentLapTimeLCD.setDigitCount(9)
         self.currentLapTimeLCD.display(self.currentLapTimeValue)
         self.currentLapTimeLCD.move(0, 20)
-        if arguments.Args.demo:
-            self.currentLapTimeLCD.resize(170,40)
-        else:
-            self.currentLapTimeLCD.resize(270,140)
-            self.currentLapTimeLCD.move(0,0)
+
+        self.currentLapTimeLCD.resize(270,140)
+        
         self.currentLapTimeLCD.setFrameShape(QFrame.NoFrame)
         self.currentLapTimeLCD.setSegmentStyle(QLCDNumber.Flat)
         

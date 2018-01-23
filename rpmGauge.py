@@ -55,10 +55,10 @@ class Rpm(QWidget):
         MAX_RPM = 8500
         ARC_TO_TOTAL_RATIO = 2
         ARC_WIDTH = 500
-        ARC_HEIGHT = 200
+        ARC_HEIGHT = 250
         ARC_HPOS = 150
         ARC_VPOS = 120
-        BRUSH_WIDTH = ARC_WIDTH*.1
+        BRUSH_WIDTH = ARC_WIDTH*.11
         GRADIENT_ANGLE = 0.0
 
         #Gradient Color setup
