@@ -51,7 +51,7 @@ class Dash(QMainWindow):
 
         self.setPalette(p)
 
-        self.rpmGauge = Rpm(self, DASH_WIDTH,RPM_HEIGHT)
+        self.rpmGauge = Rpm(self)
         self.rpmGauge.move(0,0)
         self.rpmGauge.resize(DASH_WIDTH,RPM_HEIGHT)
 
@@ -118,7 +118,7 @@ class Dash(QMainWindow):
         p.setColor(self.foregroundRole(), Qt.black)
         self.setPalette(p)
         self.update()
-        print("ERROR:", v1, v2, v3, v4)
+        print("ERROR, Post Lo:", v1, "Post Hi:", v2, "Run Lo:", v3, "Run Hi:", v4)
 
     @pyqtSlot()
     def temp_close(self):

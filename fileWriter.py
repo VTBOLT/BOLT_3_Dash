@@ -149,7 +149,7 @@ class FileWriter(QThread):
     def error_write(self, v1, v2, v3, v4):
         self.error = v1
         temp = "ERROR," + str(self.currentTime)+','+str(v1)+','+str(v2)+','+str(v3)+','+str(v4)+'\n'
-        print("Error from CAN bus:", v1, v2, v3, v4)
+        #print("Error from CAN bus:", v1, v2, v3, v4)
         csvWriter_error = open(self.filename, 'a')
         csvWriter_error.write(temp)
 
