@@ -24,6 +24,7 @@ class Temp(QWidget):
         
         self.mcTempValue = 0
         self.motorTempValue = 0
+        self.highMotorTempValue = 0
         self.cellTempValue = 0
         
         self.mcTempGauge = QLCDNumber(self)
@@ -49,7 +50,7 @@ class Temp(QWidget):
         self.motorTemplabel.move(0,80)
 
         self.highMotorTempGauge = QLCDNumber(self)
-        self.highMotorTempGauge.display(str(self.motorTempValue).zfill(1))
+        self.highMotorTempGauge.display(str(self.highMotorTempValue).zfill(1))
         self.highMotorTempGauge.move(0,180)
         self.highMotorTempGauge.resize(100,100)
         self.highMotorTempGauge.setFrameShape(QFrame.NoFrame)

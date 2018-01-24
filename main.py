@@ -40,7 +40,7 @@ if __name__ == '__main__':
 
         canWorker.mcTempUpdateValue.connect(dash.tempGauge.mcTemp_update)
         canWorker.motorTempUpdateValue.connect(dash.tempGauge.motorTemp_update)
-        canWorker.highMotorTempUpdateValue.connect(dash.tempGauge.motorTemp_update)
+        canWorker.highMotorTempUpdateValue.connect(dash.tempGauge.highMotorTemp_update)
         canWorker.cellTempUpdateValue.connect(dash.tempGauge.cellTemp_update)
         
         canWorker.errorSignal.connect(dash.error_update)

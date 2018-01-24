@@ -36,6 +36,8 @@ class CanReader(QThread):
             i = 1000
             j = 98.0
             k = 98.0
+            m = 30.0
+            highM = 0.0
             while True:
                 time.sleep(.1)
                 if i >= 8500:
@@ -49,9 +51,16 @@ class CanReader(QThread):
                 time.sleep(.001)
                 self.socUpdateValue.emit(j)
                 self.mcTempUpdateValue.emit(k)
+                self.motorTempUpdateValue.emit(m)
                 i=i+100
                 j=j-0.1
                 k = k+0.01
+                m = m+1
+                if m > highM:
+                    highM = m
+                if m > 40:
+                    m = 10
+                self.highMotorTempUpdateValue.emit(highM)
             self.processEvents()
         else:
             C = True # Flag for which can do use, python or c++, defualts to c++
