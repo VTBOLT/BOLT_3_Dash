@@ -66,6 +66,7 @@ if __name__ == '__main__':
             canWorker.socUpdateValue.connect(fileWriter.soc_write)
             canWorker.mcTempUpdateValue.connect(fileWriter.mcTemp_write)
             canWorker.motorTempUpdateValue.connect(fileWriter.motorTemp_write)
+            canWorker.highMotorTempUpdateValue.connect(fileWriter.highMotorTemp_write)
             canWorker.cellTempUpdateValue.connect(fileWriter.cellTemp_write)
             canWorker.errorSignal.connect(fileWriter.error_write)
         if arguments.Args.gpsoff == True:
