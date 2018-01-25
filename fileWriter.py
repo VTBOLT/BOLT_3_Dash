@@ -91,6 +91,8 @@ class FileWriter(QThread):
                                                                                     
     @pyqtSlot(int)
     def rpm_write(self, value):
+        if value < 0:
+            value = 0
         self.rpm = value        
             
     @pyqtSlot(float)
