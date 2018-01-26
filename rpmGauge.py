@@ -30,14 +30,17 @@ class Rpm(QWidget):
         self.rpmLCD.setSegmentStyle(QLCDNumber.Flat)
         
         self.rpmLabel = QLabel(self)
-        self.rpmLabel.setText("rpm (x1000): ")
+        self.rpmLabel.setText("rpm: ")
         self.rpmLabel.move(320,170)
         self.rpmLabel.show()
 
     @pyqtSlot(int)
     def rpm_update(self, value):
-        self.rpmLCD.display(str(10*int(value/10)).zfill(4))#displays rpm, reduces precision to imporve readablity 
-        self.rpmValue = value        
+        #self.rpmValue = value
+        self.rpmValue = (800 * self.rpmValue + (1024 - 800) * value) >> 10
+        if self.rpmValue < 0:
+            self.rpmValue = 0
+        self.rpmLCD.display(str(10*int(self.rpmValue/10)).zfill(4))#displays rpm, reduces precision to imporve readablity 
         self.update()
 
             

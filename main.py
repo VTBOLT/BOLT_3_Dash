@@ -13,7 +13,6 @@
 import sys
 
 from PyQt5.QtWidgets import QApplication
-
 from dash import Dash
 from canReader import CanReader
 from gpsReader import GpsReader
