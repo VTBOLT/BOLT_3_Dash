@@ -51,11 +51,14 @@ class FileWriter(QThread):
             
             vbox_path = '/home/vbox/logs/'
             pi_path = '/home/pi/logs/'
+            alex_path = '/home/alex/pi/logs/'
             
             if Path(pi_path).exists():
                 path = pi_path
             elif Path(vbox_path).exists():
                 path = vbox_path
+            elif Path(alex_path).exists():
+                path = alex_path
             
             filename_time = 'dash_log_'+str(dt.now().year)+'_'+str(dt.now().month)+'_'+str(dt.now().day)+'_'+str(dt.now().hour)+'_'+str(dt.now().minute)+'.csv'
 
