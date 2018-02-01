@@ -44,7 +44,7 @@ class Debug(QWidget):
 
         self.c5 = Channel(self, "High Cell Temp",0,100,0)
         self.c6 = Channel(self, "Low Cell Temp",100,100,0)
-        self.c7 = Channel(self, "High Motor Temp",0,200,0)
+        self.c7 = Channel(self, "High Motor Temp",450,20,0)
                
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.gray)
