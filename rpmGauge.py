@@ -24,14 +24,14 @@ class Rpm(QWidget):
         
         self.rpmLCD = QLCDNumber(self)
         self.rpmLCD.display(str(10*int(self.rpmValue/10)).zfill(4))
-        self.rpmLCD.move(250,150)
+        self.rpmLCD.move(250,100)
         self.rpmLCD.resize(300,200)
         self.rpmLCD.setFrameStyle(QFrame.NoFrame)
         self.rpmLCD.setSegmentStyle(QLCDNumber.Flat)
         
         self.rpmLabel = QLabel(self)
         self.rpmLabel.setText("rpm: ")
-        self.rpmLabel.move(320,170)
+        self.rpmLabel.move(320,120)
         self.rpmLabel.show()
 
     @pyqtSlot(int)
@@ -60,7 +60,7 @@ class Rpm(QWidget):
         ARC_WIDTH = 500
         ARC_HEIGHT = 250
         ARC_HPOS = 150
-        ARC_VPOS = 120
+        ARC_VPOS = 80
         BRUSH_WIDTH = ARC_WIDTH*.11
         GRADIENT_ANGLE = 0.0
 

@@ -32,7 +32,8 @@ class FileWriter(QThread):
         self.mcTemp = 0.0
         self.motorTemp = 0.0
         self.highMotorTemp = 0.0
-        self.cellTemp = 0.0
+        self.highCellTemp = 0.0
+        self.lowCellTemp = 0.0
         self.latitude = 0.0
         self.longitude = 0.0
         self.roll = 0.0
@@ -74,7 +75,7 @@ class FileWriter(QThread):
             temp = ""
 
             #creates a header
-            temp = 'currentTime, '+ 'rpm, '+ 'soc, '+ 'mcTemp, '+ 'motorTemp, '+ 'highMotorTemp, '+ 'cellTemp, '+ 'latitude, '+ 'longitude, '+'roll, '+ 'pitch, '+ 'gForce, '+ 'bodyAccelx, '+ 'bodyAccely, '+ 'bodyAccelz, '+ 'velx, '+ 'vely, '+ 'velz, '
+            temp = 'currentTime, '+ 'rpm, '+ 'soc, '+ 'mcTemp, '+ 'motorTemp, '+ 'highMotorTemp, '+ 'highestCellTemp, '+'lowestCellTemp, '+ 'latitude, '+ 'longitude, '+'roll, '+ 'pitch, '+ 'gForce, '+ 'bodyAccelx, '+ 'bodyAccely, '+ 'bodyAccelz, '+ 'velx, '+ 'vely, '+ 'velz, '
             
             while True:
                 startTimer = time.time()
@@ -83,7 +84,7 @@ class FileWriter(QThread):
                     self.currentTime = "{0:.2f}".format(float(time.time())-self.startTime)
                     pastTime = currentTime
                     if count < 20:#waits for a block of 20 data collections before writing to the file
-                        temp = temp + str(self.currentTime)+','+str(self.rpm)+','+str(self.soc)+','+str(self.mcTemp)+','+str(self.motorTemp)+','+str(self.highMotorTemp)+','+str(self.cellTemp)+','+str(self.latitude)+','+str(self.longitude)+','+str(self.roll)+','+str(self.pitch)+','+str(self.gForce)+','+str(self.bodyAccelx)+','+str(self.bodyAccely)+','+str(self.bodyAccelz)+','+str(self.velx)+','+str(self.vely)+','+str(self.velz)+'\n'
+                        temp = temp + str(self.currentTime)+','+str(self.rpm)+','+str(self.soc)+','+str(self.mcTemp)+','+str(self.motorTemp)+','+str(self.highMotorTemp)+','+str(self.highCellTemp)+','+str(self.lowCellTemp)+','+str(self.latitude)+','+str(self.longitude)+','+str(self.roll)+','+str(self.pitch)+','+str(self.gForce)+','+str(self.bodyAccelx)+','+str(self.bodyAccely)+','+str(self.bodyAccelz)+','+str(self.velx)+','+str(self.vely)+','+str(self.velz)+'\n'
                         count=count+1
                     else:
                         csvWriter.write(temp)
@@ -115,9 +116,11 @@ class FileWriter(QThread):
         self.highMotorTemp = value
         
     @pyqtSlot(float)
-    def cellTemp_write(self, value):
-        self.cellMotorTemp = value
-
+    def highCellTemp_write(self, value):
+        self.highCellTemp = value
+    @pyqtSlot(float)
+    def lowCellTemp_write(self, value):
+        self.lowCellTemp = value
     @pyqtSlot(float)
     def lat_write(self, value):
         self.latitude = value

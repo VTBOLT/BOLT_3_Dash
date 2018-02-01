@@ -25,12 +25,13 @@ class Temp(QWidget):
         self.mcTempValue = 0
         self.motorTempValue = 0
         self.highMotorTempValue = 0
-        self.cellTempValue = 0
+        self.highCellTempValue = 0
+        self.lowCellTempValue = 0
         
         self.mcTempGauge = QLCDNumber(self)
         self.mcTempGauge.display(str(self.mcTempValue).zfill(1))
         self.mcTempGauge.move(0,0)
-        self.mcTempGauge.resize(100,100)
+        self.mcTempGauge.resize(100,80)
         self.mcTempGauge.setFrameShape(QFrame.NoFrame)
         self.mcTempGauge.setSegmentStyle(QLCDNumber.Flat)
         
@@ -40,37 +41,48 @@ class Temp(QWidget):
 
         self.motorTempGauge = QLCDNumber(self)
         self.motorTempGauge.display(str(self.motorTempValue).zfill(1))
-        self.motorTempGauge.move(0,80)
-        self.motorTempGauge.resize(100,100)
+        self.motorTempGauge.move(0,60)
+        self.motorTempGauge.resize(100,80)
         self.motorTempGauge.setFrameShape(QFrame.NoFrame)
         self.motorTempGauge.setSegmentStyle(QLCDNumber.Flat)
         
         self.motorTemplabel = QLabel(self)
         self.motorTemplabel.setText("motor temp: ")
-        self.motorTemplabel.move(0,80)
+        self.motorTemplabel.move(0,60)
 
         self.highMotorTempGauge = QLCDNumber(self)
         self.highMotorTempGauge.display(str(self.highMotorTempValue).zfill(1))
-        self.highMotorTempGauge.move(0,180)
-        self.highMotorTempGauge.resize(100,100)
+        self.highMotorTempGauge.move(0,120)
+        self.highMotorTempGauge.resize(100,80)
         self.highMotorTempGauge.setFrameShape(QFrame.NoFrame)
         self.highMotorTempGauge.setSegmentStyle(QLCDNumber.Flat)
         
         self.highMotorTemplabel = QLabel(self)
         self.highMotorTemplabel.setText("highest motor temp: ")
-        self.highMotorTemplabel.move(0,180)
+        self.highMotorTemplabel.move(0,120)
 
-        self.cellTempGauge = QLCDNumber(self)
-        self.cellTempGauge.display(str(self.cellTempValue).zfill(1))
-        self.cellTempGauge.move(0,280)
-        self.cellTempGauge.resize(100,100)
-        self.cellTempGauge.setFrameShape(QFrame.NoFrame)
-        self.cellTempGauge.setSegmentStyle(QLCDNumber.Flat)
+        self.highCellTempGauge = QLCDNumber(self)
+        self.highCellTempGauge.display(str(self.highCellTempValue).zfill(1))
+        self.highCellTempGauge.move(0,180)
+        self.highCellTempGauge.resize(100,80)
+        self.highCellTempGauge.setFrameShape(QFrame.NoFrame)
+        self.highCellTempGauge.setSegmentStyle(QLCDNumber.Flat)
         
-        self.cellTemplabel = QLabel(self)
-        self.cellTemplabel.setText("highest cell temp: ")
-        self.cellTemplabel.move(0,280)
+        self.highCellTemplabel = QLabel(self)
+        self.highCellTemplabel.setText("highest cell temp: ")
+        self.highCellTemplabel.move(0,180)
+
+        self.lowCellTempGauge = QLCDNumber(self)
+        self.lowCellTempGauge.display(str(self.lowCellTempValue).zfill(1))
+        self.lowCellTempGauge.move(0,240)
+        self.lowCellTempGauge.resize(100,80)
+        self.lowCellTempGauge.setFrameShape(QFrame.NoFrame)
+        self.lowCellTempGauge.setSegmentStyle(QLCDNumber.Flat)
         
+        self.lowCellTemplabel = QLabel(self)
+        self.lowCellTemplabel.setText("lowest cell temp: ")
+        self.lowCellTemplabel.move(0,240)
+
     @pyqtSlot(float)
     def mcTemp_update(self, value):
         self.mcTempGauge.display(value)
@@ -81,8 +93,11 @@ class Temp(QWidget):
     def highMotorTemp_update(self, value):
         self.highMotorTempGauge.display(value)
     @pyqtSlot(float)
-    def cellTemp_update(self, value):
-        self.cellTempGauge.display(value)
+    def highCellTemp_update(self, value):
+        self.highCellTempGauge.display(value)
+    @pyqtSlot(float)
+    def lowCellTemp_update(self, value):
+        self.lowCellTempGauge.display(value)
         
     '''
     def paintEvent(self, event):

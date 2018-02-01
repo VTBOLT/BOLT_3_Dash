@@ -56,11 +56,11 @@ class Dash(QMainWindow):
         self.rpmGauge.resize(DASH_WIDTH,RPM_HEIGHT)
 
         self.socGauge = Soc(self)
-        self.socGauge.move(600,GAUGE_VPOS-150)
+        self.socGauge.move(600,GAUGE_VPOS-220)
         self.socGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT*2.5)
 
         self.tempGauge = Temp(self)
-        self.tempGauge.move(850,GAUGE_VPOS-150)
+        self.tempGauge.move(850,GAUGE_VPOS-220)
         self.tempGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT*2.5)
         self.tempGauge.show()
 

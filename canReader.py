@@ -18,10 +18,12 @@ from args import Arg_Class
 class CanReader(QThread):
     rpmUpdateValue = pyqtSignal(int)
     socUpdateValue = pyqtSignal(float)
+    DCLUpadateValue = pyqtSignal(float)
     mcTempUpdateValue = pyqtSignal(float)
     motorTempUpdateValue = pyqtSignal(float)
     highMotorTempUpdateValue = pyqtSignal(float)
-    cellTempUpdateValue = pyqtSignal(float)
+    highCellTempUpdateValue = pyqtSignal(float)
+    lowCellTempUpdateValue = pyqtSignal(float)
     errorSignal = pyqtSignal(int, int, int, int)
 
     highMotorTemp = 0
@@ -82,6 +84,9 @@ class CanReader(QThread):
                         elif buf.split(':')[0] == 'soc':
                             soc = buf.split(':')[1]
                             self.socUpdateValue.emit(float(soc))
+                        elif buf.split(':')[0] == 'DCL':
+                            DCL = buf.split(':')[1]
+                            self.DCLUpdateValue.emit(float(DCL))
                         elif buf.split(':')[0] == 'mcTemp':
                             mcTemp = buf.split(':')[1]
                             self.mcTempUpdateValue.emit(float(mcTemp))
@@ -93,8 +98,11 @@ class CanReader(QThread):
                                 self.highMotorTemp = motorTemp
                             self.highMotorTempUpdateValue.emit(float(self.highMotorTemp))
                         elif buf.split(':')[0] == 'highCellTemp':
+                            highCellTemp = buf.split(':')[1]
+                            self.highCellTempUpdateValue.emit(float(highCellTemp))
+                        elif buf.split(':')[0] == 'lowCellTemp':
                             cellTemp = buf.split(':')[1]
-                            self.cellTempUpdateValue.emit(float(cellTemp))
+                            self.lowCellTempUpdateValue.emit(float(lowCellTemp))
                         elif buf.split(':')[0] == 'ERROR':
                             post_lo_fault = buf.split(':')[1]
                             post_hi_fault = buf.split(':')[2]
