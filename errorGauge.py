@@ -93,7 +93,7 @@ class Error(QWidget):
     def DCL_update(self, value):
         self.DCLGauge.display(value)
 
-    @pyqtSlot(int)
+    @pyqtSlot(float)
     def RPMCut_update(self, value):
         rpmCutValue = value
         if value > 10 and self.cutFlag == 0:

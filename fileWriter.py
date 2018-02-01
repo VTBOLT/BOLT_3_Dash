@@ -94,7 +94,7 @@ class FileWriter(QThread):
                 time.sleep(.5)# slows down file writing to reduce lag
         self.exec()
                                                                                     
-    @pyqtSlot(int)
+    @pyqtSlot(float)
     def rpm_write(self, value):
         if value < 0:
             value = 0

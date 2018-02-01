@@ -16,7 +16,7 @@ from PyQt5.QtCore import QThread, pyqtSlot, pyqtSignal
 from args import Arg_Class
 
 class CanReader(QThread):
-    rpmUpdateValue = pyqtSignal(int)
+    rpmUpdateValue = pyqtSignal(float)
     socUpdateValue = pyqtSignal(float)
     DCLUpdateValue = pyqtSignal(float)
     mcTempUpdateValue = pyqtSignal(float)

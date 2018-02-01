@@ -104,7 +104,7 @@ void CanReader::run()
 	  case 0x181:
 	    //BMS Tempatures
 	    highCellTemp = (int16_t)(( frame_rd.data[2] << 8 ) + ( frame_rd.data[1] )) * 0.1;
-	    lowCellTemp = (int16_5)(( frame_rd.data[5] << 8 ) + (frame_rd.data[4] )) * 0.1;
+	    lowCellTemp = (int16_t)(( frame_rd.data[5] << 8 ) + (frame_rd.data[4] )) * 0.1;
 	    std::cout << "highCellTemp:" << highCellTemp << std::endl;
 	    std::cout << "lowCellTemp:" << lowCellTemp << std::endl;
 	    break;
@@ -112,7 +112,7 @@ void CanReader::run()
 	    //BMS Isolations
 	    break;
 	  case 0x111: //BMS DCL
-	    //DCL = (int16_t)(( frame_rd.data[5] << 8 ) + ( frame_rd.data[4] )) * 0.5;
+	    DCL = (int16_t)(( frame_rd.data[1] << 8 ) + ( frame_rd.data[0] ));
 	    std::cout << "DCL:" << DCL << std::endl;
 	    break;
 	  case 0x183:
