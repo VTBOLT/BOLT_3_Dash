@@ -41,27 +41,27 @@ class Dash(QMainWindow):
         self.setMinimumWidth(DASH_WIDTH)
         self.setMinimumHeight(DASH_HEIGHT)
         self.initGUI()
-        
+
     def initGUI(self):
-        
+
         self.setAutoFillBackground(True)
         self.arguments = Arg_Class()
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.black)
-        p.setColor(self.foregroundRole(), Qt.red)
+        p.setColor(self.foregroundRole(), Qt.white)
 
         self.setPalette(p)
 
         self.rpmGauge = Rpm(self)
-        self.rpmGauge.move(0,0)
+        self.rpmGauge.move(0, 16.0)
         self.rpmGauge.resize(DASH_WIDTH,RPM_HEIGHT)
 
         self.socGauge = Soc(self)
-        self.socGauge.move(600,GAUGE_VPOS-220)
+        self.socGauge.move(600,GAUGE_VPOS - 150.0)
         self.socGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT*2.5)
 
         self.tempGauge = Temp(self)
-        self.tempGauge.move(850,GAUGE_VPOS-220)
+        self.tempGauge.move(850,GAUGE_VPOS - 150.0)
         self.tempGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT*2.5)
         self.tempGauge.show()
 
@@ -78,14 +78,14 @@ class Dash(QMainWindow):
         if self.arguments.Args.debug:
             self.debug.show()
 
-        self.mainMenu = self.menuBar()        
+        self.mainMenu = self.menuBar()
         self.mainMenu.setStyleSheet("QMenuBar::item { color: rgb(255,0,0);}") #sets text color
         self.mainMenu.setStyleSheet("QMenuBar::item { background-color: rgb(255,255,255);}") # sets button color
 
         self.fileMenu = self.mainMenu.addMenu('Debug')
         self.openDebug = QAction("Open Debug Window", self)
         self.fileMenu.addAction(self.openDebug)
-        self.openDebug.triggered.connect(self.debug.debug_open)            
+        self.openDebug.triggered.connect(self.debug.debug_open)
 
         self.openGPS = QAction("Open GPS Window", self)
         self.fileMenu.addAction(self.openGPS)
@@ -97,7 +97,7 @@ class Dash(QMainWindow):
         self.graphSoc = QAction("Graph SOC", self)
         self.analyzeMenu.addAction(self.graphRpm)
         self.analyzeMenu.addAction(self.graphSoc)
-        
+
         self.tempMenu = self.mainMenu.addMenu('Temp')
         self.settingMenu = self.mainMenu.addMenu('Settings')
         ### Open temp dispaly
@@ -109,19 +109,19 @@ class Dash(QMainWindow):
         self.settingMenu.addAction(self.tempOff)
         self.tempOff.triggered.connect(self.temp_close)
 
-        
+
         if self.arguments.Args.debug:
             #self.debug.show()
             self.debugGps.show()
 
         #if self.arguments.Args.log:
         #self.fileWriter = FileWriter(self)
-        
+
     @pyqtSlot(int, int, int, int)
     def error_update(self, v1, v2, v3, v4):
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.red)
-        p.setColor(self.foregroundRole(), Qt.black)
+        p.setColor(self.foregroundRole(), Qt.white)
         self.setPalette(p)
         self.update()
         print("ERROR, Post Lo:", v1, "Post Hi:", v2, "Run Lo:", v3, "Run Hi:", v4)
@@ -132,4 +132,3 @@ class Dash(QMainWindow):
     @pyqtSlot()
     def temp_open(self):
         self.tempGauge.show()
-        
