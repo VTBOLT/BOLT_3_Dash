@@ -37,7 +37,7 @@ class Rpm(QWidget):
     @pyqtSlot(float)
     def rpm_update(self, value):
         #self.rpmValue = value
-        self.rpmValue = (800 * int(self.rpmValue) + (1024 - 800) * value) >> 10
+        self.rpmValue = (800 * int(self.rpmValue) + (1024 - 800) * int(value)) >> 10
         if self.rpmValue < 0:
             self.rpmValue = 0
         self.rpmLCD.display(str(10*int(self.rpmValue/10)).zfill(4))#displays rpm, reduces precision to imporve readablity 
