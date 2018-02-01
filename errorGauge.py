@@ -106,7 +106,7 @@ class Error(QWidget):
             self.rpmCutLabel.show()
             self.cutFlag = 1
 
-    @pyqtSlot(float)
+    @pyqtSlot(int, int, int, int)
     def error_update(self, value1, value2, value3, value4):
         self.PLErrorGauge.display(value1)
         self.PHErrorGauge.display(value2)
