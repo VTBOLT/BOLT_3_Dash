@@ -18,7 +18,7 @@ from args import Arg_Class
 class CanReader(QThread):
     rpmUpdateValue = pyqtSignal(int)
     socUpdateValue = pyqtSignal(float)
-    DCLUpadateValue = pyqtSignal(float)
+    DCLUpdateValue = pyqtSignal(float)
     mcTempUpdateValue = pyqtSignal(float)
     motorTempUpdateValue = pyqtSignal(float)
     highMotorTempUpdateValue = pyqtSignal(float)
@@ -44,7 +44,7 @@ class CanReader(QThread):
                 time.sleep(.1)
                 if i >= 8500:
                     i = 0
-                    #self.errorSignal.emit(1,2,3,4)
+                    self.errorSignal.emit(1,2,3,4)
                 if j <= 0:
                     j = 99.0
                 if k <= 0:

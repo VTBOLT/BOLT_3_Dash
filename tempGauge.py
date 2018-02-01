@@ -98,15 +98,3 @@ class Temp(QWidget):
     @pyqtSlot(float)
     def lowCellTemp_update(self, value):
         self.lowCellTempGauge.display(value)
-        
-    '''
-    def paintEvent(self, event):
-        qp = QPainter(self)
-        qp.setPen(Qt.white)
-        qp.drawRect(20,110,100,20)
-        qp.drawLine(70, 104, 70, 136)
-        qp.drawLine(90, 104, 90, 136)
-
-        qp.setBrush(Qt.green)
-        qp.drawRect(80,110,5,20)
-    '''

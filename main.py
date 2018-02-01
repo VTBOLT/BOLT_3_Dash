@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
         canWorker.rpmUpdateValue.connect(dash.rpmGauge.rpm_update)
         canWorker.socUpdateValue.connect(dash.socGauge.soc_update)
-        #canWorker.DCLUpdateValue.connect(dash.errorGauge.dcl_update)
+        canWorker.DCLUpdateValue.connect(dash.errorGauge.DCL_update)
 
         canWorker.mcTempUpdateValue.connect(dash.tempGauge.mcTemp_update)
         canWorker.motorTempUpdateValue.connect(dash.tempGauge.motorTemp_update)
@@ -45,7 +45,7 @@ if __name__ == '__main__':
         canWorker.lowCellTempUpdateValue.connect(dash.tempGauge.lowCellTemp_update)
         
         canWorker.errorSignal.connect(dash.error_update)
-        #canWorker.errorSignal.connect(dash.errorGauge.error_update)
+        canWorker.errorSignal.connect(dash.errorGauge.error_update)
         canWorker.rpmUpdateValue.connect(dash.debug.c1.channel_update)
         
     if arguments.Args.gpsoff == True:
@@ -71,6 +71,8 @@ if __name__ == '__main__':
             canWorker.motorTempUpdateValue.connect(fileWriter.motorTemp_write)
             canWorker.highMotorTempUpdateValue.connect(fileWriter.highMotorTemp_write)
             canWorker.highCellTempUpdateValue.connect(fileWriter.highCellTemp_write)
+            canWorker.lowCellTempUpdateValue.connect(fileWriter.lowCellTemp_write)
+            canWorker.DCLUpdateValue.connect(fileWriter.DCL_write)
             canWorker.errorSignal.connect(fileWriter.error_write)
         if arguments.Args.gpsoff == True:
             gpsWorker.latValue.connect(fileWriter.lat_write)

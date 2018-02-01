@@ -23,6 +23,7 @@ from debug import Debug
 from args import Arg_Class
 from debugGps import DebugGPS
 from fileWriter import FileWriter
+from errorGauge import Error
 
 DASH_WIDTH = 1000
 DASH_HEIGHT = 550
@@ -67,7 +68,12 @@ class Dash(QMainWindow):
         self.debug = Debug(self)
         self.debugGps = DebugGPS(self)
         self.debug.hide()
-        self.debugGps.hide() 
+        self.debugGps.hide()
+
+        self.errorGauge = Error(self)
+        self.errorGauge.move(20, 400)
+        self.errorGauge.resize(GAUGE_WIDTH*2, GAUGE_HEIGHT)
+        self.errorGauge.show()
 
         if self.arguments.Args.debug:
             self.debug.show()
