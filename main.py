@@ -45,8 +45,8 @@ if __name__ == '__main__':
         canWorker.lowCellTempUpdateValue.connect(dash.tempGauge.lowCellTemp_update)
         
         canWorker.errorSignal.connect(dash.error_update)
-        #canWorker.errorSignal.connect(dash.errorGauge.error_update)        
-
+        canWorker.errorSignal.connect(dash.errorGauge.error_update)        
+        canWorker.rpmUpdateValue.connect(dash.errorGauge.RPMCut_update)
         #signal/slot connections for debug screen
         canWorker.rpmUpdateValue.connect(dash.debug.c1.channel_update)
         canWorker.socUpdateValue.connect(dash.debug.c2.channel_update)

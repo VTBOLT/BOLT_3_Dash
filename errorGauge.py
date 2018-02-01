@@ -21,6 +21,10 @@ class Error(QWidget):
         super(Error, self).__init__(parent)
 
         self.arguments = Arg_Class()
+
+        self.rpmCutValue = 0
+        self.rpmCutValuePrev = 0
+        self.cutFlag = 0
         
         self.DCLValue = 0
         self.errorCodePL = 0 # post low
@@ -70,11 +74,37 @@ class Error(QWidget):
         self.errorlabel = QLabel(self)
         self.errorlabel.setText("Error code: ")
         self.errorlabel.move(0,0)
-                
+
+        self.rpmCutGauge = QLCDNumber(self)
+        self.rpmCutGauge.display(str(self.DCLValue).zfill(1))
+        self.rpmCutGauge.move(300,0)
+        self.rpmCutGauge.resize(100,100)
+        self.rpmCutGauge.setFrameShape(QFrame.NoFrame)
+        self.rpmCutGauge.setSegmentStyle(QLCDNumber.Flat)
+        self.rpmCutGauge.hide()
+        
+        self.rpmCutLabel = QLabel(self)
+        self.rpmCutLabel.setText("RPM Before Cut: ")
+        self.rpmCutLabel.move(300,0)
+        self.rpmCutLabel.hide()
+
 
     @pyqtSlot(float)
     def DCL_update(self, value):
         self.DCLGauge.display(value)
+
+    @pyqtSlot(int)
+    def RPMCut_update(self, value):
+        rpmCutValue = value
+        if value > 10 and self.cutFlag == 0:
+            self.rpmCutGauge.hide()
+            #self.rpmCutGauge.display(value)
+            self.rpmCutValuePrev = value
+        else:
+            self.rpmCutGauge.display(self.rpmCutValuePrev)
+            self.rpmCutGauge.show()
+            self.rpmCutLabel.show()
+            self.cutFlag = 1
 
     @pyqtSlot(float)
     def error_update(self, value1, value2, value3, value4):

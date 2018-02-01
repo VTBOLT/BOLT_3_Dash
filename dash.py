@@ -72,7 +72,7 @@ class Dash(QMainWindow):
 
         self.errorGauge = Error(self)
         self.errorGauge.move(20, 400)
-        self.errorGauge.resize(GAUGE_WIDTH*2, GAUGE_HEIGHT)
+        self.errorGauge.resize(GAUGE_WIDTH*2.5, GAUGE_HEIGHT)
         self.errorGauge.show()
 
         if self.arguments.Args.debug:
