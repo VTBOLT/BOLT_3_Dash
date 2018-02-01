@@ -46,8 +46,15 @@ if __name__ == '__main__':
         
         canWorker.errorSignal.connect(dash.error_update)
         #canWorker.errorSignal.connect(dash.errorGauge.error_update)
-        canWorker.rpmUpdateValue.connect(dash.debug.c1.channel_update)
         
+        #signal/slot connections for debug screen
+        canWorker.rpmUpdateValue.connect(dash.debug.c1.channel_update)
+        canWorker.socUpdateValue.connect(dash.debug.c2.channel_update)
+        canWorker.mcTempUpdateValue.connect(dash.debug.c3.channel_update)        
+        canWorker.motorTempUpdateValue.connect(dash.debug.c4.channel_update)
+        canWorker.highCellTempUpdateValue.connect(dash.debug.c5.channel_update)
+        canWorker.lowCellTempUpdateValue.connect(dash.debug.c6.channel_update)
+
     if arguments.Args.gpsoff == True:
         try:
             gpsWorker = GpsReader()
