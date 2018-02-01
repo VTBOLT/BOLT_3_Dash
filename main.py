@@ -43,6 +43,7 @@ if __name__ == '__main__':
         canWorker.cellTempUpdateValue.connect(dash.tempGauge.cellTemp_update)
         
         canWorker.errorSignal.connect(dash.error_update)
+        canWorker.rpmUpdateValue.connect(dash.debug.c1.channel_update)
         
     if arguments.Args.gpsoff == True:
         try:
