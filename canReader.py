@@ -108,7 +108,7 @@ class CanReader(QThread):
                             post_hi_fault = buf.split(':')[2]
                             run_lo_fault = buf.split(':')[3]
                             run_hi_fault = buf.split(':')[4]
-                            self.errorSignal.emit(post_lo_fault, post_hi_fault, run_lo_fault, run_hi_fault)
+                            #self.errorSignal.emit(post_lo_fault, post_hi_fault, run_lo_fault, run_hi_fault)
                         #else:
                             #print("ERROR: Parsing missed:", buf)
                         buf = ""
