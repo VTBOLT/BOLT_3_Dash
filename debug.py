@@ -39,12 +39,13 @@ class Debug(QWidget):
 
         self.c1 = Channel(self, "RPM:",0, 20, 0)
         self.c2 = Channel(self, "SOC:", 125, 20, 0.0)
-        self.c3 = Channel(self, "MC Temp",250,20,0.0)
+        self.c3 = Channel(self, "MC Temp:",250,20,0.0)
         self.c4 = Channel(self, "Motor Temp:",350,20,0.0) 
 
-        self.c5 = Channel(self, "High Cell Temp",0,100,0.0)
-        self.c6 = Channel(self, "Low Cell Temp",100,100,0.0)
-        self.c7 = Channel(self, "High Motor Temp",450,20,0.0)
+        self.c5 = Channel(self, "High Cell Temp:",0,100,0.0)
+        self.c6 = Channel(self, "Low Cell Temp:",150,100,0.0)
+        self.c7 = Channel(self, "High Motor Temp:",450,20,0.0)
+        self.c8 = Channel(self, "DCL:",300,100,0.0)
                
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.gray)

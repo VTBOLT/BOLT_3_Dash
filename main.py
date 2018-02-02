@@ -55,6 +55,7 @@ if __name__ == '__main__':
         canWorker.highCellTempUpdateValue.connect(dash.debug.c5.channel_update)
         canWorker.lowCellTempUpdateValue.connect(dash.debug.c6.channel_update)
         canWorker.highMotorTempUpdateValue.connect(dash.debug.c7.channel_update)
+        canWorker.DCLUpdateValue.connect(dash.debug.c8.channel_update)        
 
     if arguments.Args.gpsoff == True:
         try:
