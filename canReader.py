@@ -101,7 +101,7 @@ class CanReader(QThread):
                             highCellTemp = buf.split(':')[1]
                             self.highCellTempUpdateValue.emit(float(highCellTemp))
                         elif buf.split(':')[0] == 'lowCellTemp':
-                            cellTemp = buf.split(':')[1]
+                            lowCellTemp = buf.split(':')[1]
                             self.lowCellTempUpdateValue.emit(float(lowCellTemp))
                         elif buf.split(':')[0] == 'ERROR':
                             post_lo_fault = buf.split(':')[1]
