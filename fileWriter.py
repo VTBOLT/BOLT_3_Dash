@@ -15,6 +15,7 @@ from pathlib import Path
 import subprocess
 from PyQt5.QtCore import QThread, pyqtSlot, pyqtSignal
 from args import Arg_Class
+from pymongo import MongoClient
 
 class FileWriter(QThread):
     
@@ -48,35 +49,38 @@ class FileWriter(QThread):
         self.velz = 0.0
 
         self.error = 0
+
+        client = MongoClient(port=27017)
+        db=client.CANlog
         
         if arguments.Args.log:
             
-            vbox_path = '/home/vbox/logs/'
-            pi_path = '/home/pi/logs/'
-            alex_path = '/home/alex/pi/logs/'
+            #vbox_path = '/home/vbox/logs/'
+            #pi_path = '/home/pi/logs/'
+            #alex_path = '/home/alex/pi/logs/'
             
-            if Path(pi_path).exists():
-                path = pi_path
-            elif Path(vbox_path).exists():
-                path = vbox_path
-            elif Path(alex_path).exists():
-                path = alex_path
+            #if Path(pi_path).exists():
+                #path = pi_path
+            #elif Path(vbox_path).exists():
+                #path = vbox_path
+            #elif Path(alex_path).exists():
+                #path = alex_path
             
-            filename_time = 'dash_log_'+str(dt.now().year)+'_'+str(dt.now().month)+'_'+str(dt.now().day)+'_'+str(dt.now().hour)+'_'+str(dt.now().minute)+'.csv'
+            #filename_time = 'dash_log_'+str(dt.now().year)+'_'+str(dt.now().month)+'_'+str(dt.now().day)+'_'+str(dt.now().hour)+'_'+str(dt.now().minute)+'.csv'
 
-            self.filename = path+filename_time
+            #self.filename = path+filename_time
             #use traditional file writing, the python csv libary is slow
-            csvWriter = open(self.filename, 'a')
+            #csvWriter = open(self.filename, 'a')
             
             self.startTime = time.time()
             pastTime = 0
             currentTime = 0
 
             count = 0
-            temp = ""
+            #temp = ""
 
             #creates a header
-            temp = 'currentTime, '+ 'rpm, '+ 'soc, '+ 'mcTemp, '+ 'motorTemp, '+ 'highMotorTemp, '+ 'highestCellTemp, '+'lowestCellTemp, '+'DCL, '+'latitude, '+ 'longitude, '+'roll, '+ 'pitch, '+ 'gForce, '+ 'bodyAccelx, '+ 'bodyAccely, '+ 'bodyAccelz, '+ 'velx, '+ 'vely, '+ 'velz, '
+            #temp = 'currentTime, '+ 'rpm, '+ 'soc, '+ 'mcTemp, '+ 'motorTemp, '+ 'highMotorTemp, '+ 'highestCellTemp, '+'lowestCellTemp, '+'DCL, '+'latitude, '+ 'longitude, '+'roll, '+ 'pitch, '+ 'gForce, '+ 'bodyAccelx, '+ 'bodyAccely, '+ 'bodyAccelz, '+ 'velx, '+ 'vely, '+ 'velz, '
             
             while True:
                 startTimer = time.time()
@@ -84,14 +88,39 @@ class FileWriter(QThread):
                 if self.currentTime != pastTime:
                     self.currentTime = "{0:.2f}".format(float(time.time())-self.startTime)
                     pastTime = currentTime
-                    if count < 20:#waits for a block of 20 data collections before writing to the file
-                        temp = temp + str(self.currentTime)+','+str(self.rpm)+','+str(self.soc)+','+str(self.mcTemp)+','+str(self.motorTemp)+','+str(self.highMotorTemp)+','+str(self.highCellTemp)+','+str(self.lowCellTemp)+','+str(self.DCL)+','+str(self.latitude)+','+str(self.longitude)+','+str(self.roll)+','+str(self.pitch)+','+str(self.gForce)+','+str(self.bodyAccelx)+','+str(self.bodyAccely)+','+str(self.bodyAccelz)+','+str(self.velx)+','+str(self.vely)+','+str(self.velz)+'\n'
-                        count=count+1
-                    else:
-                        csvWriter.write(temp)
-                        count = 0
-                        temp = ""
-                time.sleep(.5)# slows down file writing to reduce lag
+                    log = {
+                        'currentTime' : str(self.currentTime),
+                        'rpm' : str(self.rpm),
+                        'soc' : str(self.soc),
+                        'mcTemp' : str(self.mcTemp),
+                        'motorTemp' : str(self.motorTemp),
+                        'highMotorTemp' : str(self.highMotorTemp),
+                        'highCellTemp' : str(self.highCellTemp),
+                        'lowCellTemp' : str(self.lowCellTemp),
+                        'DCL' : str(self.DCL),
+                        'latitude' : str(self.latitude),
+                        'longitude' : str(self.longitude),
+                        'roll' : str(self.roll),
+                        'pitch' : str(self.pitch),
+                        'gForce' : str(self.gForce),
+                        'bodyAccelx' : str(self.bodyAccelx),
+                        'bodyAccely' : str(self.bodyAccely),
+                        'bodyAccelz' : str(self.bodyAccelz),
+                        'velx' : str(self.velx),
+                        'vely' : str(self.vely),
+                        'velz' : str(self.velz)
+                    }
+                    result=db.data.insert_one(log)
+                    count = count + 1
+                    print('Created log {0} as {1}'.format(count,result.inserted_id))
+                    #if count < 20:#waits for a block of 20 data collections before writing to the file
+                        #temp = temp + str(self.currentTime)+','+str(self.rpm)+','+str(self.soc)+','+str(self.mcTemp)+','+str(self.motorTemp)+','+str(self.highMotorTemp)+','+str(self.highCellTemp)+','+str(self.lowCellTemp)+','+str(self.DCL)+','+str(self.latitude)+','+str(self.longitude)+','+str(self.roll)+','+str(self.pitch)+','+str(self.gForce)+','+str(self.bodyAccelx)+','+str(self.bodyAccely)+','+str(self.bodyAccelz)+','+str(self.velx)+','+str(self.vely)+','+str(self.velz)+'\n'
+                        #count=count+1
+                    #else:
+                        #csvWriter.write(temp)
+                        #count = 0
+                        #temp = ""
+                time.sleep(.5)# slows down file writing to reduce lag    
         self.exec()
                                                                                     
     @pyqtSlot(float)
