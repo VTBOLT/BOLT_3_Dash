@@ -52,6 +52,7 @@ class FileWriter(QThread):
 
         client = MongoClient(port=27017)
         db=client.CANlog
+        collection = db['data_' + str(dt.now().year) + '_' + str(dt.now().month) + '_' + str(dt.now().day) + '_' + str(dt.now().hour) + '_' + str(dt.now().minute)] 
         
         if arguments.Args.log:
             
@@ -110,7 +111,7 @@ class FileWriter(QThread):
                         'vely' : str(self.vely),
                         'velz' : str(self.velz)
                     }
-                    result=db.data.insert_one(log)
+                    result=collection.insert_one(log)
                     count = count + 1
                     print('Created log {0} as {1}'.format(count,result.inserted_id))
                     #if count < 20:#waits for a block of 20 data collections before writing to the file
