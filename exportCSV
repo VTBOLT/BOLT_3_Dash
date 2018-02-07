@@ -1,0 +1,3 @@
+#!/bin/bash
+
+mongoexport --db CANlog --collection data --type=csv --fieldFile fields.txt --out /home/alex/pi/logs/data_test3.csv
