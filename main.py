@@ -29,8 +29,8 @@ if __name__ == '__main__':
         dash.showFullScreen()
     else:
         dash.show()
-    
-    if arguments.Args.canoff == True:
+
+    if arguments.Args.canoff == True and arguments.Args.charging == False:
         canWorker =CanReader()
         canWorker.start()
 
@@ -43,9 +43,9 @@ if __name__ == '__main__':
         canWorker.highMotorTempUpdateValue.connect(dash.tempGauge.highMotorTemp_update)
         canWorker.highCellTempUpdateValue.connect(dash.tempGauge.highCellTemp_update)
         canWorker.lowCellTempUpdateValue.connect(dash.tempGauge.lowCellTemp_update)
-        
+
         canWorker.errorSignal.connect(dash.error_update)
-        canWorker.errorSignal.connect(dash.errorGauge.error_update)        
+        canWorker.errorSignal.connect(dash.errorGauge.error_update)
         canWorker.rpmUpdateValue.connect(dash.errorGauge.RPMCut_update)
         #signal/slot connections for debug screen
         canWorker.rpmUpdateValue.connect(dash.debug.c1.channel_update)
@@ -55,9 +55,9 @@ if __name__ == '__main__':
         canWorker.highCellTempUpdateValue.connect(dash.debug.c5.channel_update)
         canWorker.lowCellTempUpdateValue.connect(dash.debug.c6.channel_update)
         canWorker.highMotorTempUpdateValue.connect(dash.debug.c7.channel_update)
-        canWorker.DCLUpdateValue.connect(dash.debug.c8.channel_update)        
+        canWorker.DCLUpdateValue.connect(dash.debug.c8.channel_update)
 
-    if arguments.Args.gpsoff == True:
+    if arguments.Args.gpsoff == True and arguments.Args.charging == False:
         try:
             gpsWorker = GpsReader()
             gpsWorker.start()
@@ -69,8 +69,8 @@ if __name__ == '__main__':
         gpsWorker.rollValue.connect(dash.debugGps.gpsGauge.roll_update)
         gpsWorker.pitchValue.connect(dash.debugGps.gpsGauge.pitch_update)
         gpsWorker.gForceValue.connect(dash.debugGps.gpsGauge.gForce_update)
-        
-    if arguments.Args.log:
+
+    if arguments.Args.log and arguments.Args.charging == False:
         fileWriter = FileWriter()
         fileWriter.start()
         if arguments.Args.canoff == True:
@@ -91,7 +91,11 @@ if __name__ == '__main__':
             gpsWorker.gForceValue.connect(fileWriter.gForce_write)
             gpsWorker.bodyAccelValue.connect(fileWriter.bodyAccel_write)
             gpsWorker.velValue.connect(fileWriter.vel_write)
-        
+
+        if arguments.Args.charging:
+            #if charging is true, then we want the graphs and battery life to show (SOC)
+            #only add signals here that will be used in the charging screens
+            print("Charging Screen")
+
     app.processEvents()
     sys.exit(app.exec_())
-                                                                

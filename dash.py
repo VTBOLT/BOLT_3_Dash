@@ -55,30 +55,37 @@ class Dash(QMainWindow):
         ###state machine starts here
 
         ## call function that sets the text of each of the startup screens based on what gpio signals are high
-        
+
         ## once startup is complete call these to setup dash in race mode
-        self.rpmGauge = Rpm(self)
-        self.rpmGauge.move(0, 16.0)
-        self.rpmGauge.resize(DASH_WIDTH,RPM_HEIGHT)
+        if self.arguments.Args.charging == False:
+            self.rpmGauge = Rpm(self)
+            self.rpmGauge.move(0, 16.0)
+            self.rpmGauge.resize(DASH_WIDTH,RPM_HEIGHT)
 
-        self.socGauge = Soc(self)
-        self.socGauge.move(600,GAUGE_VPOS - 150.0)
-        self.socGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT*2.5)
+            self.socGauge = Soc(self)
+            self.socGauge.move(600,GAUGE_VPOS - 150.0)
+            self.socGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT*2.5)
 
-        self.tempGauge = Temp(self)
-        self.tempGauge.move(850,GAUGE_VPOS - 150.0)
-        self.tempGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT*2.5)
-        self.tempGauge.show()
+            self.tempGauge = Temp(self)
+            self.tempGauge.move(850,GAUGE_VPOS - 150.0)
+            self.tempGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT*2.5)
+            self.tempGauge.show()
+
+            self.errorGauge = Error(self)
+            self.errorGauge.move(20, 400)
+            self.errorGauge.resize(GAUGE_WIDTH*2.5, GAUGE_HEIGHT)
+            self.errorGauge.show()
+        elif self.arguments.Args.charging == True:
+            p.setColor(self.backgroundRole(), Qt.blue)
+            p.setColor(self.foregroundRole(), Qt.blue)
+            self.setPalette(p) #temporary to make sure the screen is unique
+            #SET GUAGES/GRAPHS FOR CHARGING SCREEN HERE
+
 
         self.debug = Debug(self)
         self.debugGps = DebugGPS(self)
         self.debug.hide()
         self.debugGps.hide()
-
-        self.errorGauge = Error(self)
-        self.errorGauge.move(20, 400)
-        self.errorGauge.resize(GAUGE_WIDTH*2.5, GAUGE_HEIGHT)
-        self.errorGauge.show()
 
         if self.arguments.Args.debug:
             self.debug.show()
@@ -86,7 +93,7 @@ class Dash(QMainWindow):
         #### if an error is thrown enter error state machine defined here
 
 
-        ###################################################### 
+        ######################################################
         #### if possible move this so its always visiable, even during startup
         #### It would be a good idea to setup a menu option to skip the startup screens
         self.mainMenu = self.menuBar()
