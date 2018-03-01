@@ -39,7 +39,7 @@ class GpsReader(QThread):
         latitude = 37.0
         longitude = 38.0
         roll = 0.0 # degrees
-        if arguments.Args.dev:
+        if not arguments.Args.dev:
             while True:
                 time.sleep(.1)
                 self.currentLapTimeValue.emit(current_min, current_sec, current_msec) 
