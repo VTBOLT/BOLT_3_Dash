@@ -16,6 +16,7 @@ from PyQt5.QtWidgets import QApplication
 from dash import Dash
 from canReader import CanReader
 from gpsReader import GpsReader
+from laptimes import LapTimes
 from debug import Debug
 from args import Arg_Class
 from fileWriter import FileWriter
@@ -61,14 +62,20 @@ if __name__ == '__main__':
         try:
             gpsWorker = GpsReader()
             gpsWorker.start()
+            lapWorker = LapTimes()
+            lapWorker.start()
         except:   # not exiting correctly
             exit(0)
+
         #gpsWorker.currentLapTimeValue.connect(dash.currentLapTimeGauge.currentLapTime_update)
         gpsWorker.latValue.connect(dash.debugGps.gpsGauge.lat_update)
         gpsWorker.longValue.connect(dash.debugGps.gpsGauge.long_update)
         gpsWorker.rollValue.connect(dash.debugGps.gpsGauge.roll_update)
         gpsWorker.pitchValue.connect(dash.debugGps.gpsGauge.pitch_update)
         gpsWorker.gForceValue.connect(dash.debugGps.gpsGauge.gForce_update)
+
+        gpsWorker.latValue.connect(lapWorker.lat_update)
+        #gpsWorker.longValue.connect(lapWorker.long_update)
         
     if arguments.Args.log:
         fileWriter = FileWriter()

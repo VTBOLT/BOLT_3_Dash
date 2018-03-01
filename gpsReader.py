@@ -73,12 +73,6 @@ class GpsReader(QThread):
             if not Path(cmd).exists():
                 #if Path('./spatialReader').exists():
                 cmd = './spatialReader'            
-            
-            #    else:
-            #        exit(0)
-            #else:
-            #    exit(0)
-            
             #need to add error checking to make sure the executable exitsts
             p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
             buf = ""
