@@ -25,8 +25,8 @@ from debugGps import DebugGPS
 from fileWriter import FileWriter
 from errorGauge import Error
 
-DASH_WIDTH = 1000
-DASH_HEIGHT = 550
+DASH_WIDTH = 800
+DASH_HEIGHT = 420
 
 RPM_HEIGHT = (2/3)*DASH_HEIGHT
 GAUGE_VPOS = 340
