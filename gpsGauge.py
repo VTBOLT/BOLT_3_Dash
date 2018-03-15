@@ -26,6 +26,7 @@ class Gps(QWidget):
         self.rollValue = 0.0
         self.pitchValue = 0.0
         self.gForceValue = 0.0
+        self.currentTimeValue = 0.0
 
         self.latLCD = QLCDNumber(self)
         self.latLCD.display(self.latValue)
@@ -83,7 +84,7 @@ class Gps(QWidget):
         self.gForceLCD.display(self.gForceValue)
         self.gForceLCD.setFrameShape(QFrame.NoFrame)
         self.gForceLCD.setSegmentStyle(QLCDNumber.Flat)
-        self.gForceLCD.move(0,100)
+        self.gForceLCD.move(0,110)
         self.gForceLCD.resize(70,50)
         self.gForceLCD.hide()
         
@@ -91,6 +92,20 @@ class Gps(QWidget):
         self.gForceLabel.setText("gForce: ")
         self.gForceLabel.move(0,100)
         self.gForceLabel.hide()
+
+        self.currentTimeLCD = QLCDNumber(self)
+        self.currentTimeLCD.display(self.currentTimeValue)
+        self.currentTimeLCD.setFrameShape(QFrame.NoFrame)
+        self.currentTimeLCD.setSegmentStyle(QLCDNumber.Flat)
+        self.currentTimeLCD.move(90,110)
+        self.currentTimeLCD.resize(70,50)
+        self.currentTimeLCD.hide()
+        
+        self.currentTimeLabel = QLabel(self)
+        self.currentTimeLabel.setText("current LapTime: ")
+        self.currentTimeLabel.move(80,100)
+        self.currentTimeLabel.hide()
+
         
         self.latLCD.show()
         self.latLabel.show()
@@ -102,6 +117,9 @@ class Gps(QWidget):
         self.pitchLabel.show()
         self.gForceLCD.show()
         self.gForceLabel.show()
+        self.currentTimeLCD.show()
+        self.currentTimeLabel.show()
+        
     @pyqtSlot(float)
     def lat_update(self, value):
         self.latLCD.display(value)
@@ -130,6 +148,12 @@ class Gps(QWidget):
     def gForce_update(self, value):
         self.gForceLCD.display(value)
         self.gForceValue = value
+        self.update()
+
+    @pyqtSlot(float)
+    def currentTime_update(self, value):
+        self.currentTimeLCD.display(value)
+        self.currentTimeValue = value
         self.update()
 
     def paintEvent(self, event):

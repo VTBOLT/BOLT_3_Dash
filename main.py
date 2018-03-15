@@ -20,6 +20,7 @@ from laptimes import LapTimes
 from debug import Debug
 from args import Arg_Class
 from fileWriter import FileWriter
+from lapTimesThread import LapTimesThread
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
@@ -62,8 +63,8 @@ if __name__ == '__main__':
         try:
             gpsWorker = GpsReader()
             gpsWorker.start()
-            lapWorker = LapTimes()
-            lapWorker.start()
+            lapTimeWorker = LapTimesThread()
+            lapTimeWorker.start()
         except:   # not exiting correctly
             exit(0)
 
@@ -74,7 +75,11 @@ if __name__ == '__main__':
         gpsWorker.pitchValue.connect(dash.debugGps.gpsGauge.pitch_update)
         gpsWorker.gForceValue.connect(dash.debugGps.gpsGauge.gForce_update)
 
-        gpsWorker.latValue.connect(lapWorker.lat_update)
+        #lapTimeWorker.lapTimeUpdateValue.connect(dash.debugGps.gpsGauge.lapTime_update)
+        gpsWorker.latValue.connect(lapTimeWorker.lat_update)
+        gpsWorker.longValue.connect(lapTimeWorker.long_update)
+        
+        gpsWorker.latValue.connect(lapTimeWorker.lat_update)
         #gpsWorker.longValue.connect(lapWorker.long_update)
         
     if arguments.Args.log:
