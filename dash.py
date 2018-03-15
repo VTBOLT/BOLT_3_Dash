@@ -25,8 +25,8 @@ from debugGps import DebugGPS
 from fileWriter import FileWriter
 from errorGauge import Error
 
-DASH_WIDTH = 1000
-DASH_HEIGHT = 550
+DASH_WIDTH = 800
+DASH_HEIGHT = 420
 
 RPM_HEIGHT = (2/3)*DASH_HEIGHT
 GAUGE_VPOS = 340
@@ -61,12 +61,14 @@ class Dash(QMainWindow):
         self.rpmGauge.move(0, 16.0)
         self.rpmGauge.resize(DASH_WIDTH,RPM_HEIGHT)
 
+        self.rpmGauge.hide()
+
         self.socGauge = Soc(self)
-        self.socGauge.move(600,GAUGE_VPOS - 150.0)
+        self.socGauge.move(420,GAUGE_VPOS - 150.0)
         self.socGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT*2.5)
 
         self.tempGauge = Temp(self)
-        self.tempGauge.move(850,GAUGE_VPOS - 150.0)
+        self.tempGauge.move(600,GAUGE_VPOS - 200.0)
         self.tempGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT*2.5)
         self.tempGauge.show()
 
@@ -76,7 +78,7 @@ class Dash(QMainWindow):
         self.debugGps.hide()
 
         self.errorGauge = Error(self)
-        self.errorGauge.move(20, 400)
+        self.errorGauge.move(20, 340)
         self.errorGauge.resize(GAUGE_WIDTH*2.5, GAUGE_HEIGHT)
         self.errorGauge.show()
 
