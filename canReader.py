@@ -103,12 +103,20 @@ class CanReader(QThread):
                         elif buf.split(':')[0] == 'lowCellTemp':
                             lowCellTemp = buf.split(':')[1]
                             self.lowCellTempUpdateValue.emit(float(lowCellTemp))
+                        elif buf.split(':')[0] == 'states':
+                            VSM_state = buf.split(':')[1]
+                            inverter_state = buf.split(':')[2]
+                            relay_state = buf.split(':')[3]
+                            inverter_run_state = buf.split(':')[4]
+                            inverter_cmd_state = buf.split(':')[5]
+                            inverter_enable_state = buf.split(':')[6]
+                            direction_state = buf.split(':')[7]
                         elif buf.split(':')[0] == 'ERROR':
                             post_lo_fault = buf.split(':')[1]
                             post_hi_fault = buf.split(':')[2]
                             run_lo_fault = buf.split(':')[3]
                             run_hi_fault = buf.split(':')[4]
-                            #self.errorSignal.emit(post_lo_fault, post_hi_fault, run_lo_fault, run_hi_fault)
+                            self.errorSignal.emit(post_lo_fault, post_hi_fault, run_lo_fault, run_hi_fault)
                         #else:
                             #print("ERROR: Parsing missed:", buf)
                         buf = ""
