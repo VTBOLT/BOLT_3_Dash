@@ -86,6 +86,7 @@ void CanReader::run()
 	    gateDrvrBrd     = (int16_t)(( frame_rd.data[7] << 8 ) + ( frame_rd.data[6] )) * 0.1;		      
 	    std::cout << "mcTemp:" << max(moduleA, moduleB, moduleC, gateDrvrBrd) << std::endl;		    
 	    break;
+	    
 	  case 0xA2:
               //MC Tempatures
 	    mtrTemp = (int16_t)(( frame_rd.data[5] << 8 ) + ( frame_rd.data[4] )) * 0.1;
@@ -97,10 +98,12 @@ void CanReader::run()
 	    RPM = (int16_t)(( frame_rd.data[3] << 8 ) + ( frame_rd.data[2] ));
 	    std::cout << "rpm:" << RPM << std::endl;		      
 	    break;
+	    
 	  case 0x180:
 	    //BMS VOLTAGES
 	    //high low cell delta
 	    break;
+	    
 	  case 0x181:
 	    //BMS Tempatures
 	    highCellTemp = (int16_t)(( frame_rd.data[2] << 8 ) + ( frame_rd.data[1] )) * 0.1;
@@ -108,9 +111,11 @@ void CanReader::run()
 	    std::cout << "highCellTemp:" << highCellTemp << std::endl;
 	    std::cout << "lowCellTemp:" << lowCellTemp << std::endl;
 	    break;
+	    
 	  case 0x182:
 	    //BMS Isolations
 	    break;
+	    
 	  case 0x111: //BMS DCL
 	    DCL = (int16_t)(( frame_rd.data[1] << 8 ) + ( frame_rd.data[0] ));
 	    std::cout << "DCL:" << DCL << std::endl;
@@ -120,6 +125,7 @@ void CanReader::run()
 	    SOC = (int16_t)(( frame_rd.data[5] << 8 ) + ( frame_rd.data[4] )) * 0.5;
 	    std::cout << "soc:" << SOC << std::endl;
 	    break;
+	    
 	  case 0xAA:
 	    //Internal State of MC
 	    VSM_state = (int16_t)(( frame_rd.data[1] << 8 ) + ( frame_rd.data[0] ));
@@ -131,6 +137,7 @@ void CanReader::run()
 	    direction_state = (int16_t)(( frame_rd.data[7] ));
 	    
 	    std::cout << "states:" << VSM_state << ":" << inverter_state << ":" << relay_state << ":" << inverter_run_state << ":" << inverter_cmd_state << ":" << inverter_enable_state << ":" << direction_state << std::endl;
+	    break;
 	    
 	  case 0xAB:
 	    //MC Errors
@@ -138,8 +145,9 @@ void CanReader::run()
 	    post_hi_fault = (int16_t)(( frame_rd.data[3] << 8 ) + ( frame_rd.data[2] ));
 	    run_lo_fault = (int16_t)(( frame_rd.data[5] << 8 ) + ( frame_rd.data[4] ));
 	    run_hi_fault = (int16_t)(( frame_rd.data[7] << 8 ) + ( frame_rd.data[6] ));
-	    //std::cout << "ERROR:" << post_lo_fault << ":" << post_hi_fault << ":" << run_lo_fault << ":" << run_hi_fault << std::endl;
+	    std::cout << "ERROR:" << post_lo_fault << ":" << post_hi_fault << ":" << run_lo_fault << ":" << run_hi_fault << std::endl;
 	    break;
+	    
 	  default:		
 	    //std::cout << "defualt condition, can_id:" << frame_rd.can_id << std::endl;
 	    break;
