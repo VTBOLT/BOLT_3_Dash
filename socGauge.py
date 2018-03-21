@@ -50,7 +50,8 @@ class Soc(QWidget):
 
         qp.drawRect(70,20, 70, 180)
         qp.drawRect(96,10, 20, 10)
-
+        if self.socValue < 0:
+            self.socValue = 0
         if self.socValue < 20:
             qp.setBrush(Qt.red)
         else:
