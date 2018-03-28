@@ -12,7 +12,7 @@ import sys
 import time
 from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QFrame, QAction, QPushButton
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, Qt, QThread, pyqtSlot
-
+from PyQt5.QtGui import QKeyEvent
 from socGauge import Soc
 from rpmGauge import Rpm
 from lapTimePannel import LastLapTime, CurrentLapTime, BestLapTime
@@ -24,6 +24,7 @@ from args import Arg_Class
 from debugGps import DebugGPS
 from fileWriter import FileWriter
 from errorGauge import Error
+from stateMachineGUI import StateMachine
 
 DASH_WIDTH = 800
 DASH_HEIGHT = 420
@@ -34,6 +35,11 @@ GAUGE_HEIGHT = 140
 GAUGE_WIDTH = 200
 
 class Dash(QMainWindow):
+    accessoryPress = pyqtSignal(int)
+    ignitionPress = pyqtSignal(int)
+    precharge = pyqtSignal(int)
+    estop = pyqtSignal(int)
+    raceMode = pyqtSignal()
     def __init__(self, parent=None):
         super(Dash, self).__init__(parent)
 
@@ -43,7 +49,6 @@ class Dash(QMainWindow):
         self.initGUI()
 
     def initGUI(self):
-
         self.setAutoFillBackground(True)
         self.arguments = Arg_Class()
         p = self.palette()
@@ -53,9 +58,10 @@ class Dash(QMainWindow):
         self.setPalette(p)
         ######################################################
         ###state machine starts here
-
+        self.stateMachine = StateMachine(self)
+        self.stateMachine.move(DASH_WIDTH/2-200,DASH_HEIGHT/2-100)
+        self.stateMachine.resize(300,200)
         ## call function that sets the text of each of the startup screens based on what gpio signals are high
-
         ## once startup is complete call these to setup dash in race mode
         self.rpmGauge = Rpm(self)
         self.rpmGauge.move(0, 16.0)
@@ -70,7 +76,6 @@ class Dash(QMainWindow):
         self.tempGauge = Temp(self)
         self.tempGauge.move(660,GAUGE_VPOS - 180.0)
         self.tempGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT*2.5)
-        self.tempGauge.show()
 
         self.debug = Debug(self)
         self.debugGps = DebugGPS(self)
@@ -80,7 +85,12 @@ class Dash(QMainWindow):
         self.errorGauge = Error(self)
         self.errorGauge.move(20, 340)
         self.errorGauge.resize(GAUGE_WIDTH*2.5, GAUGE_HEIGHT)
-        self.errorGauge.show()
+
+        self.stateMachine.show()
+        self.socGauge.hide()
+        self.tempGauge.hide()
+        self.rpmGauge.hide()
+        self.errorGauge.hide()
 
         if self.arguments.Args.debug:
             self.debug.show()
@@ -129,7 +139,20 @@ class Dash(QMainWindow):
 
         #if self.arguments.Args.log:
         #self.fileWriter = FileWriter(self)
-
+    def keyPressEvent(self, event):
+        if (type(event) == QKeyEvent and event.key() == 0x41):
+            self.accessoryPress.emit(1)
+            print("Accessory Pressed")
+        elif (type(event) == QKeyEvent and event.key() == 0x49):
+            self.ignitionPress.emit(2)
+            print("Ignition Pressed")
+            print("Pre-charge start")
+            time.sleep(3)
+            print("Pre-charge complete")
+            self.raceMode.emit()
+        elif (type(event) == QKeyEvent and event.key() == 0x45):
+            self.estop.emit(0)
+            print("Emergency Stop")
     @pyqtSlot(int, int, int, int)
     def error_update(self, v1, v2, v3, v4):
         p = self.palette()
@@ -138,7 +161,13 @@ class Dash(QMainWindow):
         self.setPalette(p)
         self.update()
         print("ERROR, Post Lo:", v1, "Post Hi:", v2, "Run Lo:", v3, "Run Hi:", v4)
-
+    @pyqtSlot()
+    def race(self):
+        self.stateMachine.hide()
+        self.rpmGauge.show()
+        self.socGauge.show()
+        self.tempGauge.show()
+        self.errorGauge.show()
     @pyqtSlot()
     def temp_close(self):
         self.tempGauge.hide()
