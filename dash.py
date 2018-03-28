@@ -24,7 +24,6 @@ from args import Arg_Class
 from debugGps import DebugGPS
 from fileWriter import FileWriter
 from errorGauge import Error
-
 DASH_WIDTH = 1000
 DASH_HEIGHT = 550
 
@@ -75,10 +74,20 @@ class Dash(QMainWindow):
             self.errorGauge.move(20, 400)
             self.errorGauge.resize(GAUGE_WIDTH*2.5, GAUGE_HEIGHT)
             self.errorGauge.show()
-        elif self.arguments.Args.charging == True:
+        elif self.arguments.Args.charging == True:  #---------------Charging widgets go here
             p.setColor(self.backgroundRole(), Qt.blue)
-            p.setColor(self.foregroundRole(), Qt.blue)
+            p.setColor(self.foregroundRole(), Qt.black)
             self.setPalette(p) #temporary to make sure the screen is unique
+            #self.socGrapher = CustomFigCanvas()
+            #self.socGrapher.move(0,16.0)
+            #self.socGrapher.show()
+            self.socGauge = Soc(self)
+            self.socGauge.move(850,GAUGE_VPOS-300.0)
+            self.socGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT*2.5)
+            self.tempGauge = Temp(self)
+            self.tempGauge.move(850,GAUGE_VPOS - 150.0)
+            self.tempGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT*2.5)
+            self.tempGauge.show()
             #SET GUAGES/GRAPHS FOR CHARGING SCREEN HERE
 
 

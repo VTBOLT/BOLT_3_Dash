@@ -14,6 +14,7 @@ import sys
 
 from PyQt5.QtWidgets import QApplication
 from dash import Dash
+from charge import Charge
 from canReader import CanReader
 from gpsReader import GpsReader
 from debug import Debug
@@ -24,9 +25,12 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     arguments = Arg_Class()
     dash = Dash()
+    charge = Charge()
     print("Dash thread started:", app.instance().thread())
     if arguments.Args.fullscreen:
         dash.showFullScreen()
+    elif arguments.Args.charging:
+        charge.show()
     else:
         dash.show()
 
@@ -96,6 +100,11 @@ if __name__ == '__main__':
             #if charging is true, then we want the graphs and battery life to show (SOC)
             #only add signals here that will be used in the charging screens
             print("Charging Screen")
+            canWorker =CanReader()
+            canWorker.start()
+            canWorker.socUpdateValue.connect(dash.socGauge.soc_update)
+            canWorker.socUpdateValue.connect(dash.debug.c2.channel_update)
+            canWorker.socUpdateValue.connect(fileWriter.soc_write)
 
     app.processEvents()
     sys.exit(app.exec_())
