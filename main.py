@@ -29,7 +29,7 @@ if __name__ == '__main__':
         dash.showFullScreen()
     else:
         dash.show()
-    
+
     if arguments.Args.canoff == True:
         canWorker =CanReader()
         canWorker.start()
@@ -43,10 +43,11 @@ if __name__ == '__main__':
         canWorker.highMotorTempUpdateValue.connect(dash.tempGauge.highMotorTemp_update)
         canWorker.highCellTempUpdateValue.connect(dash.tempGauge.highCellTemp_update)
         canWorker.lowCellTempUpdateValue.connect(dash.tempGauge.lowCellTemp_update)
-        
+
         canWorker.errorSignal.connect(dash.error_update)
-        canWorker.errorSignal.connect(dash.errorGauge.error_update)        
+        canWorker.errorSignal.connect(dash.errorGauge.error_update)
         canWorker.rpmUpdateValue.connect(dash.errorGauge.RPMCut_update)
+
         #signal/slot connections for debug screen
         canWorker.rpmUpdateValue.connect(dash.debug.c1.channel_update)
         canWorker.socUpdateValue.connect(dash.debug.c2.channel_update)
@@ -55,8 +56,7 @@ if __name__ == '__main__':
         canWorker.highCellTempUpdateValue.connect(dash.debug.c5.channel_update)
         canWorker.lowCellTempUpdateValue.connect(dash.debug.c6.channel_update)
         canWorker.highMotorTempUpdateValue.connect(dash.debug.c7.channel_update)
-        canWorker.DCLUpdateValue.connect(dash.debug.c8.channel_update)        
-
+        canWorker.DCLUpdateValue.connect(dash.debug.c8.channel_update)
 
         #signal/slot connection for state machine
         dash.accessoryPress.connect(dash.stateMachine.updateState)
@@ -64,6 +64,7 @@ if __name__ == '__main__':
         dash.precharge.connect(dash.stateMachine.updateState)
         dash.estop.connect(dash.stateMachine.updateState)
         dash.raceMode.connect(dash.race)
+
     if arguments.Args.gpsoff == True:
         try:
             gpsWorker = GpsReader()
@@ -76,7 +77,7 @@ if __name__ == '__main__':
         gpsWorker.rollValue.connect(dash.debugGps.gpsGauge.roll_update)
         gpsWorker.pitchValue.connect(dash.debugGps.gpsGauge.pitch_update)
         gpsWorker.gForceValue.connect(dash.debugGps.gpsGauge.gForce_update)
-        
+
     if arguments.Args.log:
         fileWriter = FileWriter()
         fileWriter.start()
@@ -98,7 +99,7 @@ if __name__ == '__main__':
             gpsWorker.gForceValue.connect(fileWriter.gForce_write)
             gpsWorker.bodyAccelValue.connect(fileWriter.bodyAccel_write)
             gpsWorker.velValue.connect(fileWriter.vel_write)
-        
+
     app.processEvents()
     sys.exit(app.exec_())
-                                                                
+
