@@ -168,10 +168,10 @@ class Data(QWidget):
         self.calculateDelta_low(self, self.delta_low)
     def calculateDelta_high(self, value):
         self.new_value = value - self.delta_low
-        self.soc_value_charge.display(self.new_value)
+        self.delta_value.display(self.new_value)
     def calculateDelta_low(self, value):
         self.new_value = self.delta_high - value
-        self.soc_value_charge.display(self.new_value)
+        self.delta_value.display(self.new_value)
 
 
 class Graph(QWidget):
