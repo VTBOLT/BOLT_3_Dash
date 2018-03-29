@@ -26,12 +26,13 @@ class State(Enum):
 	IMDFAULT = 7 #Probably will not need here since this is only reading GPIO
 	PRESSUREFAULT = 8 #Probably will not need here since this is only reading GPIO
 	BMSFAULT = 9 #Probably will not need here since this is only reading GPIO
-	ESTOP = 10 
+	ESTOP = 10
 
 class stateMachine(QThread):
 	def __init__(self):
 		self.currentState = State.IDLE
 		QThread.__init__(self)
+
 	def run(self):
 		print("State Machine Thread Started", self.currentThread())
 		print("Current State: IDLE")

@@ -35,11 +35,14 @@ GAUGE_HEIGHT = 140
 GAUGE_WIDTH = 200
 
 class Dash(QMainWindow):
+
+    """Signals for key presses"""
     accessoryPress = pyqtSignal(int)
     ignitionPress = pyqtSignal(int)
     precharge = pyqtSignal(int)
     estop = pyqtSignal(int)
     raceMode = pyqtSignal()
+
     def __init__(self, parent=None):
         super(Dash, self).__init__(parent)
 
@@ -138,7 +141,74 @@ class Dash(QMainWindow):
             self.debugGps.show()
 
         #if self.arguments.Args.log:
-        #self.fileWriter = FileWriter(self)
+            #self.fileWriter = FileWriter(self)
+
+#______________________________________________________________________#
+# System State Machine
+# Each of the following pyqtSlots represenents a state in the system
+# state machine.
+
+    @pyqtSlot()
+    def idol_state(self):
+        """TODO(chrise92):Show 'Turn on Accessory Switch' screen
+        and wait for acc GPIO pin to go HI"""
+        pass
+
+    @pyqtSlot()
+    def acc_on_state(self):
+        """TODO(chrise92): Show "Pump Good, BMS Good, Turn on Ignition Switch' screen
+        and wait for ign GPIO pin to go HI
+        - check for all required signals, ACC, PRESSURE_OK, IMD_OK, BMS_DE
+        - display errors if they exist
+        """
+        pass
+
+    @pyqtSlot()
+    def ign_on_state(self):
+        """TODO(chrise92):
+        - if CAN does not say MC on say 'Precharging...''
+        - if CAN does say MC on say 'Precharge complete! Press Start Button'
+        - if there is a POST FAULT, go to POST_FAULT_STATE
+        """
+        pass
+
+    @pyqtSlot()
+    def motor_enabled_state(self):
+        """TODO(chrise92):
+        - show racing screen
+        - check for faults
+        - go to run_fault_state if one is found
+        """
+        pass
+
+    @pyqtSlot()
+    def run_fault_state(self):
+        """TODO(chrise92):
+        - determine criticality of the fault
+        - report the fault
+        - go to interter_disabled_state if MC turned off, or if criticality is high
+        - go back to interter_enabled_state if MC still running
+        """
+        pass
+
+    @pyqtSlot()
+    def post_fault_state(self):
+        """TODO(chrise92):
+        - report fault and go to inverter_disabled_state
+        """
+        pass
+
+    @pyqtSlot()
+    def inverter_disabled_state(self):
+        """TODO(chrise92)
+        - Show blue screen of death, display error, and instruct rider for next actions
+        depending on reason for disabled state
+        - Go back to acc_on state once ignition is switched off
+        """
+        pass
+#________________________________________________________________________#
+
+
     def keyPressEvent(self, event):
         if (type(event) == QKeyEvent and event.key() == 0x41):
             self.accessoryPress.emit(1)
@@ -153,6 +223,7 @@ class Dash(QMainWindow):
         elif (type(event) == QKeyEvent and event.key() == 0x45):
             self.estop.emit(0)
             print("Emergency Stop")
+
     @pyqtSlot(int, int, int, int)
     def error_update(self, v1, v2, v3, v4):
         p = self.palette()
@@ -161,6 +232,7 @@ class Dash(QMainWindow):
         self.setPalette(p)
         self.update()
         print("ERROR, Post Lo:", v1, "Post Hi:", v2, "Run Lo:", v3, "Run Hi:", v4)
+
     @pyqtSlot()
     def race(self):
         self.stateMachine.hide()
@@ -168,9 +240,11 @@ class Dash(QMainWindow):
         self.socGauge.show()
         self.tempGauge.show()
         self.errorGauge.show()
+
     @pyqtSlot()
     def temp_close(self):
         self.tempGauge.hide()
+
     @pyqtSlot()
     def temp_open(self):
         self.tempGauge.show()
