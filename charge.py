@@ -1,7 +1,7 @@
 import sys
 import time
 import pyqtgraph as pg
-from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QFrame, QAction, QPushButton, QVBoxLayout, QLabel,QHBoxLayout, QGridLayout, QTabWidget
+from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QFrame, QAction, QPushButton, QVBoxLayout, QLabel,QHBoxLayout, QGridLayout, QTabWidget, QLCDNumber
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, Qt, QThread, pyqtSlot
 
 from socGauge import Soc
@@ -60,6 +60,18 @@ class Charge(QMainWindow):
         # self.tempGauge.show()
         #SET GUAGES/GRAPHS FOR CHARGING SCREEN HERE
 
+    #These are the slots that are called when a value is updated (connections made in main.py)
+    @pyqtSlot(float)
+    def soc_update(self, value):
+        self.layout.data.soc_value(value) #calling these functions changes the value on the GUI
+    @pyqtSlot(float)
+    def highCellTemp_update(self, value):
+        self.layout.data.highCellTemp_value(value)
+    @pyqtSlot(float)
+    def lowCellTemp_update(self, value):
+        self.layout.data.lowCellTemp_value(value)
+
+
 class Layouts(QWidget):
     def __init__(self, parent):
         super(Layouts, self).__init__(parent)
@@ -102,17 +114,47 @@ class Data(QWidget):
         self.voltage = QLabel("Voltage:")
         self.voltage.setStyleSheet('color: white')
 
+        self.soc_value_charge = QLCDNumber(self)
+        self.soc_value_charge.display(0.0)
+        self.soc_value_charge.setFrameShape(QFrame.NoFrame)
+        self.soc_value_charge.setSegmentStyle(QLCDNumber.Flat)
+
+        self.high_cell_temp_value_charge = QLCDNumber(self)
+        self.high_cell_temp_value_charge.display(0.0)
+        self.high_cell_temp_value_charge.setFrameShape(QFrame.NoFrame)
+        self.high_cell_temp_value_charge.setSegmentStyle(QLCDNumber.Flat)
+
+        self.low_cell_temp_value_charge = QLCDNumber(self)
+        self.low_cell_temp_value_charge.display(0.0)
+        self.low_cell_temp_value_charge.setFrameShape(QFrame.NoFrame)
+        self.low_cell_temp_value_charge.setSegmentStyle(QLCDNumber.Flat)
 
         self.title.setAlignment(Qt.AlignCenter)
         self.data.addWidget(self.title,0,0,1,2)
         self.data.addWidget(self.SoC,1,0)
+        self.data.addWidget(self.soc_value_charge, 1, 1) #adding state of charge value
         self.data.addWidget(self.hiTemp,2,0)
-        self.data.addWidget(self.hiTempData,2,1)
+        self.data.addWidget(self.high_cell_temp_value_charge, 2, 1) #adding the high cell temp value
         self.data.addWidget(self.hiId,3,0)
         self.data.addWidget(self.lowTemp,4,0)
+        self.data.addWidget(self.low_cell_temp_value_charge, 4, 1) #adding the low cell temp value
         self.data.addWidget(self.lowId,5,0)
         self.data.addWidget(self.voltage,6,0)
         self.setLayout(self.data)
+
+    #these functions, when called, are what actually change the value shown on the GUI
+    def soc_value(self, value):
+        self.soc_value_charge.display(value)
+        self.value = value
+        self.update()
+    def highCellTemp_value(self, value):
+        self.high_cell_temp_value_charge.display(value)
+        self.value = value
+        self.update()
+    def lowCellTemp_value(self, value):
+        self.low_cell_temp_value_charge.display(value)
+        self.value = value
+        self.update()
 
 class Graph(QWidget):
     def __init__(self,parent):

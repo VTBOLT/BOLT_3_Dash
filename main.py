@@ -20,12 +20,14 @@ from gpsReader import GpsReader
 from debug import Debug
 from args import Arg_Class
 from fileWriter import FileWriter
+from charge import Data
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     arguments = Arg_Class()
     dash = Dash()
     charge = Charge()
+
     print("Dash thread started:", app.instance().thread())
     if arguments.Args.fullscreen:
         dash.showFullScreen()
@@ -96,15 +98,15 @@ if __name__ == '__main__':
             gpsWorker.bodyAccelValue.connect(fileWriter.bodyAccel_write)
             gpsWorker.velValue.connect(fileWriter.vel_write)
 
-        if arguments.Args.charging:
+    if arguments.Args.charging == True:
             #if charging is true, then we want the graphs and battery life to show (SOC)
             #only add signals here that will be used in the charging screens
-            print("Charging Screen")
             canWorker =CanReader()
             canWorker.start()
-            canWorker.socUpdateValue.connect(dash.socGauge.soc_update)
-            canWorker.socUpdateValue.connect(dash.debug.c2.channel_update)
-            canWorker.socUpdateValue.connect(fileWriter.soc_write)
+            canWorker.socUpdateValue.connect(charge.soc_update)
+            canWorker.highCellTempUpdateValue.connect(charge.highCellTemp_update)
+            canWorker.lowCellTempUpdateValue.connect(charge.lowCellTemp_update)
+            #canWorker.socUpdateValue.connect(fileWriter.soc_write)
 
     app.processEvents()
     sys.exit(app.exec_())
