@@ -4,7 +4,7 @@
 ## Author: Matt Verghese
 ## Written: Fall 2017
 ## Last Upadated: Fall 2017
-## Notes: 
+## Notes:
 #############################################################################
 
 import argparse
@@ -22,4 +22,6 @@ class Arg_Class(object):
         parser.add_argument('-dev', action='store_false', help='dev help')
         parser.add_argument('-log', action='store_true', help='log help')
         parser.add_argument('-loc', help='location help')
+        # option to go to the charging screen instead of the racing dash
+        parser.add_argument('-charging', action='store_true', help='charging on')
         self.Args = parser.parse_args()
