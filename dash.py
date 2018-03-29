@@ -10,9 +10,9 @@
 
 import sys
 import time
-from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QFrame, QAction, QPushButton
+from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QFrame, QAction, QPushButton, QLabel
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, Qt, QThread, pyqtSlot
-from PyQt5.QtGui import QKeyEvent
+from PyQt5.QtGui import QKeyEvent, QPixmap, QFont, QColor
 from socGauge import Soc
 from rpmGauge import Rpm
 from lapTimePannel import LastLapTime, CurrentLapTime, BestLapTime
@@ -56,21 +56,39 @@ class Dash(QMainWindow):
         self.arguments = Arg_Class()
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.black)
-        p.setColor(self.foregroundRole(), Qt.white)
+        p.setColor(self.foregroundRole(), QColor(255, 129, 0))
 
         self.setPalette(p)
+
+        # This is the logo widget
+        pixmap = QPixmap("BOLT3.png")
+        pixmap = pixmap.scaled(DASH_WIDTH, DASH_HEIGHT)
+        self.logo = QLabel(self)
+        self.logo.setPixmap(pixmap)
+        self.logo.move(0.0, 0.0)
+        self.logo.resize(DASH_WIDTH, DASH_HEIGHT)
+
+        self.msg_font = QFont("Helvetica", 16, QFont.Bold)
+
+        # This is the acc message widget
+        self.msg = QLabel(self)
+        self.msg.setText("Turn On Accessory Switch")
+        self.msg.setAlignment(Qt.AlignCenter)
+        self.msg.setFont(self.msg_font)
+        self.msg.move(0, DASH_HEIGHT * 3/4)
+        self.msg.resize(DASH_WIDTH, DASH_HEIGHT / 6)
+
         ######################################################
         ###state machine starts here
-        self.stateMachine = StateMachine(self)
-        self.stateMachine.move(DASH_WIDTH/2-200,DASH_HEIGHT/2-100)
-        self.stateMachine.resize(300,200)
+        #self.stateMachine = StateMachine(self)
+        #self.stateMachine.move(DASH_WIDTH/2-200,DASH_HEIGHT/2-100)
+        #self.stateMachine.resize(300,200)
+
         ## call function that sets the text of each of the startup screens based on what gpio signals are high
         ## once startup is complete call these to setup dash in race mode
         self.rpmGauge = Rpm(self)
         self.rpmGauge.move(0, 16.0)
         self.rpmGauge.resize(DASH_WIDTH,RPM_HEIGHT)
-
-        #self.rpmGauge.hide()
 
         self.socGauge = Soc(self)
         self.socGauge.move(500,GAUGE_VPOS - 150.0)
@@ -89,11 +107,17 @@ class Dash(QMainWindow):
         self.errorGauge.move(20, 340)
         self.errorGauge.resize(GAUGE_WIDTH*2.5, GAUGE_HEIGHT)
 
-        self.stateMachine.show()
+        """self.logo.show()
+        self.msg.show()
         self.socGauge.hide()
         self.tempGauge.hide()
         self.rpmGauge.hide()
         self.errorGauge.hide()
+"""
+        self.rpmGauge.show()
+        self.socGauge.show()
+        self.tempGauge.show()
+        self.errorGauge.show()
 
         if self.arguments.Args.debug:
             self.debug.show()
@@ -235,7 +259,7 @@ class Dash(QMainWindow):
 
     @pyqtSlot()
     def race(self):
-        self.stateMachine.hide()
+        #self.stateMachine.hide()
         self.rpmGauge.show()
         self.socGauge.show()
         self.tempGauge.show()

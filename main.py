@@ -59,11 +59,11 @@ if __name__ == '__main__':
         canWorker.DCLUpdateValue.connect(dash.debug.c8.channel_update)
 
         #signal/slot connection for state machine
-        dash.accessoryPress.connect(dash.stateMachine.updateState)
-        dash.ignitionPress.connect(dash.stateMachine.updateState)
-        dash.precharge.connect(dash.stateMachine.updateState)
-        dash.estop.connect(dash.stateMachine.updateState)
-        dash.raceMode.connect(dash.race)
+        #dash.accessoryPress.connect(dash.stateMachine.updateState)
+        #dash.ignitionPress.connect(dash.stateMachine.updateState)
+        #dash.precharge.connect(dash.stateMachine.updateState)
+        #dash.estop.connect(dash.stateMachine.updateState)
+        #dash.raceMode.connect(dash.race)
 
     if arguments.Args.gpsoff == True:
         try:

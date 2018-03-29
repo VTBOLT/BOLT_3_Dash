@@ -29,7 +29,9 @@ class StateMachine(QThread):
 		"""Checks conditions and determines next state"""
 		print("State Machine Thread Started", self.currentThread())
 		while(True):
+			current_state = next_state
 			if self.current_state == 'IDLE'
+
 				if self.acc_on:
 					self.next_state = 'ACC_ON'
 				else:
@@ -46,7 +48,11 @@ class StateMachine(QThread):
 					self.next_state = 'IGN_ON'
 			elif self.current_state == 'MOTOR_ENABLED':
 				if self.run_fault_occurred:
-					self.next_state = 'RUN_FAULT'
+					self.next_state = 'INVERTER_DISABLED'
 				else
 					self.next_state = 'MOTOR_ENABLED'
-			current_state = next_state
+			elif self.current_state == 'INVERTER_DISABLED'
+				if not self.run_fault_occurred:
+					self.next_state = 'ACC_ON'
+				else:
+					self.next_state = 'INVERTER_DISABLED'
