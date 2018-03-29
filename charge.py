@@ -114,6 +114,9 @@ class Data(QWidget):
         self.voltage = QLabel("Voltage:")
         self.voltage.setStyleSheet('color: white')
 
+        self.delta = QLabel("Delta:")
+        self.delta.setStyleSheet('color: white')
+
         self.soc_value_charge = QLCDNumber(self)
         self.soc_value_charge.display(0.0)
         self.soc_value_charge.setFrameShape(QFrame.NoFrame)
@@ -129,6 +132,14 @@ class Data(QWidget):
         self.low_cell_temp_value_charge.setFrameShape(QFrame.NoFrame)
         self.low_cell_temp_value_charge.setSegmentStyle(QLCDNumber.Flat)
 
+        #delt_value = delta_high - delta_low
+        self.delta_value = QLCDNumber(self)
+        self.delta_value.display(0.0)
+        self.delta_value.setFrameShape(QFrame.NoFrame)
+        self.delta_value.setSegmentStyle(QLCDNumber.Flat)
+        self.delta_low = 0.0
+        self.delta_high = 0.0
+
         self.title.setAlignment(Qt.AlignCenter)
         self.data.addWidget(self.title,0,0,1,2)
         self.data.addWidget(self.SoC,1,0)
@@ -139,22 +150,29 @@ class Data(QWidget):
         self.data.addWidget(self.lowTemp,4,0)
         self.data.addWidget(self.low_cell_temp_value_charge, 4, 1) #adding the low cell temp value
         self.data.addWidget(self.lowId,5,0)
-        self.data.addWidget(self.voltage,6,0)
+        self.data.addWidget(self.delta,6,0)
+        self.data.addWidget(self.delta_value,6,1)
+        self.data.addWidget(self.voltage,7,0)
         self.setLayout(self.data)
 
     #these functions, when called, are what actually change the value shown on the GUI
     def soc_value(self, value):
         self.soc_value_charge.display(value)
-        self.value = value
-        self.update()
     def highCellTemp_value(self, value):
         self.high_cell_temp_value_charge.display(value)
-        self.value = value
-        self.update()
+        self.delta_high = value
+        self.calculateDelta_high(self, self.delta_high)
     def lowCellTemp_value(self, value):
         self.low_cell_temp_value_charge.display(value)
-        self.value = value
-        self.update()
+        self.delta_low = value
+        self.calculateDelta_low(self, self.delta_low)
+    def calculateDelta_high(self, value):
+        self.new_value = value - self.delta_low
+        self.soc_value_charge.display(self.new_value)
+    def calculateDelta_low(self, value):
+        self.new_value = self.delta_high - value
+        self.soc_value_charge.display(self.new_value)
+
 
 class Graph(QWidget):
     def __init__(self,parent):
