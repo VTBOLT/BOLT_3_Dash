@@ -76,80 +76,81 @@ class StateMachine(QThread):
 
 	@pyqtSlot(int)
 	def updateACC_ON(self, value):
+		print("Updating acc_on value...")
 		if value:
-			self.acc_on = true
+			self.acc_on = True
 		else:
-			self.acc_on = false
-		self.update()
+			self.acc_on = False
+		self.run()
 
 	@pyqtSlot(int)
 	def updateBMS_DE(self, value):
 		if value:
-			self.bms_de = true
+			self.bms_de = True
 		else:
-			self.bmd_de = false
-		self.update()
+			self.bmd_de = False
+		self.run()
 
 	@pyqtSlot(int)
 	def updateIMD_OK(self, value):
 		if value:
-			self.imd_ok = true
+			self.imd_ok = True
 		else:
-			self.imd_ok = false
-		self.update()
+			self.imd_ok = False
+		self.run()
 
 	@pyqtSlot(int)
 	def updatePRESSURE_OK(self, value):
 		if value:
-			self.pressure_ok = true
+			self.pressure_ok = True
 		else:
-			self.pressure_ok = false
-		self.update()
+			self.pressure_ok = False
+		self.run()
 
 	@pyqtSlot(int)
 	def updateIGN_ON(self, value):
 		if value:
-			self.img_on = true
+			self.img_on = True
 		else:
-			self.img_on = false
-		self.update()
+			self.img_on = False
+		self.run()
 
 	@pyqtSlot(int)
 	def updateSTART_BUTTON(self, value):
 		if value:
-			self.start_button_pressed = true
+			self.start_button_pressed = True
 		else:
-			self.start_button_pressed = false
-		self.update()
+			self.start_button_pressed = False
+		self.run()
 
 	@pyqtSlot(int)
 	def updatePOST_FAULT(self, value):
 		if value:
-			self.post_fault_occurred = true
+			self.post_fault_occurred = True
 		else:
-			self.post_fault_occurred = false
-		self.update()
+			self.post_fault_occurred = False
+		self.run()
 
 	@pyqtSlot(int)
 	def updateRUN_FAULT(self, value):
 		if value:
-			self.run_fault_occurred = true
+			self.run_fault_occurred = True
 		else:
-			self.run_fault_occurred = false
-		self.update()
+			self.run_fault_occurred = False
+		self.run()
 
 	@pyqtSlot(int)
 	def updateMOTOR_ENABLED(self, value):
 		if value:
-			self.motor_enabled = true
+			self.motor_enabled = True
 		else:
-			self.motor_enabled = false
-		self.update()
+			self.motor_enabled = False
+		self.run()
 
 	@pyqtSlot(int)
 	def updateINVERTER_DISABLED(self, value):
 		if value:
-			self.inverter_disabled = true
+			self.inverter_disabled = True
 		else:
-			self.inverter_disabled = false
-		self.update()
+			self.inverter_disabled = False
+		self.run()
