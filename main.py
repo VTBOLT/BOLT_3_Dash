@@ -14,6 +14,7 @@ import sys
 
 from PyQt5.QtWidgets import QApplication
 from dash import Dash
+from stateMachine import StateMachine
 from canReader import CanReader
 from gpsReader import GpsReader
 from debug import Debug
@@ -23,7 +24,12 @@ from fileWriter import FileWriter
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     arguments = Arg_Class()
+
     dash = Dash()
+
+    state_machine = StateMachine()
+    state_machine.start()
+
     print("Dash thread started:", app.instance().thread())
     if arguments.Args.fullscreen:
         dash.showFullScreen()
@@ -59,11 +65,15 @@ if __name__ == '__main__':
         canWorker.DCLUpdateValue.connect(dash.debug.c8.channel_update)
 
         #signal/slot connection for state machine
-        #dash.accessoryPress.connect(dash.stateMachine.updateState)
-        #dash.ignitionPress.connect(dash.stateMachine.updateState)
-        #dash.precharge.connect(dash.stateMachine.updateState)
-        #dash.estop.connect(dash.stateMachine.updateState)
-        #dash.raceMode.connect(dash.race)
+        dash.accessoryPress.connect(dash.state_machine.updateACC_ON)
+        dash.ignitionPress.connect(dash.state_machine.updateIGN_ON)
+        dash.startButton.connect(dash.state_machine.updateSTART_BUTTON)
+
+        dash.state_machine.idle_state.connect(dash.idle_state)
+        dash.state_machine.acc_on_state.connect(dash.acc_on_state)
+        dash.state_machine.ign_on_state.connect(dash.ign_on_state)
+        dash.state_machine.motor_enabled_state.connect(dash.motor_enabled_state)
+        dash.state_machine.inverter_disabled_state.connect(dash.inverter_disabled_state)
 
     if arguments.Args.gpsoff == True:
         try:

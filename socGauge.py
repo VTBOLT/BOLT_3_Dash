@@ -1,6 +1,6 @@
 ############################################################################################################
 ## Description: displays State of Charge values
-## Values displayed: SOC, battery level gauge 
+## Values displayed: SOC, battery level gauge
 ## Written for: BOLT Senior Design Team
 ## Author: Henry Trease
 ## Written: Fall 2017
@@ -20,9 +20,9 @@ class Soc(QWidget):
         super(Soc, self).__init__(parent)
 
         self.arguments = Arg_Class()
-        
+
         self.socValue = 0.0
-        
+
         self.socLCD = QLCDNumber(self)
         self.socLCD.display(str(int(self.socValue)).zfill(4)+'.'+str((self.socValue - int(self.socValue))*10).zfill(4))
         self.socLCD.setFrameShape(QFrame.NoFrame)
@@ -30,13 +30,13 @@ class Soc(QWidget):
         #self.socLCD.move(30,100)
         self.socLCD.move(0,20)
         self.socLCD.resize(70,80)
-        
+
         self.socLabel = QLabel(self)
         self.socLabel.setText("soc: ")
         self.socLabel.move(10,10)
         self.socLCD.show()
         self.socLabel.show()
-        
+
     @pyqtSlot(float)
     def soc_update(self, value):
         self.socLCD.display(value)
@@ -59,5 +59,5 @@ class Soc(QWidget):
 
         qp.drawRect(70, 20+(300*(1-(self.socValue/100))), 70, ((180*self.socValue/100)))
         #qp.drawRect(60+(150*(1-(self.socValue/100))), 40, ((150*self.socValue/100)),60)#horizontal bar
-            
+
 

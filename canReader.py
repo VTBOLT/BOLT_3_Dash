@@ -27,7 +27,7 @@ class CanReader(QThread):
     errorSignal = pyqtSignal(int, int, int, int)
     vsmUpdateValue = pyqtSignal(int)
     highMotorTemp = 0
-    
+
     def __init__(self):
         self.highMotorTemp = 0.0
         QThread.__init__(self)
@@ -122,32 +122,32 @@ class CanReader(QThread):
                         #else:
                             #print("ERROR: Parsing missed:", buf)
                         buf = ""
-            else:                
-                #while True:                      
+            else:
+                #while True:
                     #sudo modprobe can
                     # Create a can network interface with a specific name
                     #sudo ip link add dev can0 type can
                     #sudo ip link set can0 up
                     #sudo ip link set can0 up type can bitrate 500000000 #5k bitrate
-                    #sudo ifconfig can0 txqueuelen 100                    
+                    #sudo ifconfig can0 txqueuelen 100
 
                 can_interface = 'can0'
                 def producer(id):
                     bus = can.interface.Bus(can_interface, bustype='socketcan_native')
                 producer(0x183)
                 idFilterList = [{'rpm': 0xA5, 'can_mask': 0x11},
-                                {'soc': 0x183, 'can_mask': 0x11}, 
+                                {'soc': 0x183, 'can_mask': 0x11},
                                 {'cellTemp': 0x181, 'can_mask': 0x11}]  #in order RPM, SOC, highcellTemp
-                              
-                can0.set_filters(idFilterList) 
+
+                can0.set_filters(idFilterList)
 
                 while True:
                     message = can0.recv(0.0) # choose a timeout in seconds, 0.0 means non-blocking
 
-                    if message is None: 
+                    if message is None:
                         print('Timeout occured, no data from can bus.')
                     else:
-                        
+
                         if message is idFilterList["rpm"]: #RPM
 
                             self.rpmUpdateValue.emit()
@@ -157,6 +157,6 @@ class CanReader(QThread):
 
                         elif message is idFilterList["cellTemp"]: #highCellTemp
                             self.tempUpdateValue.emit()
-            
+
         self.exec()
-                                                                                    
+

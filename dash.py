@@ -24,7 +24,7 @@ from args import Arg_Class
 from debugGps import DebugGPS
 from fileWriter import FileWriter
 from errorGauge import Error
-from stateMachineGUI import StateMachine
+from stateMachine import StateMachine
 
 DASH_WIDTH = 800
 DASH_HEIGHT = 420
@@ -39,9 +39,7 @@ class Dash(QMainWindow):
     """Signals for key presses"""
     accessoryPress = pyqtSignal(int)
     ignitionPress = pyqtSignal(int)
-    precharge = pyqtSignal(int)
-    estop = pyqtSignal(int)
-    raceMode = pyqtSignal()
+    startButton = pyqtSignal(int)
 
     def __init__(self, parent=None):
         super(Dash, self).__init__(parent)
@@ -50,6 +48,8 @@ class Dash(QMainWindow):
         self.setMinimumWidth(DASH_WIDTH)
         self.setMinimumHeight(DASH_HEIGHT)
         self.initGUI()
+
+        self.state_machine = StateMachine()
 
     def initGUI(self):
         self.setAutoFillBackground(True)
@@ -70,19 +70,13 @@ class Dash(QMainWindow):
 
         self.msg_font = QFont("Helvetica", 16, QFont.Bold)
 
-        # This is the acc message widget
+        # This is the message widget
         self.msg = QLabel(self)
         self.msg.setText("Turn On Accessory Switch")
         self.msg.setAlignment(Qt.AlignCenter)
         self.msg.setFont(self.msg_font)
         self.msg.move(0, DASH_HEIGHT * 3/4)
         self.msg.resize(DASH_WIDTH, DASH_HEIGHT / 6)
-
-        ######################################################
-        ###state machine starts here
-        #self.stateMachine = StateMachine(self)
-        #self.stateMachine.move(DASH_WIDTH/2-200,DASH_HEIGHT/2-100)
-        #self.stateMachine.resize(300,200)
 
         ## call function that sets the text of each of the startup screens based on what gpio signals are high
         ## once startup is complete call these to setup dash in race mode
@@ -100,27 +94,22 @@ class Dash(QMainWindow):
 
         self.debug = Debug(self)
         self.debugGps = DebugGPS(self)
-        self.debug.hide()
-        self.debugGps.hide()
 
         self.errorGauge = Error(self)
         self.errorGauge.move(20, 340)
         self.errorGauge.resize(GAUGE_WIDTH*2.5, GAUGE_HEIGHT)
 
-        """self.logo.show()
-        self.msg.show()
-        self.socGauge.hide()
-        self.tempGauge.hide()
-        self.rpmGauge.hide()
-        self.errorGauge.hide()
-"""
-        self.rpmGauge.show()
-        self.socGauge.show()
-        self.tempGauge.show()
-        self.errorGauge.show()
-
         if self.arguments.Args.debug:
             self.debug.show()
+
+        self.logo.show()
+        self.msg.show()
+        self.rpmGauge.hide()
+        self.socGauge.hide()
+        self.tempGauge.hide()
+        self.debug.hide()
+        self.debugGps.hide()
+        self.errorGauge.hide()
 
         #### if an error is thrown enter error state machine defined here
 
@@ -164,31 +153,59 @@ class Dash(QMainWindow):
             #self.debug.show()
             self.debugGps.show()
 
+
         #if self.arguments.Args.log:
             #self.fileWriter = FileWriter(self)
 
-#______________________________________________________________________#
-# System State Machine
-# Each of the following pyqtSlots represenents a state in the system
-# state machine.
+    def keyPressEvent(self, event):
+        if (type(event) == QKeyEvent and event.key() == 0x41):
+            self.accessoryPress.emit(1)
+            print("Accessory Pressed")
+        elif (type(event) == QKeyEvent and event.key() == 0x49):
+            self.ignitionPress.emit(1)
+            print("Ignition Pressed")
+            print("Precharging...")
+            time.sleep(3)
+            print("Press start button")
+        elif (type(event) == QKeyEvent and event.key() == 0x45):
+            self.estop.emit(0)
+            print("Emergency Stop")
 
-    @pyqtSlot()
-    def idol_state(self):
+    @pyqtSlot(int)
+    def idle_state(self, value):
         """TODO(chrise92):Show 'Turn on Accessory Switch' screen
         and wait for acc GPIO pin to go HI"""
-        pass
+        self.logo.show()
+        self.msg.show()
 
-    @pyqtSlot()
-    def acc_on_state(self):
+        self.socGauge.hide()
+        self.tempGauge.hide()
+        self.rpmGauge.hide()
+        self.errorGauge.hide()
+        self.debug.hide()
+        self.debugGps.hide()
+
+    @pyqtSlot(int)
+    def acc_on_state(self, value):
         """TODO(chrise92): Show "Pump Good, BMS Good, Turn on Ignition Switch' screen
         and wait for ign GPIO pin to go HI
         - check for all required signals, ACC, PRESSURE_OK, IMD_OK, BMS_DE
         - display errors if they exist
         """
-        pass
+        self.msg.setText("Turn on Ignition Switch")
 
-    @pyqtSlot()
-    def ign_on_state(self):
+        self.logo.show()
+        self.msg.show()
+
+        self.socGauge.hide()
+        self.tempGauge.hide()
+        self.rpmGauge.hide()
+        self.errorGauge.hide()
+        self.debug.hide()
+        self.debugGps.hide()
+
+    @pyqtSlot(int)
+    def ign_on_state(self, value):
         """TODO(chrise92):
         - if CAN does not say MC on say 'Precharging...''
         - if CAN does say MC on say 'Precharge complete! Press Start Button'
@@ -196,8 +213,8 @@ class Dash(QMainWindow):
         """
         pass
 
-    @pyqtSlot()
-    def motor_enabled_state(self):
+    @pyqtSlot(int)
+    def motor_enabled_state(self, value):
         """TODO(chrise92):
         - show racing screen
         - check for faults
@@ -205,8 +222,8 @@ class Dash(QMainWindow):
         """
         pass
 
-    @pyqtSlot()
-    def run_fault_state(self):
+    @pyqtSlot(int)
+    def run_fault_state(self, value):
         """TODO(chrise92):
         - determine criticality of the fault
         - report the fault
@@ -215,38 +232,23 @@ class Dash(QMainWindow):
         """
         pass
 
-    @pyqtSlot()
-    def post_fault_state(self):
+
+    @pyqtSlot(int)
+    def post_fault_state(self, value):
         """TODO(chrise92):
         - report fault and go to inverter_disabled_state
         """
         pass
 
-    @pyqtSlot()
-    def inverter_disabled_state(self):
+
+    @pyqtSlot(int)
+    def inverter_disabled_state(self, value):
         """TODO(chrise92)
         - Show blue screen of death, display error, and instruct rider for next actions
         depending on reason for disabled state
         - Go back to acc_on state once ignition is switched off
         """
         pass
-#________________________________________________________________________#
-
-
-    def keyPressEvent(self, event):
-        if (type(event) == QKeyEvent and event.key() == 0x41):
-            self.accessoryPress.emit(1)
-            print("Accessory Pressed")
-        elif (type(event) == QKeyEvent and event.key() == 0x49):
-            self.ignitionPress.emit(2)
-            print("Ignition Pressed")
-            print("Pre-charge start")
-            time.sleep(3)
-            print("Pre-charge complete")
-            self.raceMode.emit()
-        elif (type(event) == QKeyEvent and event.key() == 0x45):
-            self.estop.emit(0)
-            print("Emergency Stop")
 
     @pyqtSlot(int, int, int, int)
     def error_update(self, v1, v2, v3, v4):
