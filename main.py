@@ -65,15 +65,15 @@ if __name__ == '__main__':
         canWorker.DCLUpdateValue.connect(dash.debug.c8.channel_update)
 
         #signal/slot connection for state machine
-        dash.accessoryPress.connect(dash.state_machine.updateACC_ON)
-        dash.ignitionPress.connect(dash.state_machine.updateIGN_ON)
-        dash.startButton.connect(dash.state_machine.updateSTART_BUTTON)
+        dash.accessoryPress.connect(state_machine.updateACC_ON)
+        dash.ignitionPress.connect(state_machine.updateIGN_ON)
+        dash.startButton.connect(state_machine.updateSTART_BUTTON)
 
-        dash.state_machine.idle_state.connect(dash.idle_state)
-        dash.state_machine.acc_on_state.connect(dash.acc_on_state)
-        dash.state_machine.ign_on_state.connect(dash.ign_on_state)
-        dash.state_machine.motor_enabled_state.connect(dash.motor_enabled_state)
-        dash.state_machine.inverter_disabled_state.connect(dash.inverter_disabled_state)
+        state_machine.idle_signal.connect(dash.idle_state)
+        state_machine.acc_on_signal.connect(dash.acc_on_state)
+        state_machine.ign_on_signal.connect(dash.ign_on_state)
+        state_machine.motor_enabled_signal.connect(dash.motor_enabled_state)
+        state_machine.inverter_disabled_signal.connect(dash.inverter_disabled_state)
 
     if arguments.Args.gpsoff == True:
         try:

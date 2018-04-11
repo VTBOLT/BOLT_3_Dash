@@ -49,16 +49,13 @@ class Dash(QMainWindow):
         self.setMinimumHeight(DASH_HEIGHT)
         self.initGUI()
 
-        self.state_machine = StateMachine()
-
     def initGUI(self):
         self.setAutoFillBackground(True)
         self.arguments = Arg_Class()
-        p = self.palette()
-        p.setColor(self.backgroundRole(), Qt.black)
-        p.setColor(self.foregroundRole(), QColor(255, 129, 0))
-
-        self.setPalette(p)
+        self.p = self.palette()
+        self.p.setColor(self.backgroundRole(), Qt.black)
+        self.p.setColor(self.foregroundRole(), QColor(255, 129, 0))
+        self.setPalette(self.p)
 
         # This is the logo widget
         pixmap = QPixmap("BOLT3.png")
@@ -158,23 +155,21 @@ class Dash(QMainWindow):
             #self.fileWriter = FileWriter(self)
 
     def keyPressEvent(self, event):
-        if (type(event) == QKeyEvent and event.key() == 0x41):
-            self.accessoryPress.emit(1)
+        if (type(event) == QKeyEvent and event.key() == Qt.Key_A):
             print("Accessory Pressed")
-        elif (type(event) == QKeyEvent and event.key() == 0x49):
-            self.ignitionPress.emit(1)
+            self.accessoryPress.emit(1)
+        elif (type(event) == QKeyEvent and event.key() == Qt.Key_I):
             print("Ignition Pressed")
-            print("Precharging...")
-            time.sleep(3)
-            print("Press start button")
-        elif (type(event) == QKeyEvent and event.key() == 0x45):
-            self.estop.emit(0)
-            print("Emergency Stop")
+            self.ignitionPress.emit(1)
+        elif (type(event) == QKeyEvent and event.key() == Qt.Key_S):
+            print("Ignition Presse")
+            self.startButton.emit(1)
 
     @pyqtSlot(int)
     def idle_state(self, value):
         """TODO(chrise92):Show 'Turn on Accessory Switch' screen
         and wait for acc GPIO pin to go HI"""
+        print("Dash IDLE state")
         self.logo.show()
         self.msg.show()
 
@@ -192,6 +187,10 @@ class Dash(QMainWindow):
         - check for all required signals, ACC, PRESSURE_OK, IMD_OK, BMS_DE
         - display errors if they exist
         """
+        self.p.setColor(self.foregroundRole(), QColor(255, 129, 0))
+        self.setPalette(self.p)
+
+        print("Dash ACC_ON state")
         self.msg.setText("Turn on Ignition Switch")
 
         self.logo.show()
@@ -211,7 +210,21 @@ class Dash(QMainWindow):
         - if CAN does say MC on say 'Precharge complete! Press Start Button'
         - if there is a POST FAULT, go to POST_FAULT_STATE
         """
-        pass
+        self.p.setColor(self.foregroundRole(), QColor(255, 129, 0))
+        self.setPalette(self.p)
+
+        print("Dash IGN_ON state")
+        self.msg.setText("Press the start button")
+
+        self.logo.show()
+        self.msg.show()
+
+        self.socGauge.hide()
+        self.tempGauge.hide()
+        self.rpmGauge.hide()
+        self.errorGauge.hide()
+        self.debug.hide()
+        self.debugGps.hide()
 
     @pyqtSlot(int)
     def motor_enabled_state(self, value):
@@ -220,7 +233,18 @@ class Dash(QMainWindow):
         - check for faults
         - go to run_fault_state if one is found
         """
-        pass
+        self.p.setColor(self.foregroundRole(), Qt.white)
+        self.setPalette(self.p)
+
+        self.logo.hide()
+        self.msg.hide()
+
+        self.socGauge.show()
+        self.tempGauge.hide()
+        self.rpmGauge.show()
+        self.errorGauge.hide()
+        self.debug.hide()
+        self.debugGps.hide()
 
     @pyqtSlot(int)
     def run_fault_state(self, value):
