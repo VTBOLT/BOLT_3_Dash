@@ -39,6 +39,8 @@ class Soc(QWidget):
         
     @pyqtSlot(float)
     def soc_update(self, value):
+        if value < 0:
+            value = 0
         self.socLCD.display(value)
         self.socValue = value
         self.update()
@@ -57,7 +59,7 @@ class Soc(QWidget):
         else:
             qp.setBrush(Qt.green)
 
-        qp.drawRect(70, 20+(300*(1-(self.socValue/100))), 70, ((180*self.socValue/100)))
+        qp.drawRect(70, 20+(180*(1-(self.socValue/100))), 70, ((180*self.socValue/100)))
         #qp.drawRect(60+(150*(1-(self.socValue/100))), 40, ((150*self.socValue/100)),60)#horizontal bar
             
 

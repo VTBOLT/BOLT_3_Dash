@@ -36,7 +36,7 @@ class CanReader(QThread):
         if not self.arguments.Args.dev:
             print("can worker thread:", self.currentThread())
             i = 1000
-            j = 98.0
+            j = 20.0
             k = 98.0
             m = 30.0
             highM = 0.0
