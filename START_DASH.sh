@@ -15,4 +15,4 @@
 sleep 4 ## sleep is necessary to run on startup
 
 ## creates a log file with a unique filename everytime it is run
-sudo python3 /home/pi/BOLT_3_Dash/main.py -gpsoff -log -fullscreen > /home/pi/logs/dash_start_log_$(date "+%H_%M_%S").txt 2>&1
+sudo python3 /home/pi/BOLT_3_Dash/main.py -gpsoff -log > /home/pi/logs/dash_start_log_$(date "+%H_%M_%S").txt 2>&1

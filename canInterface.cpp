@@ -138,14 +138,13 @@ void CanReader::run()
 	    
 	    std::cout << "states:" << VSM_state << ":" << inverter_state << ":" << relay_state << ":" << inverter_run_state << ":" << inverter_cmd_state << ":" << inverter_enable_state << ":" << direction_state << std::endl;
 	    break;
-	    
 	  case 0xAB:
 	    //MC Errors
 	    post_lo_fault = (int16_t)(( frame_rd.data[1] << 8 ) + ( frame_rd.data[0] ));
 	    post_hi_fault = (int16_t)(( frame_rd.data[3] << 8 ) + ( frame_rd.data[2] ));
 	    run_lo_fault = (int16_t)(( frame_rd.data[5] << 8 ) + ( frame_rd.data[4] ));
 	    run_hi_fault = (int16_t)(( frame_rd.data[7] << 8 ) + ( frame_rd.data[6] ));
-	    std::cout << "ERROR:" << post_lo_fault << ":" << post_hi_fault << ":" << run_lo_fault << ":" << run_hi_fault << std::endl;
+            std::cout << "ERROR:" << post_lo_fault << ":" << post_hi_fault << ":" << run_lo_fault << ":" << run_hi_fault << std::endl;
 	    break;
 	    
 	  default:		
