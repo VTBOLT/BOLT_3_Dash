@@ -69,7 +69,7 @@ class GpsReader(QThread):
             #should use boost or embedding and exending
 
             #cmd = './spatialReader'        
-            cmd = '/home/pi/BOLT_3_Dash/spatialReader'
+            cmd = '/home/$USER/BOLT_3_Dash/spatialReader'
             if not Path(cmd).exists():
                 #if Path('./spatialReader').exists():
                 cmd = './spatialReader'            

@@ -71,7 +71,7 @@ class CanReader(QThread):
                 #os.system('sudo ip link set can0 up type can bitrate 500000000')
                 #os.system('sudo ifconfig can0 txqueuelen 100')#sets buffer size
                 #os.system('sudo ifconfig can0 up')
-                cmd = "/home/vbox/BOLT_3_Dash/canInterface"
+                cmd = "/home/$USER/BOLT_3_Dash/canInterface"
                 p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
                 buf = ""
                 for out in iter(lambda: p.stdout.read(1), ''):
