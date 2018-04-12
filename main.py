@@ -93,8 +93,9 @@ if __name__ == '__main__':
             gpsWorker.bodyAccelValue.connect(fileWriter.bodyAccel_write)
             gpsWorker.velValue.connect(fileWriter.vel_write)
 
-    tester = TestThread()
+
     if arguments.Args.test == True and arguments.Args.canoff == True:
+        tester = TestThread()
         tester.start()
         canWorker.rpmUpdateValue.connect(tester.rpm_check)
         canWorker.socUpdateValue.connect(tester.soc_check)

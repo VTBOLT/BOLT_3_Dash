@@ -36,8 +36,7 @@ class TestThread(QThread):
         #self.highMotorTempUpdateValue.emit(highM)
 
         while self.exitFlag == False:
-            print("running11")
-            print("Testing interface for BOLT 3 Dash:")
+            print("\n\nTesting interface for BOLT 3 Dash:")
             print("   1. Test canReader.py")
             print("   2. Test gpsReader.py")
             print("   3. Test GPIO interface")
