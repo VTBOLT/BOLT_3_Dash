@@ -156,20 +156,30 @@ class Dash(QMainWindow):
 
     def keyPressEvent(self, event):
         if (type(event) == QKeyEvent and event.key() == Qt.Key_A):
-            print("Accessory Pressed")
+            print("Acc On")
             self.accessoryPress.emit(1)
+        elif (type(event) == QKeyEvent and event.key() == Qt.Key_Z):
+            print("Acc Off")
+            self.accessoryPress.emit(0)
         elif (type(event) == QKeyEvent and event.key() == Qt.Key_I):
-            print("Ignition Pressed")
+            print("Ign On")
             self.ignitionPress.emit(1)
+        elif (type(event) == QKeyEvent and event.key() == Qt.Key_K):
+            print("Ign Off")
+            self.ignitionPress.emit(0)
         elif (type(event) == QKeyEvent and event.key() == Qt.Key_S):
-            print("Ignition Presse")
+            print("Start button pressed")
             self.startButton.emit(1)
 
     @pyqtSlot(int)
     def idle_state(self, value):
         """TODO(chrise92):Show 'Turn on Accessory Switch' screen
         and wait for acc GPIO pin to go HI"""
-        print("Dash IDLE state")
+        self.p.setColor(self.foregroundRole(), QColor(255, 129, 0))
+        self.setPalette(self.p)
+
+        self.msg.setText("Turn on Accessory Switch")
+
         self.logo.show()
         self.msg.show()
 
@@ -190,7 +200,6 @@ class Dash(QMainWindow):
         self.p.setColor(self.foregroundRole(), QColor(255, 129, 0))
         self.setPalette(self.p)
 
-        print("Dash ACC_ON state")
         self.msg.setText("Turn on Ignition Switch")
 
         self.logo.show()
@@ -213,7 +222,6 @@ class Dash(QMainWindow):
         self.p.setColor(self.foregroundRole(), QColor(255, 129, 0))
         self.setPalette(self.p)
 
-        print("Dash IGN_ON state")
         self.msg.setText("Press the start button")
 
         self.logo.show()

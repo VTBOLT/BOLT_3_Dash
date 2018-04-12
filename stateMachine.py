@@ -43,29 +43,41 @@ class StateMachine(QThread):
 		while True:
 			self.current_state = self.next_state
 			if self.current_state == 'IDLE':
-				print("In IDLE state...")
+				self.start_button_pressed = False
 				self.idle_signal.emit(1)
 				if self.acc_on:
 					self.next_state = 'ACC_ON'
 				else:
 					self.next_state = 'IDLE'
 			elif self.current_state == 'ACC_ON':
-				print("In ACC_ON state...")
+				self.start_button_pressed = False
 				self.acc_on_signal.emit(1)
-				if self.ign_on:
+				if not self.acc_on:
+					self.ign_on = False
+					self.next_state = 'IDLE'
+				elif self.ign_on:
 					self.next_state = 'IGN_ON'
 				else:
 					self.next_state = 'ACC_ON'
 			elif self.current_state == 'IGN_ON':
-				print("in IGN_ON state...")
 				self.ign_on_signal.emit(1)
-				if self.start_button_pressed:
+				if not self.acc_on:
+					self.ign_on = False
+					self.next_state = 'IDLE'
+				elif not self.ign_on:
+					self.next_state = 'ACC_ON'
+				elif self.start_button_pressed:
 					self.next_state = 'MOTOR_ENABLED'
 				else:
 					self.next_state = 'IGN_ON'
 			elif self.current_state == 'MOTOR_ENABLED':
 				self.motor_enabled_signal.emit(1)
-				if self.run_fault_occurred:
+				if not self.acc_on:
+					self.ign_on = False
+					self.next_state = 'IDLE'
+				elif not self.ign_on:
+					self.next_state = 'ACC_ON'
+				elif self.run_fault_occurred:
 					self.next_state = 'INVERTER_DISABLED'
 				else:
 					self.next_state = 'MOTOR_ENABLED'
@@ -80,52 +92,27 @@ class StateMachine(QThread):
 
 	@pyqtSlot(int)
 	def updateACC_ON(self, value):
-		print("Updating acc_on value...")
-		if value:
-			self.acc_on = True
-		else:
-			self.acc_on = False
+		self.acc_on = value
 
 	@pyqtSlot(int)
 	def updateBMS_DE(self, value):
-		if value:
-			self.bms_de = True
-		else:
-			self.bmd_de = False
+		self.bms_de = value
 
 	@pyqtSlot(int)
 	def updateIMD_OK(self, value):
-		if value:
-			self.imd_ok = True
-		else:
-			self.imd_ok = False
+		self.imd_ok = value
 
 	@pyqtSlot(int)
 	def updatePRESSURE_OK(self, value):
-		if value:
-			self.pressure_ok = True
-		else:
-			self.pressure_ok = False
+		self.pressure_ok = value
 
 	@pyqtSlot(int)
 	def updateIGN_ON(self, value):
-		print("Updating ign_on value...")
-		print("signal value", value)
-		if value:
-			self.ign_on = True
-		else:
-			self.ign_on = False
-		print(self.ign_on)
+		self.ign_on = value
 
 	@pyqtSlot(int)
 	def updateSTART_BUTTON(self, value):
-		print("Updating ign_on value...")
-		print("signal value", value)
-		if value:
-			self.start_button_pressed = True
-		else:
-			self.start_button_pressed = False
-		print(self.start_button_pressed)
+		self.start_button_pressed = value
 
 	@pyqtSlot(int)
 	def updatePOST_FAULT(self, value):
