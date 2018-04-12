@@ -19,6 +19,7 @@ from gpsReader import GpsReader
 from debug import Debug
 from args import Arg_Class
 from fileWriter import FileWriter
+from testThread import TestThread
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
@@ -29,7 +30,7 @@ if __name__ == '__main__':
         dash.showFullScreen()
     else:
         dash.show()
-    
+        
     if arguments.Args.canoff == True:
         canWorker =CanReader()
         canWorker.start()
@@ -91,7 +92,19 @@ if __name__ == '__main__':
             gpsWorker.gForceValue.connect(fileWriter.gForce_write)
             gpsWorker.bodyAccelValue.connect(fileWriter.bodyAccel_write)
             gpsWorker.velValue.connect(fileWriter.vel_write)
-        
+
+    tester = TestThread()
+    if arguments.Args.test == True and arguments.Args.canoff == True:
+        tester.start()
+        canWorker.rpmUpdateValue.connect(tester.rpm_check)
+        canWorker.socUpdateValue.connect(tester.soc_check)
+        canWorker.mcTempUpdateValue.connect(tester.mcTemp_check)
+        canWorker.motorTempUpdateValue.connect(tester.motorTemp_check)
+        canWorker.highCellTempUpdateValue.connect(tester.highCellTemp_check)
+        canWorker.lowCellTempUpdateValue.connect(tester.lowCellTemp_check)
+        canWorker.DCLUpdateValue.connect(tester.DCL_check)
+        canWorker.errorSignal.connect(tester.Error_check)
+            
     app.processEvents()
     sys.exit(app.exec_())
                                                                 

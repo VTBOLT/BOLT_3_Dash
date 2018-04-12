@@ -44,7 +44,7 @@ class CanReader(QThread):
                 time.sleep(.1)
                 if i >= 8500:
                     i = 0
-                    #self.errorSignal.emit(1,2,3,4)
+                    self.errorSignal.emit(1,2,3,4)
                 if j <= 0:
                     j = 99.0
                 if k <= 0:
@@ -67,11 +67,11 @@ class CanReader(QThread):
         else:
             C = True # Flag for which can do use, python or c++, defualts to c++
             if C == True:
-                os.system('sudo ifconfig can0 down')
-                os.system('sudo ip link set can0 up type can bitrate 500000000')
-                os.system('sudo ifconfig can0 txqueuelen 100')#sets buffer size
-                os.system('sudo ifconfig can0 up')
-                cmd = "/home/pi/BOLT_3_Dash/canInterface"
+                #os.system('sudo ifconfig can0 down')
+                #os.system('sudo ip link set can0 up type can bitrate 500000000')
+                #os.system('sudo ifconfig can0 txqueuelen 100')#sets buffer size
+                #os.system('sudo ifconfig can0 up')
+                cmd = "/home/vbox/BOLT_3_Dash/canInterface"
                 p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
                 buf = ""
                 for out in iter(lambda: p.stdout.read(1), ''):
@@ -103,20 +103,12 @@ class CanReader(QThread):
                         elif buf.split(':')[0] == 'lowCellTemp':
                             lowCellTemp = buf.split(':')[1]
                             self.lowCellTempUpdateValue.emit(float(lowCellTemp))
-                        elif buf.split(':')[0] == 'states':
-                            VSM_state = buf.split(':')[1]
-                            inverter_state = buf.split(':')[2]
-                            relay_state = buf.split(':')[3]
-                            inverter_run_state = buf.split(':')[4]
-                            inverter_cmd_state = buf.split(':')[5]
-                            inverter_enable_state = buf.split(':')[6]
-                            direction_state = buf.split(':')[7]
                         elif buf.split(':')[0] == 'ERROR':
                             post_lo_fault = buf.split(':')[1]
                             post_hi_fault = buf.split(':')[2]
                             run_lo_fault = buf.split(':')[3]
                             run_hi_fault = buf.split(':')[4]
-                            self.errorSignal.emit(post_lo_fault, post_hi_fault, run_lo_fault, run_hi_fault)
+                            self.errorSignal.emit(float(post_lo_fault), float(post_hi_fault), float(run_lo_fault), float(run_hi_fault))
                         #else:
                             #print("ERROR: Parsing missed:", buf)
                         buf = ""
