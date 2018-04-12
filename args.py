@@ -19,7 +19,7 @@ class Arg_Class(object):
         parser.add_argument('-dots', action='store_true', help='turn dots on')
         parser.add_argument('-fullscreen', action='store_true', help='full screen')
         # option to use fake data instead of reading from can bus
-        parser.add_argument('-dev', action='store_false', help='dev help')
+        parser.add_argument('-dev', action='store_true', help='dev help')
         parser.add_argument('-log', action='store_true', help='log help')
         parser.add_argument('-loc', help='location help')
         parser.add_argument('-test', action='store_true', help='testing')
