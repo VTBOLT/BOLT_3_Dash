@@ -10,8 +10,10 @@
 import os, sys
 import time
 import subprocess
-import can
+from pathlib import Path
+from datetime import datetime as dt
 from PyQt5.QtCore import QThread, pyqtSlot, pyqtSignal
+from PyQt5.QtWidgets import QApplication
 
 from args import Arg_Class
 
@@ -41,7 +43,7 @@ class TestThread(QThread):
             print("   2. Test gpsReader.py")
             print("   3. Test GPIO interface")
             print("   4. Run Dash.py")
-            print("   5. Test fileWriter")
+            print("   5. Test fileWriter- *must run with -log option")
             print("   6. Exit")
             userInput = input("   Enter option: ")
         
@@ -54,8 +56,7 @@ class TestThread(QThread):
                 os.system('sudo ip link set up vcan0')
                 
                 #os.system('cansend vcan0 123#deadbeef')# properly formated can message
-                #subprocess.call(['gnome-terminal', '-x', '/home/vbox/BOLT_3_Dash_V3/canInterface'])
-                #os.system('sudo /home/vbox/BOLT_3_Dash_V3/canInterface')
+
                 print("Sending: mcTemp Value: 3")
                 time.sleep(0.5)
                 os.system('cansend vcan0 0A0#1E.00.0B.00.0C.00.0D.00')
@@ -110,7 +111,7 @@ class TestThread(QThread):
                     print("Error: error codes")
                     failureCount+=1
                 if failureCount == 0:
-                    print("\n\nSucess: All tests passed")
+                    print("\n\nSucess: All tests passed\n*Note mc states are not being tested")
                 else:
                     print("\n\nFailure:", failureCount, "tests failed")
             elif userInput == '2':
@@ -118,11 +119,21 @@ class TestThread(QThread):
             elif userInput == '3':
                 print("GPIO")
             elif userInput == '4':
-                print("Dash")
+                print("\n\nExiting to dash\n")
+                self.exitFlag = 1
             elif userInput == '5':
-                print("file")
+                path = os.environ['HOME'] + '/logs'
+                if not Path(path).exists():
+                    print("Error:", path, "does not exist")
+                print(os.listdir(path)[-1],"min",  dt.now().minute)
+                ext = str(dt.now().month)+'_'+str(dt.now().day)+'_'+str(dt.now().hour)+'_'+str(dt.now().minute)+'.csv'
+                print('testing', path+ext)
+                if not Path(path+ext):
+                    print('Error: log file does not exist', path+ext)
             elif userInput == '6':
-                print("Exiting- this option doesn't work yet")
+                print("Exiting now\n\n")
+                self.exitFlag = 1
+                exit(0)
             #self.exec()
     @pyqtSlot(float)
     def soc_check(self, value):

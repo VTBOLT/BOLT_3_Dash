@@ -8,7 +8,7 @@
 ## TODO: Find faster way of writing to file and log more often
 ##       Also write data to mongodb
 ############################################################################################################
-import sys
+import sys, os
 import time
 from datetime import datetime as dt
 from pathlib import Path
@@ -51,7 +51,7 @@ class FileWriter(QThread):
         
         if arguments.Args.log:
             
-            vbox_path = '/home/vbox/logs/'
+            '''vbox_path = '/home/vbox/logs/'
             pi_path = '/home/pi/logs/'
             alex_path = '/home/alex/pi/logs/'
             
@@ -61,10 +61,14 @@ class FileWriter(QThread):
                 path = vbox_path
             elif Path(alex_path).exists():
                 path = alex_path
-            
+            '''
+            path = os.environ['HOME'] + '/logs/'
+            if not Path(path).exists():
+                print("logs dir not present- creating it-", path)              
+                os.system('mkdir /home/$USER/logs')
             filename_time = 'dash_log_'+str(dt.now().year)+'_'+str(dt.now().month)+'_'+str(dt.now().day)+'_'+str(dt.now().hour)+'_'+str(dt.now().minute)+'.csv'
 
-            self.filename = path+filename_time
+            self.filename = path + filename_time
             #use traditional file writing, the python csv libary is slow
             csvWriter = open(self.filename, 'a')
             
