@@ -24,13 +24,13 @@ GPIO.setup(DASH_PRES, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(DASH_BMSDE, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 class GPIOThread(QThread):
-        ignSignal = pyqtSignal(int)
+	ignSignal = pyqtSignal(int)
 	imdSignal = pyqtSignal(int)
 	presSignal = pyqtSignal(int)
 	bmsdeSignal = pyqtSignal(int)
         #estop = pyqtSignal(int)
 	def __init__(self):
-                self.IGN_FLAG = False
+		self.IGN_FLAG = False
 		self.IMD_FLAG = False
 		self.PRES_FLAG = False
 		self.BMSDE_FLAG = False
@@ -38,35 +38,35 @@ class GPIOThread(QThread):
 	def run(self):
 		print("GPIO Thread Started", self.currentThread())
 		while(True):
-			if GPIO.input(IGN_SWITCH) and !(self.IGN_FLAG):
+			if GPIO.input(IGN_SWITCH) and not self.IGN_FLAG:
 				print("IGN_SWITCH ON")
-                        	self.ignSignal.emit(1)
-                        	self.IGN_FLAG = True
+				self.ignSignal.emit(1)
+				self.IGN_FLAG = True
 			elif not GPIO.input(IGN_SWITCH) and self.IGN_FLAG:
 				print("IGN_SWITCH OFF")
 				self.ignSignal.emit(0)
 				self.IGN_FLAG = False
-			if GPIO.input(DASH_IMD) and !(self.IMD_FLAG):
+			if GPIO.input(DASH_IMD) and not self.IMD_FLAG:
 				print("DASH_IMD ON")
 				self.imdSignal.emit(1)
 				self.IMD_FLAG = True
-			elif not GPIO.input(DASH_IMD) and self.IMD_FLAG):
+			elif not GPIO.input(DASH_IMD) and self.IMD_FLAG:
 				print("DASH_IMD OFF")
 				self.imdSignal.emit(0)
 				self.IMD_FLAG = False
-			if GPIO.input(DASH_PRES) and !(self.PRES_FLAG):
+			if GPIO.input(DASH_PRES) and not self.PRES_FLAG:
 				print("DASH_PRES ON")
 				self.presSignal.emit(1)
 				self.PRES_FLAG = True
-			elif not GPIO.input(DASH_PRES) and self.PRES_FLAG):
+			elif not GPIO.input(DASH_PRES) and self.PRES_FLAG:
 				print("DASH_PRES OFF")
 				self.presSignal.emit(0)
 				self.PRES_FLAG = False
-			if GPIO.input(DASH_BMSDE) and !(self.BMSDE_FLAG):
+			if GPIO.input(DASH_BMSDE) and not self.BMSDE_FLAG:
 				print("DASH_BMSDE ON")
 				self.bmsdeSignal.emit(1)
 				self.BMSDE_FLAG = True
-			elif not GPIO.input(DASH_BMSDE) and self.BMSDE_FLAG):
+			elif not GPIO.input(DASH_BMSDE) and self.BMSDE_FLAG:
 				print("DASH_BMSDE OFF")
 				self.bmsdeSignal.emit(0)
 				self.BMSDE_FLAG = False
