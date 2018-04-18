@@ -17,7 +17,6 @@ DASH_IMD = 19
 DASH_PRES = 16
 DASH_BMSDE = 20
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(ACC_SWITCH, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(IGN_SWITCH, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(DASH_IMD, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(DASH_PRES, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
