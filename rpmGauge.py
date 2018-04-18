@@ -2,9 +2,9 @@
 ## Description: displays rpm values
 ## Values displayed: RPM, tachometer
 ## Written for: BOLT Senior Design Team
-## Author: Henry Trease
+## Author: Henry Trease, Chris Evers
 ## Written: Fall 2017
-## Modified: Winter 2017
+## Modified: Spring 2018
 ## TODO: add white box around tachometer, add flag for antialiasing, add lowpass filter on rpm
 ############################################################################################################
 

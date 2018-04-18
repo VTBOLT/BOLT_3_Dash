@@ -1,7 +1,7 @@
 """------------------------------------------------------------------
  Description: BOLT III system state machine implementation
  Written for: BOLT Spring 2018
- Author: Alex Tsai, Chris Evers
+ Authors: Alex Tsai, Chris Evers
  Notes: TODO(chrise92): Finish implementing the state transitions
 ---------------------------------------------------------------------
 """
