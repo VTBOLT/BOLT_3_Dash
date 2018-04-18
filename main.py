@@ -20,6 +20,7 @@ from gpsReader import GpsReader
 from debug import Debug
 from args import Arg_Class
 from fileWriter import FileWriter
+from GPIOThread import GPIOThread
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
@@ -29,6 +30,9 @@ if __name__ == '__main__':
 
     state_machine = StateMachine()
     state_machine.start()
+	
+    gpio_thread = GPIOThread()
+    gpio_thread.start()
 
     print("Dash thread started:", app.instance().thread())
     if arguments.Args.fullscreen:
@@ -74,6 +78,12 @@ if __name__ == '__main__':
         state_machine.ign_on_signal.connect(dash.ign_on_state)
         state_machine.motor_enabled_signal.connect(dash.motor_enabled_state)
         state_machine.inverter_disabled_signal.connect(dash.inverter_disabled_state)
+	
+	gpio_thread.ignSignal.connect(state_machine.updateIGN_ON)
+	gpio_thread.imdSignal.connect(state_machine.updateIMD_OK)
+	gpio_thread.presSignal.connect(state_machine.updateACC_ON)
+	gpio_thread.presSignal.connect(state_machine.updatePRESSURE_OK)
+	gpio_thread.bmsdeSignal.connect(state_machine.updateBMS_DE)
 
     if arguments.Args.gpsoff == True:
         try:
