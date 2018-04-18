@@ -70,7 +70,7 @@ class FileWriter(QThread):
 
             self.filename = path + filename_time
             #use traditional file writing, the python csv libary is slow
-            csvWriter = open(self.filename, 'a')
+            #csvWriter = open(self.filename, 'a')
             
             self.startTime = time.time()
             pastTime = 0
@@ -92,7 +92,10 @@ class FileWriter(QThread):
                         temp = temp + str(self.currentTime)+','+str(self.rpm)+','+str(self.soc)+','+str(self.mcTemp)+','+str(self.motorTemp)+','+str(self.highMotorTemp)+','+str(self.highCellTemp)+','+str(self.lowCellTemp)+','+str(self.DCL)+','+str(self.latitude)+','+str(self.longitude)+','+str(self.roll)+','+str(self.pitch)+','+str(self.gForce)+','+str(self.bodyAccelx)+','+str(self.bodyAccely)+','+str(self.bodyAccelz)+','+str(self.velx)+','+str(self.vely)+','+str(self.velz)+'\n'
                         count=count+1
                     else:
+                        csvWriter = open(self.filename, 'a')
                         csvWriter.write(temp)
+                        csvWriter.close()
+                        print("Writing stored string to file")
                         count = 0
                         temp = ""
                 time.sleep(.5)# slows down file writing to reduce lag

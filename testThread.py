@@ -35,9 +35,9 @@ class TestThread(QThread):
         QThread.__init__(self)
     def run(self):
         self.arguments = Arg_Class()
-        #self.highMotorTempUpdateValue.emit(highM)
 
         while self.exitFlag == False:
+            time.sleep(0.5)
             print("\n\nTesting interface for BOLT 3 Dash:")
             print("   1. Test canReader.py")
             print("   2. Test gpsReader.py")
@@ -123,13 +123,30 @@ class TestThread(QThread):
                 self.exitFlag = 1
             elif userInput == '5':
                 path = os.environ['HOME'] + '/logs'
-                if not Path(path).exists():
-                    print("Error:", path, "does not exist")
-                print(os.listdir(path)[-1],"min",  dt.now().minute)
-                ext = str(dt.now().month)+'_'+str(dt.now().day)+'_'+str(dt.now().hour)+'_'+str(dt.now().minute)+'.csv'
-                print('testing', path+ext)
-                if not Path(path+ext):
-                    print('Error: log file does not exist', path+ext)
+                print("Testing if:", path, "exists")
+                if Path(path).exists():
+                    #print(os.listdir(path)[-1],"min",  dt.now().minute)
+                    ext = '/dash_log_'+str(dt.now().year)+'_'+str(dt.now().month)+'_'+str(dt.now().day)+'_'+str(dt.now().hour)+'_'+str(dt.now().minute)+'.csv'
+                    print('Testing if path to logs:', path+ext, "exists")
+                    if Path(path+ext):
+                        os.system('sudo modprobe vcan')#use subprocess to supress error output
+                        os.system('sudo ip link add name vcan0 type vcan')
+                        os.system('sudo ip link set up vcan0')
+                        os.system('cansend vcan0 0A0#1E.00.0B.00.0C.00.0D.00')
+                        print("Send test data, please wait while logging is completed")
+                        time.sleep(11)
+                        f = open(path+ext, 'r')
+                        logLines = f.readlines()
+                        print("Testing if log data is correct")
+                        if logLines[-1].split(',')[3] != '3.0':
+                            print('\nError: incorrect log data\n')
+                        else:
+                            print("\nSucess: data logging is working correctly\n\n")
+                    else:
+                        print('\nError: log file does not exist', path+ext,'\n')
+                else:
+                    print("\nError:", path, "does not exist\n")
+                    
             elif userInput == '6':
                 print("Exiting now\n\n")
                 self.exitFlag = 1
@@ -138,7 +155,6 @@ class TestThread(QThread):
     @pyqtSlot(float)
     def soc_check(self, value):
         self.socValue = value
-
     @pyqtSlot(float)
     def rpm_check(self, value):
         self.rpmValue = value
