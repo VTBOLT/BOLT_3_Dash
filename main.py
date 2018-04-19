@@ -14,13 +14,12 @@ import sys
 
 from PyQt5.QtWidgets import QApplication
 from dash import Dash
-from stateMachine import StateMachine
 from canReader import CanReader
 from gpsReader import GpsReader
 from debug import Debug
 from args import Arg_Class
 from fileWriter import FileWriter
-from GPIOThread import GPIOThread
+#from gpioReader import gpioReader
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
@@ -28,11 +27,8 @@ if __name__ == '__main__':
 
     dash = Dash()
 
-    state_machine = StateMachine()
-    state_machine.start()
-	
-    gpio_thread = GPIOThread()
-    gpio_thread.start()
+    #gpio_reader = gpioReader()
+    #gpio_reader.start()
 
     print("Dash thread started:", app.instance().thread())
     if arguments.Args.fullscreen:
@@ -69,21 +65,15 @@ if __name__ == '__main__':
         canWorker.DCLUpdateValue.connect(dash.debug.c8.channel_update)
 
         #signal/slot connection for state machine
-        dash.accessoryPress.connect(state_machine.updateACC_ON)
-        dash.ignitionPress.connect(state_machine.updateIGN_ON)
-        dash.startButton.connect(state_machine.updateSTART_BUTTON)
+        dash.accessoryPress.connect(dash.updateACC_ON)
+        dash.ignitionPress.connect(dash.updateIGN_ON)
+        dash.startButton.connect(dash.updateSTART_BUTTON)
 
-        state_machine.idle_signal.connect(dash.idle_state)
-        state_machine.acc_on_signal.connect(dash.acc_on_state)
-        state_machine.ign_on_signal.connect(dash.ign_on_state)
-        state_machine.motor_enabled_signal.connect(dash.motor_enabled_state)
-        state_machine.inverter_disabled_signal.connect(dash.inverter_disabled_state)
-	
-        gpio_thread.ignSignal.connect(state_machine.updateIGN_ON)
-        gpio_thread.imdSignal.connect(state_machine.updateIMD_OK)
-        gpio_thread.presSignal.connect(state_machine.updateACC_ON)
-        gpio_thread.presSignal.connect(state_machine.updatePRESSURE_OK)
-        gpio_thread.bmsdeSignal.connect(state_machine.updateBMS_DE)
+        #gpio_reader.ignSignal.connect(dash.updateIGN_ON)
+        #gpio_reader.imdSignal.connect(dash.updateIMD_OK)
+        #gpio_reader.presSignal.connect(dash.updateACC_ON)
+        #gpio_reader.presSignal.connect(dash.updatePRESSURE_OK)
+        #gpio_reader.bmsdeSignal.connect(dash.updateBMS_DE)
 
     if arguments.Args.gpsoff == True:
         try:

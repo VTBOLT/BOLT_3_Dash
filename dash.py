@@ -24,7 +24,6 @@ from args import Arg_Class
 from debugGps import DebugGPS
 from fileWriter import FileWriter
 from errorGauge import Error
-from stateMachine import StateMachine
 
 DASH_WIDTH = 800
 DASH_HEIGHT = 420
@@ -40,6 +39,21 @@ class Dash(QMainWindow):
     accessoryPress = pyqtSignal(int)
     ignitionPress = pyqtSignal(int)
     startButton = pyqtSignal(int)
+
+    """Initialize state transition variables"""
+    acc_on = False
+    bms_de = True
+    imd_ok = True
+    pressure_ok = True
+    ign_on = False
+    start_button_pressed = False
+    post_fault_occurred = False
+    run_fault_occurred = False
+    motor_enabled = False
+    inverter_disabled = False
+
+    current_state = 'IDLE'
+    next_state = 'IDLE'
 
     def __init__(self, parent=None):
         super(Dash, self).__init__(parent)
@@ -171,8 +185,64 @@ class Dash(QMainWindow):
             print("Start button pressed")
             self.startButton.emit(1)
 
-    @pyqtSlot(int)
-    def idle_state(self, value):
+    def changeStates(self):
+        """Checks conditions and determines next state"""
+
+        ## IDLE State transition logic
+        if self.current_state == 'IDLE':
+            self.start_button_pressed = False
+            self.idle_state()
+            if self.acc_on:
+                self.current_state = 'ACC_ON'
+                self.acc_on_state()
+
+        ## ACC_ON State transition logic
+        elif self.current_state == 'ACC_ON':
+            self.start_button_pressed = False
+            self.acc_on_state()
+            if not self.acc_on:
+                self.ign_on = False
+                self.current_state = 'IDLE'
+                self.idle_state()
+            elif self.ign_on:
+                self.current_state = 'IGN_ON'
+                self.ign_on_state()
+
+        ## IGN_ON State transition logic
+        elif self.current_state == 'IGN_ON':
+            if not self.acc_on:
+                self.ign_on = False
+                self.current_state = 'IDLE'
+                self.idle_state()
+            elif not self.ign_on:
+                self.current_state = 'ACC_ON'
+                self.acc_on_state()
+            elif self.start_button_pressed:
+                self.current_state = 'MOTOR_ENABLED'
+                self.motor_enabled_state()
+
+        ## MOTOR_ENABLED state transition logic
+        elif self.current_state == 'MOTOR_ENABLED':
+            self.motor_enabled_state()
+            if not self.acc_on:
+                self.ign_on = False
+                self.current_state = 'IDLE'
+                self.idle_state()
+            elif not self.ign_on:
+                self.current_state = 'ACC_ON'
+                self.acc_on_state()
+            elif self.run_fault_occurred:
+                self.current_state = 'INVERTER_DISABLED'
+                self.inverter_disabled_state()
+
+        ## INVERTER_DISABLED state transition logic
+        elif self.current_state == 'INVERTER_DISABLED':
+            self.inverter_disabled_state()
+            if not self.run_fault_occurred:
+                self.current_state = 'ACC_ON'
+                self.acc_on_state()
+
+    def idle_state(self):
         """TODO(chrise92):Show 'Turn on Accessory Switch' screen
         and wait for acc GPIO pin to go HI"""
         self.p.setColor(self.foregroundRole(), QColor(255, 129, 0))
@@ -190,8 +260,7 @@ class Dash(QMainWindow):
         self.debug.hide()
         self.debugGps.hide()
 
-    @pyqtSlot(int)
-    def acc_on_state(self, value):
+    def acc_on_state(self):
         """TODO(chrise92): Show "Pump Good, BMS Good, Turn on Ignition Switch' screen
         and wait for ign GPIO pin to go HI
         - check for all required signals, ACC, PRESSURE_OK, IMD_OK, BMS_DE
@@ -212,8 +281,7 @@ class Dash(QMainWindow):
         self.debug.hide()
         self.debugGps.hide()
 
-    @pyqtSlot(int)
-    def ign_on_state(self, value):
+    def ign_on_state(self):
         """TODO(chrise92):
         - if CAN does not say MC on say 'Precharging...''
         - if CAN does say MC on say 'Precharge complete! Press Start Button'
@@ -234,8 +302,7 @@ class Dash(QMainWindow):
         self.debug.hide()
         self.debugGps.hide()
 
-    @pyqtSlot(int)
-    def motor_enabled_state(self, value):
+    def motor_enabled_state(self):
         """TODO(chrise92):
         - show racing screen
         - check for faults
@@ -254,8 +321,7 @@ class Dash(QMainWindow):
         self.debug.hide()
         self.debugGps.hide()
 
-    @pyqtSlot(int)
-    def run_fault_state(self, value):
+    def run_fault_state(self):
         """TODO(chrise92):
         - determine criticality of the fault
         - report the fault
@@ -265,16 +331,13 @@ class Dash(QMainWindow):
         pass
 
 
-    @pyqtSlot(int)
-    def post_fault_state(self, value):
+    def post_fault_state(self):
         """TODO(chrise92):
         - report fault and go to inverter_disabled_state
         """
         pass
 
-
-    @pyqtSlot(int)
-    def inverter_disabled_state(self, value):
+    def inverter_disabled_state(self):
         """TODO(chrise92)
         - Show blue screen of death, display error, and instruct rider for next actions
         depending on reason for disabled state
@@ -306,3 +369,53 @@ class Dash(QMainWindow):
     @pyqtSlot()
     def temp_open(self):
         self.tempGauge.show()
+
+    @pyqtSlot(int)
+    def updateACC_ON(self, value):
+        self.acc_on = value
+        self.changeStates()
+
+    @pyqtSlot(int)
+    def updateBMS_DE(self, value):
+        self.bms_de = value
+        self.changeStates()
+
+    @pyqtSlot(int)
+    def updateIMD_OK(self, value):
+        self.imd_ok = value
+        self.changeStates()
+
+    @pyqtSlot(int)
+    def updatePRESSURE_OK(self, value):
+        self.pressure_ok = value
+        self.changeStates()
+
+    @pyqtSlot(int)
+    def updateIGN_ON(self, value):
+        self.ign_on = value
+        self.changeStates()
+
+    @pyqtSlot(int)
+    def updateSTART_BUTTON(self, value):
+        self.start_button_pressed = value
+        self.changeStates()
+
+    @pyqtSlot(int)
+    def updatePOST_FAULT(self, value):
+        self.post_fault_occurred = value
+        self.changeStates()
+
+    @pyqtSlot(int)
+    def updateRUN_FAULT(self, value):
+        self.run_fault_occurred = value
+        self.changeStates()
+
+    @pyqtSlot(int)
+    def updateMOTOR_ENABLED(self, value):
+        self.motor_enabled = value
+        self.changeStates()
+
+    @pyqtSlot(int)
+    def updateINVERTER_DISABLED(self, value):
+        self.inverter_disabled = value
+        self.changeStates()

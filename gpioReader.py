@@ -10,7 +10,6 @@ import RPi.GPIO as GPIO
 import sys, time
 from enum import Enum
 from PyQt5.QtCore import QThread, pyqtSlot, pyqtSignal, Qt
-from stateMachine import StateMachine as states
 
 IGN_SWITCH = 26
 DASH_IMD = 19
