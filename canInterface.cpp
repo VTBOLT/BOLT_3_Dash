@@ -54,20 +54,22 @@ void CanReader::run()
   int post_hi_fault = 0;
   int run_lo_fault = 0;
   int run_hi_fault = 0;
-
-  int VSM_state       = 0; 
+  int highCellTempID   = 0;
+  int lowCellTempID    = 0;
+  int packVoltage = 0;
+  int VSM_state       = 0;
   int inverter_state  = 0;
   int relay_state     = 0;
   int inverter_run_state = 0;
-  int inverter_cmd_state = 0;  
+  int inverter_cmd_state = 0;
   int inverter_enable_state = 0;
   int direction_state = 0;
-  
+
   while(1)
   {
     if ( this->abort )
   	return;
-      
+
     struct timeval timeout = {1, 0};
     fd_set readSet;
     FD_ZERO(&readSet);
@@ -83,39 +85,46 @@ void CanReader::run()
 	    moduleA         = (int16_t)(( frame_rd.data[1] << 8 ) + ( frame_rd.data[0] )) * 0.1;
 	    moduleB         = (int16_t)(( frame_rd.data[3] << 8 ) + ( frame_rd.data[2] )) * 0.1;
 	    moduleC         = (int16_t)(( frame_rd.data[5] << 8 ) + ( frame_rd.data[4] )) * 0.1;
-	    gateDrvrBrd     = (int16_t)(( frame_rd.data[7] << 8 ) + ( frame_rd.data[6] )) * 0.1;		      
-	    std::cout << "mcTemp:" << max(moduleA, moduleB, moduleC, gateDrvrBrd) << std::endl;		    
+	    gateDrvrBrd     = (int16_t)(( frame_rd.data[7] << 8 ) + ( frame_rd.data[6] )) * 0.1;
+	    std::cout << "mcTemp:" << max(moduleA, moduleB, moduleC, gateDrvrBrd) << std::endl;
 	    break;
-	    
+
 	  case 0xA2:
               //MC Tempatures
 	    mtrTemp = (int16_t)(( frame_rd.data[5] << 8 ) + ( frame_rd.data[4] )) * 0.1;
-	    std::cout << "motorTemp:" << mtrTemp << std::endl;	      
+	    std::cout << "motorTemp:" << mtrTemp << std::endl;
 	    break;
-    	    
+
 	  case 0xA5:
 	    //Motor Position
 	    RPM = (int16_t)(( frame_rd.data[3] << 8 ) + ( frame_rd.data[2] ));
-	    std::cout << "rpm:" << RPM << std::endl;		      
+	    std::cout << "rpm:" << RPM << std::endl;
 	    break;
-	    
+
 	  case 0x180:
+      //Pack Voltage
+      packVoltage = (int16_t)((frame_rd.data[7] << 8) + (frame_rd.data[6]));
+      std::cout << "packVoltage:" << packVoltage << std::endl;
 	    //BMS VOLTAGES
 	    //high low cell delta
 	    break;
-	    
+
 	  case 0x181:
 	    //BMS Tempatures
 	    highCellTemp = (int16_t)(( frame_rd.data[2] << 8 ) + ( frame_rd.data[1] )) * 0.1;
 	    lowCellTemp = (int16_t)(( frame_rd.data[5] << 8 ) + (frame_rd.data[4] )) * 0.1;
+      highCellTempID = (int16_t)(frame_rd.data[0]);
+      lowCellTempID = (int16_t)(frame_rd.data[3]);
 	    std::cout << "highCellTemp:" << highCellTemp << std::endl;
 	    std::cout << "lowCellTemp:" << lowCellTemp << std::endl;
+      std::cout << "highCellTempID:" << highCellTempID << std::endl;
+      std::cout << "lowCellTempID" << lowCellTempID << std::endl;
 	    break;
-	    
+
 	  case 0x182:
 	    //BMS Isolations
 	    break;
-	    
+
 	  case 0x111: //BMS DCL
 	    DCL = (int16_t)(( frame_rd.data[1] << 8 ) + ( frame_rd.data[0] ));
 	    std::cout << "DCL:" << DCL << std::endl;
@@ -125,7 +134,7 @@ void CanReader::run()
 	    SOC = (int16_t)(( frame_rd.data[5] << 8 ) + ( frame_rd.data[4] )) * 0.5;
 	    std::cout << "soc:" << SOC << std::endl;
 	    break;
-	    
+
 	  case 0xAA:
 	    //Internal State of MC
 	    VSM_state = (int16_t)(( frame_rd.data[1] << 8 ) + ( frame_rd.data[0] ));
@@ -135,10 +144,10 @@ void CanReader::run()
 	    inverter_cmd_state = (int16_t)(( frame_rd.data[5] ));
 	    inverter_enable_state = (int16_t)(( frame_rd.data[6] ));
 	    direction_state = (int16_t)(( frame_rd.data[7] ));
-	    
+
 	    std::cout << "states:" << VSM_state << ":" << inverter_state << ":" << relay_state << ":" << inverter_run_state << ":" << inverter_cmd_state << ":" << inverter_enable_state << ":" << direction_state << std::endl;
 	    break;
-	    
+
 	  case 0xAB:
 	    //MC Errors
 	    post_lo_fault = (int16_t)(( frame_rd.data[1] << 8 ) + ( frame_rd.data[0] ));
@@ -147,8 +156,8 @@ void CanReader::run()
 	    run_hi_fault = (int16_t)(( frame_rd.data[7] << 8 ) + ( frame_rd.data[6] ));
 	    std::cout << "ERROR:" << post_lo_fault << ":" << post_hi_fault << ":" << run_lo_fault << ":" << run_hi_fault << std::endl;
 	    break;
-	    
-	  default:		
+
+	  default:
 	    //std::cout << "defualt condition, can_id:" << frame_rd.can_id << std::endl;
 	    break;
           }
@@ -200,6 +209,6 @@ int CanReader::max(int one, int two, int three, int four){
 int main(){
   CanReader obj;
   obj.run();
-  
+
   return 0;
 }
