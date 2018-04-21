@@ -159,23 +159,24 @@ void CanReader::run()
 
 int CanReader::openPort(const char *port)
 {
+  //Uses socketCAN- a set of open source CAN drivers and a network stack
   struct ifreq ifr;
   struct sockaddr_can addr;
   /* open socket */
-  this->soc = socket(PF_CAN, SOCK_RAW, CAN_RAW);
-  if(this->soc < 0)
+  this->soc = socket(PF_CAN, SOCK_RAW, CAN_RAW);// socket(Domain, Type, Protocol)
+  if(this->soc < 0) // Error checking
     {
       return (-1);
     }
   addr.can_family = AF_CAN;
   strcpy(ifr.ifr_name, port);
-  if (ioctl(this->soc, SIOCGIFINDEX, &ifr) < 0)
+  if (ioctl(this->soc, SIOCGIFINDEX, &ifr) < 0) // make sure there is at least one network interface
     {
       return (-1);
     }
-  addr.can_ifindex = ifr.ifr_ifindex;
-  fcntl(this->soc, F_SETFL, O_NONBLOCK);
-  if (bind(this->soc, (struct sockaddr *)&addr, sizeof(addr)) < 0)
+  addr.can_ifindex = ifr.ifr_ifindex; // sets the network interface address
+  fcntl(this->soc, F_SETFL, O_NONBLOCK);// sets file status bits
+  if (bind(this->soc, (struct sockaddr *)&addr, sizeof(addr)) < 0)// bind the new socket to the CAN interface
     {
       return (-1);
     }
