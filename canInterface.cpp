@@ -62,6 +62,12 @@ void CanReader::run()
   int inverter_cmd_state = 0;  
   int inverter_enable_state = 0;
   int direction_state = 0;
+
+  //temp vars
+  int A = 0;
+  int B = 0;
+  int C = 0;
+  int D = 0;
   
   while(1)
   {
@@ -146,9 +152,24 @@ void CanReader::run()
 	    run_hi_fault = (int16_t)(( frame_rd.data[7] << 8 ) + ( frame_rd.data[6] ));
             std::cout << "ERROR:" << post_lo_fault << ":" << post_hi_fault << ":" << run_lo_fault << ":" << run_hi_fault << std::endl;
 	    break;
-	    
+	  case 0x2027:
+	    std::cout << "found 2027" << std::endl;
+	    A         = (int16_t)(( frame_rd.data[1] << 8 ) + ( frame_rd.data[0] )) * 0.1;
+	    B         = (int16_t)(( frame_rd.data[3] << 8 ) + ( frame_rd.data[2] )) * 0.1;
+	    C         = (int16_t)(( frame_rd.data[5] << 8 ) + ( frame_rd.data[4] )) * 0.1;
+	    D    = (int16_t)(( frame_rd.data[7] << 8 ) + ( frame_rd.data[6] )) * 0.1;		      
+	    std::cout << "bms:" << A << ":" << B << ":" << C << ":" << D << std::endl;
+	    break;
 	  default:		
 	    std::cout << "defualt condition, can_id:" << frame_rd.can_id << std::endl;
+	    if(frame_rd.can_id == 2027)
+	      std::cout << "found 202" << std::endl;
+	    	    A         = (int16_t)(( frame_rd.data[1] << 8 ) + ( frame_rd.data[0] )) * 0.1;
+	    B         = (int16_t)(( frame_rd.data[3] << 8 ) + ( frame_rd.data[2] )) * 0.1;
+	    C         = (int16_t)(( frame_rd.data[5] << 8 ) + ( frame_rd.data[4] )) * 0.1;
+	    D    = (int16_t)(( frame_rd.data[7] << 8 ) + ( frame_rd.data[6] )) * 0.1;		      
+	    std::cout << "bms:" << A << ":" << B << ":" << C << ":" << D << std::endl;
+
 	    break;
           }
         }
