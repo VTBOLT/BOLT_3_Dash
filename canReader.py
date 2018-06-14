@@ -40,6 +40,10 @@ class CanReader(QThread):
             k = 98.0
             m = 30.0
             highM = 0.0
+            temp = 0
+            self.socUpdateValue.emit(92)
+            self.mcTempUpdateValue.emit(98)
+            self.motorTempUpdateValue.emit(39)
             while True:
                 time.sleep(.1)
                 if i >= 8500:
@@ -50,14 +54,17 @@ class CanReader(QThread):
                 if k <= 0:
                     k = 93.0
                 self.rpmUpdateValue.emit(i)
-                time.sleep(.001)
-                self.socUpdateValue.emit(j)
-                self.mcTempUpdateValue.emit(k)
-                self.motorTempUpdateValue.emit(m)
+                #time.sleep(.001)
                 i=i+100
-                j=j-0.1
-                k = k+0.01
-                m = m+1
+                if temp > 50:
+                    self.socUpdateValue.emit(j)
+                    self.mcTempUpdateValue.emit(k)
+                    self.motorTempUpdateValue.emit(m)
+                    j=j-0.1
+                    k = k+0.01
+                    m = m+1
+                    temp = 0
+                temp=temp+1
                 if m > highM:
                     highM = m
                 if m > 40:
