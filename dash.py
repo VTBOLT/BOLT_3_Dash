@@ -75,9 +75,9 @@ class Dash(QMainWindow):
         self.socGauge.move(500.0*self.DASH_WIDTH_SCALE,(GAUGE_VPOS - 150.0)*self.DASH_HEIGHT_SCALE)
         self.socGauge.resize(GAUGE_WIDTH*self.DASH_WIDTH_SCALE,(GAUGE_HEIGHT*3.0)*self.DASH_HEIGHT_SCALE)
 
-        self.tempGauge = Temp(self)
+        self.tempGauge = Temp(self.DASH_WIDTH_SCALE, self.DASH_HEIGHT_SCALE, self)
         self.tempGauge.move(660.0*self.DASH_WIDTH_SCALE,(GAUGE_VPOS - 180.0)*self.DASH_HEIGHT_SCALE)
-        self.tempGauge.resize(GAUGE_WIDTH,(GAUGE_HEIGHT*2.5))
+        self.tempGauge.resize(GAUGE_WIDTH*self.DASH_WIDTH_SCALE,(GAUGE_HEIGHT*2.5)*self.DASH_HEIGHT_SCALE)
         self.tempGauge.show()
 
         self.debug = Debug(self)
@@ -87,7 +87,7 @@ class Dash(QMainWindow):
 
         self.errorGauge = Error(self)
         self.errorGauge.move(20.0*self.DASH_WIDTH_SCALE, 340.0*self.DASH_HEIGHT_SCALE)
-        self.errorGauge.resize(GAUGE_WIDTH*2.5, GAUGE_HEIGHT)
+        self.errorGauge.resize(GAUGE_WIDTH*2.5*self.DASH_WIDTH_SCALE, GAUGE_HEIGHT*self.DASH_HEIGHT_SCALE)
         self.errorGauge.show()
 
         if self.arguments.Args.debug:
