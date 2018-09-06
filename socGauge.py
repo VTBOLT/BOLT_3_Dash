@@ -15,7 +15,7 @@ from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, Qt
 from args import Arg_Class
 
 class Soc(QWidget):
-    def __init__(self, parent):
+    def __init__(self, width_scale, height_scale, parent):
 
         super(Soc, self).__init__(parent)
 
@@ -28,12 +28,12 @@ class Soc(QWidget):
         self.socLCD.setFrameShape(QFrame.NoFrame)
         self.socLCD.setSegmentStyle(QLCDNumber.Flat)
         #self.socLCD.move(30,100)
-        self.socLCD.move(0,20)
-        self.socLCD.resize(70,80)
+        self.socLCD.move(0.0*width_scale,20.0*height_scale)
+        self.socLCD.resize(70.0*width_scale,80.0*width_scale)
         
         self.socLabel = QLabel(self)
         self.socLabel.setText("soc: ")
-        self.socLabel.move(10,10)
+        self.socLabel.move(10.0*width_scale,10.0*height_scale)
         self.socLCD.show()
         self.socLabel.show()
         
@@ -50,8 +50,8 @@ class Soc(QWidget):
         qp = QPainter(self)
         qp.setPen(Qt.white)
 
-        qp.drawRect(70,20, 70, 180)
-        qp.drawRect(96,10, 20, 10)
+        qp.drawRect(70.0*width_scale,20.0*height_scale, 70.0*width_scale, 180.0*height_scale)
+        qp.drawRect(96.0*width_scale,10.0*height_scale, 20.0*width_scale, 10.0*height_scale)
         if self.socValue < 0:
             self.socValue = 0
         if self.socValue < 20:
@@ -59,7 +59,7 @@ class Soc(QWidget):
         else:
             qp.setBrush(Qt.green)
 
-        qp.drawRect(70, 20+(180*(1-(self.socValue/100))), 70, ((180*self.socValue/100)))
+        qp.drawRect(70.0*width_scale, (20.0+(180.0*(1.0-(float(self.socValue)/100.0))))*height_scale, 70.0*width_scale, ((180.0*float(self.socValue)/100.0)*height_scale))
         #qp.drawRect(60+(150*(1-(self.socValue/100))), 40, ((150*self.socValue/100)),60)#horizontal bar
             
 

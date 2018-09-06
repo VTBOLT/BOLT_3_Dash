@@ -22,8 +22,12 @@ from fileWriter import FileWriter
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    screen = app.primaryScreen()
+    size = screen.size()
+    height = size.height()
+    width = size.width()
     arguments = Arg_Class()
-    dash = Dash()
+    dash = Dash(height, width)
     print("Dash thread started:", app.instance().thread())
     if arguments.Args.fullscreen:
         dash.showFullScreen()

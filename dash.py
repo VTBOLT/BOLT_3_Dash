@@ -25,21 +25,29 @@ from debugGps import DebugGPS
 from fileWriter import FileWriter
 from errorGauge import Error
 
-DASH_WIDTH = 800
-DASH_HEIGHT = 420
-
+DASH_WIDTH = 800.0
+DASH_HEIGHT = 420.0
+DASH_WIDTH_SCALE = 0.0
+DASH_HEIGHT_SCALE = 0.01
 RPM_HEIGHT = (2/3)*DASH_HEIGHT
-GAUGE_VPOS = 340
-GAUGE_HEIGHT = 140
-GAUGE_WIDTH = 200
+GAUGE_VPOS = 340.0
+GAUGE_HEIGHT = 140.0
+GAUGE_WIDTH = 200.0
 
 class Dash(QMainWindow):
-    def __init__(self, parent=None):
-        super(Dash, self).__init__(parent)
 
+    DASH_WIDTH_SCALE = 0
+    DASH_HEIGHT_SCALE = 0
+    def __init__(self, screen_height, screen_width, parent=None):
+        super(Dash, self).__init__(parent)
+        print(screen_height, screen_width)
+        self.DASH_WIDTH_SCALE = (float((screen_width)/DASH_WIDTH))
+        print(self.DASH_WIDTH_SCALE)
+        self.DASH_HEIGHT_SCALE = float(((screen_height)/DASH_HEIGHT))
+        print(self.DASH_HEIGHT_SCALE)
         self.setWindowTitle('BOLT DASH')
-        self.setMinimumWidth(DASH_WIDTH)
-        self.setMinimumHeight(DASH_HEIGHT)
+        self.setMinimumWidth(screen_width)
+        self.setMinimumHeight(screen_height)
         self.initGUI()
 
     def initGUI(self):
@@ -58,18 +66,19 @@ class Dash(QMainWindow):
 
         ## once startup is complete call these to setup dash in race mode
         self.rpmGauge = Rpm(self)
-        self.rpmGauge.move(0, 16.0)
+        self.rpmGauge.move(0.0*DASH_WIDTH_SCALE, 16.0*DASH_HEIGHT_SCALE)
         self.rpmGauge.resize(DASH_WIDTH,RPM_HEIGHT)
 
         #self.rpmGauge.hide()
 
-        self.socGauge = Soc(self)
-        self.socGauge.move(500,GAUGE_VPOS - 150.0)
-        self.socGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT*3.0)
+        self.socGauge = Soc(DASH_WIDTH_SCALE, DASH_HEIGHT_SCALE,self)
+        print(self.DASH_WIDTH_SCALE)
+        self.socGauge.move(500.0*self.DASH_WIDTH_SCALE,(GAUGE_VPOS - 150.0)*self.DASH_HEIGHT_SCALE)
+        self.socGauge.resize(GAUGE_WIDTH*DASH_WIDTH_SCALE,(GAUGE_HEIGHT*3.0)*DASH_HEIGHT_SCALE)
 
         self.tempGauge = Temp(self)
-        self.tempGauge.move(660,GAUGE_VPOS - 180.0)
-        self.tempGauge.resize(GAUGE_WIDTH,GAUGE_HEIGHT*2.5)
+        self.tempGauge.move(660.0*self.DASH_WIDTH_SCALE,(GAUGE_VPOS - 180.0)*self.DASH_HEIGHT_SCALE)
+        self.tempGauge.resize(GAUGE_WIDTH,(GAUGE_HEIGHT*2.5))
         self.tempGauge.show()
 
         self.debug = Debug(self)
@@ -78,7 +87,7 @@ class Dash(QMainWindow):
         self.debugGps.hide()
 
         self.errorGauge = Error(self)
-        self.errorGauge.move(20, 340)
+        self.errorGauge.move(20.0*self.DASH_WIDTH_SCALE, 340.0*self.DASH_HEIGHT_SCALE)
         self.errorGauge.resize(GAUGE_WIDTH*2.5, GAUGE_HEIGHT)
         self.errorGauge.show()
 
