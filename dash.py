@@ -72,6 +72,7 @@ class Dash(QMainWindow):
         self.tempGauge = Temp(self)
         self.tempGauge.move(660.0*settings.DASH_WIDTH_SCALE, (GAUGE_VPOS - 180.0)*settings.DASH_HEIGHT_SCALE)
         self.tempGauge.resize(GAUGE_WIDTH, (GAUGE_HEIGHT*2.5))
+
         self.tempGauge.show()
 
         self.debug = Debug(self)
