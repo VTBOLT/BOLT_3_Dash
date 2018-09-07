@@ -10,6 +10,7 @@
 
 import sys
 import time
+import settings
 from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QFrame, QAction, QPushButton
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, Qt, QThread, pyqtSlot
 
@@ -27,8 +28,6 @@ from errorGauge import Error
 
 DASH_WIDTH = 800.0
 DASH_HEIGHT = 420.0
-DASH_WIDTH_SCALE = 0.0
-DASH_HEIGHT_SCALE = 0.01
 RPM_HEIGHT = (2/3)*DASH_HEIGHT
 GAUGE_VPOS = 340.0
 GAUGE_HEIGHT = 140.0
@@ -36,22 +35,17 @@ GAUGE_WIDTH = 200.0
 
 class Dash(QMainWindow):
 
-    DASH_WIDTH_SCALE = 0
-    DASH_HEIGHT_SCALE = 0
     def __init__(self, screen_height, screen_width, parent=None):
         super(Dash, self).__init__(parent)
-        print(screen_height, screen_width)
-        self.DASH_WIDTH_SCALE = (float((screen_width)/DASH_WIDTH))
-        print(self.DASH_WIDTH_SCALE)
-        self.DASH_HEIGHT_SCALE = float(((screen_height)/DASH_HEIGHT))
-        print(self.DASH_HEIGHT_SCALE)
+
+        settings.DASH_WIDTH_SCALE = (float((screen_width)/DASH_WIDTH))
+        settings.DASH_HEIGHT_SCALE = float(((screen_height)/DASH_HEIGHT))
         self.setWindowTitle('BOLT DASH')
         self.setMinimumWidth(screen_width)
         self.setMinimumHeight(screen_height)
         self.initGUI()
 
     def initGUI(self):
-
         self.setAutoFillBackground(True)
         self.arguments = Arg_Class()
         p = self.palette()
@@ -66,18 +60,18 @@ class Dash(QMainWindow):
 
         ## once startup is complete call these to setup dash in race mode
         self.rpmGauge = Rpm(self)
-        self.rpmGauge.move(0.0*DASH_WIDTH_SCALE, 16.0*DASH_HEIGHT_SCALE)
+        self.rpmGauge.move(0.0*settings.DASH_WIDTH_SCALE, 16.0*settings.DASH_HEIGHT_SCALE)
         self.rpmGauge.resize(DASH_WIDTH,RPM_HEIGHT)
 
         #self.rpmGauge.hide()
 
-        self.socGauge = Soc(self.DASH_WIDTH_SCALE, self.DASH_HEIGHT_SCALE,self)
-        self.socGauge.move(500.0*self.DASH_WIDTH_SCALE,(GAUGE_VPOS - 150.0)*self.DASH_HEIGHT_SCALE)
-        self.socGauge.resize(GAUGE_WIDTH*self.DASH_WIDTH_SCALE,(GAUGE_HEIGHT*3.0)*self.DASH_HEIGHT_SCALE)
+        self.socGauge = Soc(settings.DASH_WIDTH_SCALE, settings.DASH_HEIGHT_SCALE,self)
+        self.socGauge.move(500.0*settings.DASH_WIDTH_SCALE, (GAUGE_VPOS - 150.0)*settings.DASH_HEIGHT_SCALE)
+        self.socGauge.resize(GAUGE_WIDTH*settings.DASH_WIDTH_SCALE, (GAUGE_HEIGHT*3.0)*settings.DASH_HEIGHT_SCALE)
 
         self.tempGauge = Temp(self)
-        self.tempGauge.move(660.0*self.DASH_WIDTH_SCALE,(GAUGE_VPOS - 180.0)*self.DASH_HEIGHT_SCALE)
-        self.tempGauge.resize(GAUGE_WIDTH,(GAUGE_HEIGHT*2.5))
+        self.tempGauge.move(660.0*settings.DASH_WIDTH_SCALE, (GAUGE_VPOS - 180.0)*settings.DASH_HEIGHT_SCALE)
+        self.tempGauge.resize(GAUGE_WIDTH, (GAUGE_HEIGHT*2.5))
         self.tempGauge.show()
 
         self.debug = Debug(self)
@@ -86,7 +80,7 @@ class Dash(QMainWindow):
         self.debugGps.hide()
 
         self.errorGauge = Error(self)
-        self.errorGauge.move(20.0*self.DASH_WIDTH_SCALE, 340.0*self.DASH_HEIGHT_SCALE)
+        self.errorGauge.move(20.0*settings.DASH_WIDTH_SCALE, 340.0*settings.DASH_HEIGHT_SCALE)
         self.errorGauge.resize(GAUGE_WIDTH*2.5, GAUGE_HEIGHT)
         self.errorGauge.show()
 

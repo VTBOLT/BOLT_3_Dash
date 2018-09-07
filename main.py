@@ -11,7 +11,7 @@
 ############################################################################################################
 
 import sys
-
+import settings
 from PyQt5.QtWidgets import QApplication
 from dash import Dash
 from canReader import CanReader
@@ -27,6 +27,7 @@ if __name__ == '__main__':
     height = size.height()
     width = size.width()
     arguments = Arg_Class()
+    settings.init()
     dash = Dash(height, width)
     print("Dash thread started:", app.instance().thread())
     if arguments.Args.fullscreen:
