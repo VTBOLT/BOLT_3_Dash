@@ -65,7 +65,7 @@ class Dash(QMainWindow):
 
         #self.rpmGauge.hide()
 
-        self.socGauge = Soc(settings.DASH_WIDTH_SCALE, settings.DASH_HEIGHT_SCALE,self)
+        self.socGauge = Soc(self)
         self.socGauge.move(500.0*settings.DASH_WIDTH_SCALE, (GAUGE_VPOS - 150.0)*settings.DASH_HEIGHT_SCALE)
         self.socGauge.resize(GAUGE_WIDTH*settings.DASH_WIDTH_SCALE, (GAUGE_HEIGHT*3.0)*settings.DASH_HEIGHT_SCALE)
 
