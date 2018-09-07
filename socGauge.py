@@ -23,6 +23,8 @@ class Soc(QWidget):
 
         self.arguments = Arg_Class()
         
+        self.setFont(settings.font)
+
         self.socValue = 0.0
         self.socLCD = QLCDNumber(self)
         self.socLCD.display(str(int(self.socValue)).zfill(4)+'.'+str((self.socValue - int(self.socValue))*10).zfill(4))

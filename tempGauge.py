@@ -11,7 +11,7 @@
 import sys
 import settings
 from PyQt5.QtWidgets import QWidget, QPushButton, QLCDNumber, QLabel, QAction, QFrame
-from PyQt5.QtGui import QIcon, QPainter, QColor, QPen
+from PyQt5.QtGui import QIcon, QPainter, QColor, QPen, QFont
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, Qt
 
 from args import Arg_Class
@@ -42,6 +42,8 @@ class Temp(QWidget):
         self.mcTempGauge.setSegmentStyle(QLCDNumber.Flat)
         
         self.mcTemplabel = QLabel(self)
+        #font = QFont("Times", 15)
+        self.setFont(settings.font)
         self.mcTemplabel.setText("highest mc temp: ")
         self.mcTemplabel.move(0,0)
 

@@ -13,7 +13,7 @@ import time
 import settings
 from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QFrame, QAction, QPushButton
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, Qt, QThread, pyqtSlot
-
+from PyQt5.QtGui import QFont
 from socGauge import Soc
 from rpmGauge import Rpm
 from lapTimePannel import LastLapTime, CurrentLapTime, BestLapTime
@@ -40,6 +40,7 @@ class Dash(QMainWindow):
 
         settings.DASH_WIDTH_SCALE = (float((screen_width)/DASH_WIDTH))
         settings.DASH_HEIGHT_SCALE = float(((screen_height)/DASH_HEIGHT))
+        settings.font = QFont("Times", 6.0*settings.DASH_HEIGHT_SCALE)
         self.setWindowTitle('BOLT DASH')
         self.setMinimumWidth(screen_width)
         self.setMinimumHeight(screen_height)
@@ -71,7 +72,7 @@ class Dash(QMainWindow):
 
         self.tempGauge = Temp(self)
         self.tempGauge.move(660.0*settings.DASH_WIDTH_SCALE, (GAUGE_VPOS - 180.0)*settings.DASH_HEIGHT_SCALE)
-        self.tempGauge.resize(GAUGE_WIDTH, (GAUGE_HEIGHT*2.5))
+        self.tempGauge.resize(GAUGE_WIDTH*settings.DASH_WIDTH_SCALE, (GAUGE_HEIGHT*2.5)*settings.DASH_WIDTH_SCALE)
 
         self.tempGauge.show()
 
