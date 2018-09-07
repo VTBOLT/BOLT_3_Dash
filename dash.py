@@ -41,6 +41,7 @@ class Dash(QMainWindow):
         settings.DASH_WIDTH_SCALE = (float((screen_width)/DASH_WIDTH))
         settings.DASH_HEIGHT_SCALE = float(((screen_height)/DASH_HEIGHT))
         settings.font = QFont("Times", 6.0*settings.DASH_HEIGHT_SCALE)
+        self.RPM_HEIGHT = RPM_HEIGHT = (2/3)*DASH_HEIGHT*settings.DASH_HEIGHT_SCALE
         self.setWindowTitle('BOLT DASH')
         self.setMinimumWidth(screen_width)
         self.setMinimumHeight(screen_height)
@@ -62,7 +63,7 @@ class Dash(QMainWindow):
         ## once startup is complete call these to setup dash in race mode
         self.rpmGauge = Rpm(self)
         self.rpmGauge.move(0.0, 16.0*settings.DASH_HEIGHT_SCALE)
-        self.rpmGauge.resize(DASH_WIDTH,RPM_HEIGHT)
+        self.rpmGauge.resize(DASH_WIDTH*settings.DASH_WIDTH_SCALE,self.RPM_HEIGHT*settings.DASH_HEIGHT_SCALE)
 
         #self.rpmGauge.hide()
 
