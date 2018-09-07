@@ -29,7 +29,7 @@ class Soc(QWidget):
         self.socLCD.setFrameShape(QFrame.NoFrame)
         self.socLCD.setSegmentStyle(QLCDNumber.Flat)
         #self.socLCD.move(30,100)
-        self.socLCD.move(0.0*settings.DASH_WIDTH_SCALE, 20.0*settings.DASH_HEIGHT_SCALE)
+        self.socLCD.move(0.0, 20.0*settings.DASH_HEIGHT_SCALE)
         self.socLCD.resize(70.0*settings.DASH_WIDTH_SCALE, 80.0*settings.DASH_HEIGHT_SCALE)
         
         self.socLabel = QLabel(self)

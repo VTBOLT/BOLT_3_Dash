@@ -60,7 +60,7 @@ class Dash(QMainWindow):
 
         ## once startup is complete call these to setup dash in race mode
         self.rpmGauge = Rpm(self)
-        self.rpmGauge.move(0.0*settings.DASH_WIDTH_SCALE, 16.0*settings.DASH_HEIGHT_SCALE)
+        self.rpmGauge.move(0.0, 16.0*settings.DASH_HEIGHT_SCALE)
         self.rpmGauge.resize(DASH_WIDTH,RPM_HEIGHT)
 
         #self.rpmGauge.hide()
