@@ -31,12 +31,12 @@ class Soc(QWidget):
         self.socLCD.setFrameShape(QFrame.NoFrame)
         self.socLCD.setSegmentStyle(QLCDNumber.Flat)
         #self.socLCD.move(30,100)
-        self.socLCD.move(0.0, 20.0*settings.DASH_HEIGHT_SCALE)
-        self.socLCD.resize(70.0*settings.DASH_WIDTH_SCALE, 80.0*settings.DASH_HEIGHT_SCALE)
+        self.socLCD.move(0.0, 20.0*settings.dash_height_scale)
+        self.socLCD.resize(70.0*settings.dash_width_scale, 80.0*settings.dash_height_scale)
         
         self.socLabel = QLabel(self)
         self.socLabel.setText("soc: ")
-        self.socLabel.move(10.0*settings.DASH_WIDTH_SCALE, 10.0*settings.DASH_HEIGHT_SCALE)
+        self.socLabel.move(10.0*settings.dash_width_scale, 10.0*settings.dash_height_scale)
         self.socLCD.show()
         self.socLabel.show()
         
@@ -53,14 +53,14 @@ class Soc(QWidget):
         qp = QPainter(self)
         qp.setPen(Qt.white)
 
-        qp.drawRect(70.0*settings.DASH_WIDTH_SCALE,
-                    20.0*settings.DASH_HEIGHT_SCALE,
-                    70.0 *settings.DASH_WIDTH_SCALE,
-                    180.0*settings.DASH_HEIGHT_SCALE)
-        qp.drawRect(96.0*settings.DASH_WIDTH_SCALE,
-                    10.0*settings.DASH_HEIGHT_SCALE,
-                    20.0 *settings.DASH_WIDTH_SCALE,
-                    10.0*settings.DASH_HEIGHT_SCALE)
+        qp.drawRect(70.0*settings.dash_width_scale,
+                    20.0*settings.dash_height_scale,
+                    70.0 *settings.dash_width_scale,
+                    180.0*settings.dash_height_scale)
+        qp.drawRect(96.0*settings.dash_width_scale,
+                    10.0*settings.dash_height_scale,
+                    20.0 *settings.dash_width_scale,
+                    10.0*settings.dash_height_scale)
         if self.socValue < 0:
             self.socValue = 0
         if self.socValue < 20:
@@ -68,10 +68,10 @@ class Soc(QWidget):
         else:
             qp.setBrush(Qt.green)
 
-        qp.drawRect(70.0*settings.DASH_WIDTH_SCALE,
-                    (20.0+(180.0*(1.0-(float(self.socValue)/100.0))))*settings.DASH_HEIGHT_SCALE,
-                    70.0*settings.DASH_WIDTH_SCALE,
-                    ((180.0*float(self.socValue)/100.0)*settings.DASH_HEIGHT_SCALE))
+        qp.drawRect(70.0*settings.dash_width_scale,
+                    (20.0+(180.0*(1.0-(float(self.socValue)/100.0))))*settings.dash_height_scale,
+                    70.0*settings.dash_width_scale,
+                    ((180.0*float(self.socValue)/100.0)*settings.dash_height_scale))
         #qp.drawRect(60+(150*(1-(self.socValue/100))), 40, ((150*self.socValue/100)),60)#horizontal bar
             
 

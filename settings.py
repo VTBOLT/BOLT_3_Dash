@@ -11,8 +11,8 @@ from PyQt5.QtGui import QFont
 
 def init():
     # screen scales
-    global DASH_WIDTH_SCALE
-    global DASH_HEIGHT_SCALE
+    global dash_width_scale
+    global dash_height_scale
     global font
-    DASH_WIDTH_SCALE = 0.0
-    DASH_HEIGHT_SCALE = 0.0
+    dash_width_scale = 0.0
+    dash_height_scale = 0.0
