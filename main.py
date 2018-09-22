@@ -50,7 +50,6 @@ if __name__ == '__main__':
         canWorker.highCellTempUpdateValue.connect(dash.tempGauge.highCellTemp_update)
         canWorker.lowCellTempUpdateValue.connect(dash.tempGauge.lowCellTemp_update)
 
-        canWorker.errorSignal.connect(dash.error_update)
         canWorker.errorSignal.connect(dash.errorGauge.error_update)
         canWorker.rpmUpdateValue.connect(dash.errorGauge.RPMCut_update)
 
@@ -68,9 +67,8 @@ if __name__ == '__main__':
         dash.accessoryPress.connect(dash.updateACC_ON)
         dash.ignitionPress.connect(dash.updateIGN_ON)
         dash.startButton.connect(dash.updateSTART_BUTTON)
-        dash.faultDetect.connect(dash.updateRUN_FAULT)
-
-        #dash.errorSignal.connect(dash.error_update) # for testing, actual signal in canWorker
+        dash.errorSignal.connect(dash.updateFAULT) # for testing
+        canWorker.errorSignal.connect(dash.updateFAULT)
 
         #gpio_reader.ignSignal.connect(dash.updateIGN_ON)
         #gpio_reader.imdSignal.connect(dash.updateIMD_OK)

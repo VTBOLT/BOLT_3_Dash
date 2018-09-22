@@ -44,7 +44,6 @@ class CanReader(QThread):
                 time.sleep(.1)
                 if i >= 8500:
                     i = 0
-                    #self.errorSignal.emit(1,2,3,4)
                 if j <= 0:
                     j = 99.0
                 if k <= 0:
