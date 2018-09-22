@@ -19,7 +19,7 @@ from gpsReader import GpsReader
 from debug import Debug
 from args import Arg_Class
 from fileWriter import FileWriter
-#from gpioReader import gpioReader
+from gpioReader import gpioReader
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
