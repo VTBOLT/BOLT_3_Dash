@@ -19,7 +19,7 @@ from gpsReader import GpsReader
 from debug import Debug
 from args import Arg_Class
 from fileWriter import FileWriter
-from gpioReader import gpioReader
+from gpioReader import GPIOThread
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
@@ -27,7 +27,7 @@ if __name__ == '__main__':
 
     dash = Dash()
 
-    gpio_reader = gpioReader()
+    gpio_reader = GPIOThread()
     gpio_reader.start()
 
     print("Dash thread started:", app.instance().thread())
