@@ -69,11 +69,13 @@ if __name__ == '__main__':
         dash.ignitionPress.connect(dash.updateIGN_ON)
         dash.startButton.connect(dash.updateSTART_BUTTON)
 
-        #gpio_reader.ignSignal.connect(dash.updateIGN_ON)
-        #gpio_reader.imdSignal.connect(dash.updateIMD_OK)
-        #gpio_reader.presSignal.connect(dash.updateACC_ON)
-        #gpio_reader.presSignal.connect(dash.updatePRESSURE_OK)
-        #gpio_reader.bmsdeSignal.connect(dash.updateBMS_DE)
+        gpio_reader.ignSignal.connect(dash.updateIGN_ON)
+        gpio_reader.imdSignal.connect(dash.updateIMD_OK)
+        gpio_reader.presSignal.connect(dash.updateACC_ON)
+        gpio_reader.presSignal.connect(dash.updatePRESSURE_OK)
+        gpio_reader.bmsdeSignal.connect(dash.updateBMS_DE)
+
+        # TODO read start button value
 
     if arguments.Args.gpsoff == True:
         try:
