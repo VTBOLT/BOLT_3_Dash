@@ -68,6 +68,9 @@ if __name__ == '__main__':
         dash.accessoryPress.connect(dash.updateACC_ON)
         dash.ignitionPress.connect(dash.updateIGN_ON)
         dash.startButton.connect(dash.updateSTART_BUTTON)
+        dash.faultDetect.connect(dash.updateRUN_FAULT)
+
+        #dash.errorSignal.connect(dash.error_update) # for testing, actual signal in canWorker
 
         #gpio_reader.ignSignal.connect(dash.updateIGN_ON)
         #gpio_reader.imdSignal.connect(dash.updateIMD_OK)

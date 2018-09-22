@@ -10,6 +10,7 @@
 
 import sys
 import time
+from enum import Enum
 from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QFrame, QAction, QPushButton, QLabel, QGridLayout
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, Qt, QThread, pyqtSlot
 from PyQt5.QtGui import QKeyEvent, QPixmap, QFont, QColor
@@ -39,6 +40,7 @@ class Dash(QMainWindow):
     accessoryPress = pyqtSignal(int)
     ignitionPress = pyqtSignal(int)
     startButton = pyqtSignal(int)
+    faultDetect = pyqtSignal(int)
 
     """Initialize state transition variables"""
     acc_on = False
@@ -54,6 +56,13 @@ class Dash(QMainWindow):
 
     current_state = 'IDLE'
     next_state = 'IDLE'
+    
+    class FaultLevel(Enum):
+        LOW = 0
+        MID = 1
+        HIGH = 2
+    curr_fault = {'message': 'No Fault', 'level': FaultLevel.LOW}
+    fault_list = []
 
     def __init__(self, parent=None):
         super(Dash, self).__init__(parent)
@@ -79,9 +88,17 @@ class Dash(QMainWindow):
         self.logo.move(0.0, 0.0)
         self.logo.resize(DASH_WIDTH, DASH_HEIGHT)
 
-        self.msg_font = QFont("Helvetica", 16, QFont.Bold)
+        # This is the title widget
+        self.title_font = QFont("Helvetica", 32, QFont.Bold)
+        self.title = QLabel(self)
+        self.title.setText("Bolt III")
+        self.title.setAlignment(Qt.AlignCenter)
+        self.title.setFont(self.title_font)
+        self.title.move(0, DASH_HEIGHT * 1/4)
+        self.title.resize(DASH_WIDTH, DASH_HEIGHT / 6)
 
         # This is the message widget
+        self.msg_font = QFont("Helvetica", 16, QFont.Bold)
         self.msg = QLabel(self)
         self.msg.setText("Turn On Accessory Switch")
         self.msg.setAlignment(Qt.AlignCenter)
@@ -114,6 +131,7 @@ class Dash(QMainWindow):
             self.debug.show()
 
         self.logo.show()
+        self.title.hide()
         self.msg.show()
         self.rpmGauge.hide()
         self.socGauge.hide()
@@ -184,6 +202,12 @@ class Dash(QMainWindow):
         elif (type(event) == QKeyEvent and event.key() == Qt.Key_S):
             print("Start button pressed")
             self.startButton.emit(1)
+        elif (type(event) == QKeyEvent and event.key() == Qt.Key_F):
+            print("Fault detected")
+            self.faultDetect.emit(1)
+        elif (type(event) == QKeyEvent and event.key() == Qt.Key_O):
+            print("Fault has been fixed")
+            self.faultDetect.emit(0)
 
     def changeStates(self):
         """Checks conditions and determines next state"""
@@ -232,15 +256,19 @@ class Dash(QMainWindow):
                 self.current_state = 'ACC_ON'
                 self.acc_on_state()
             elif self.run_fault_occurred:
-                self.current_state = 'INVERTER_DISABLED'
-                self.inverter_disabled_state()
+                self.current_state = 'RUN_FAULT'
+                self.run_fault_state()
+
+        ## RUN_FAULT state transition logic
+        elif self.current_state == 'RUN_FAULT':
+            self.run_fault_state()
+            if not self.run_fault_occurred:
+                self.current_state = 'ACC_ON'
+                self.acc_on_state()
 
         ## INVERTER_DISABLED state transition logic
         elif self.current_state == 'INVERTER_DISABLED':
             self.inverter_disabled_state()
-            if not self.run_fault_occurred:
-                self.current_state = 'ACC_ON'
-                self.acc_on_state()
 
     def idle_state(self):
         """TODO(chrise92):Show 'Turn on Accessory Switch' screen
@@ -253,6 +281,7 @@ class Dash(QMainWindow):
         self.logo.show()
         self.msg.show()
 
+        self.title.hide()
         self.socGauge.hide()
         self.tempGauge.hide()
         self.rpmGauge.hide()
@@ -274,6 +303,7 @@ class Dash(QMainWindow):
         self.logo.show()
         self.msg.show()
 
+        self.title.hide()
         self.socGauge.hide()
         self.tempGauge.hide()
         self.rpmGauge.hide()
@@ -295,6 +325,7 @@ class Dash(QMainWindow):
         self.logo.show()
         self.msg.show()
 
+        self.title.hide()
         self.socGauge.hide()
         self.tempGauge.hide()
         self.rpmGauge.hide()
@@ -314,6 +345,7 @@ class Dash(QMainWindow):
         self.logo.hide()
         self.msg.hide()
 
+        self.title.hide()
         self.socGauge.show()
         self.tempGauge.hide()
         self.rpmGauge.show()
@@ -328,8 +360,17 @@ class Dash(QMainWindow):
         - go to interter_disabled_state if MC turned off, or if criticality is high
         - go back to interter_enabled_state if MC still running
         """
-        pass
+        #  clear screen
+        self.socGauge.hide()
+        self.rpmGauge.hide()
+        # blue screen of death
+        p = self.palette()
+        p.setColor(self.backgroundRole(), Qt.yellow)
+        p.setColor(self.foregroundRole(), Qt.white)
+        self.setPalette(p)
 
+        self.title.setText(self.curr_fault['message'])
+        self.title.show()
 
     def post_fault_state(self):
         """TODO(chrise92):
@@ -343,16 +384,65 @@ class Dash(QMainWindow):
         depending on reason for disabled state
         - Go back to acc_on state once ignition is switched off
         """
-        pass
+        #  clear screen
+        self.socGauge.hide()
+        self.rpmGauge.hide()
+        # blue screen of death
+        p = self.palette()
+        p.setColor(self.backgroundRole(), Qt.blue)
+        p.setColor(self.foregroundRole(), Qt.white)
+        self.setPalette(p)
+
+        self.title.setText("INVERTER_DISABLED_STATE: TODO")
+        self.title.show()
 
     @pyqtSlot(int, int, int, int)
     def error_update(self, v1, v2, v3, v4):
-        p = self.palette()
-        p.setColor(self.backgroundRole(), Qt.red)
-        p.setColor(self.foregroundRole(), Qt.white)
-        self.setPalette(p)
-        self.update()
-        print("ERROR, Post Lo:", v1, "Post Hi:", v2, "Run Lo:", v3, "Run Hi:", v4)
+        """TODO(mathew6)
+        - Set the error level (low or high)
+        - Set the error message
+        - let the state methods take care of changing the screen
+        """
+        # run faults (low byte) list
+        run_lo_fault_list = [
+                                (0x0001, 'Motor Over-speed Fault', FaultLevel.LOW),
+                                (0x0002, 'Over-current Fault', FaultLevel.HIGH),
+                                (0x0004, 'Over-voltage', FaultLevel.HIGH),
+                                (0x0008, 'Inverter Over-temperature Fault', FaultLevel.MID),
+                                (0x0010, 'Accelerator Input Shorted Fault', FaultLevel.MID),
+                                (0x0020, 'Accelerator Input Open Fault', FaultLevel.MID),
+                                (0x0080, 'Inverter Response Time-out Fault', FaultLevel.LOW),
+                                (0x0100, 'Hardware Gate/Desaturation Fault', FaultLevel.HIGH),
+                                (0x0200, 'Hardware Over-current Fault', FaultLevel.HIGH),
+                                (0x0400, 'Under-voltage Fault', FaultLevel.MID),
+                                (0x0800, 'CAN Command Message Lost Fault', FaultLevel.MID),
+                                (0x1000, 'Motor Over-temerature Fault', FaultLevel.MID)
+                            ]
+        
+        # run faults (high byte) list
+        run_hi_fault_list = [
+                                (0x0001, 'Brake Input Shorted Fault', FaultLevel.LOW),
+                                (0x0002, 'Brake Input Open Fault', FaultLevel.LOW),
+                                (0x0004, 'Module A Over-temperature Fault', FaultLevel.MID),
+                                (0x0008, 'Module B Over-temperature Fualt', FaultLevel.MID),
+                                (0x0010, 'Module C Over-temperature Fault', FaultLevel.MID),
+                                (0x0020, 'PCB Over-temperature Fault', FaultLevel.MID),
+                                (0x0040, 'Gate Drive Board 1 Over-temperature Fault', FaultLevel.MID),
+                                (0x0080, 'Gate Drive Board 2 Over-temperature Fault', FaultLevel.MID),
+                                (0x0100, 'Gate Drive Board 3 Over-temperature Fault', FaultLevel.MID),
+                                (0x0200, 'Current Sensor Fault', FaultLevel.MID),
+                                (0x4000, 'Resolver Not Connected', FaultLevel.MID)
+                            ]
+
+        # choose new curr_fault
+        for i in run_lo_fault_list:
+            if i[0] & v3:
+                self.fault_list.append(i[1:2])
+                if i[2] >= self.curr_fault['level']:
+                    self.curr_fault['message'] = i[1]
+                    self.curr_fault['level'] = i[2]
+
+        #print("ERROR, Post Lo:", v1, "Post Hi:", v2, "Run Lo:", v3, "Run Hi:", v4)
 
     @pyqtSlot()
     def race(self):
