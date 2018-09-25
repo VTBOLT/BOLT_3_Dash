@@ -62,37 +62,37 @@ class Dash(QMainWindow):
         MID = 1
         HIGH = 2
     curr_fault = {'message': 'No Fault', 'level': FaultLevel.LOW}
-    fault_list = []
-    # run faults (low byte) list
-    run_lo_fault_list = [
-                            (0x0001, 'Motor Over-speed Fault', FaultLevel.LOW),
-                            (0x0002, 'Over-current Fault', FaultLevel.HIGH),
-                            (0x0004, 'Over-voltage', FaultLevel.HIGH),
-                            (0x0008, 'Inverter Over-temperature Fault', FaultLevel.MID),
-                            (0x0010, 'Accelerator Input Shorted Fault', FaultLevel.MID),
-                            (0x0020, 'Accelerator Input Open Fault', FaultLevel.MID),
-                            (0x0080, 'Inverter Response Time-out Fault', FaultLevel.LOW),
-                            (0x0100, 'Hardware Gate/Desaturation Fault', FaultLevel.HIGH),
-                            (0x0200, 'Hardware Over-current Fault', FaultLevel.HIGH),
-                            (0x0400, 'Under-voltage Fault', FaultLevel.MID),
-                            (0x0800, 'CAN Command Message Lost Fault', FaultLevel.MID),
-                            (0x1000, 'Motor Over-temerature Fault', FaultLevel.MID)
-                        ]
-    
-    # run faults (high byte) list
-    run_hi_fault_list = [
-                            (0x0001, 'Brake Input Shorted Fault', FaultLevel.LOW),
-                            (0x0002, 'Brake Input Open Fault', FaultLevel.LOW),
-                            (0x0004, 'Module A Over-temperature Fault', FaultLevel.MID),
-                            (0x0008, 'Module B Over-temperature Fualt', FaultLevel.MID),
-                            (0x0010, 'Module C Over-temperature Fault', FaultLevel.MID),
-                            (0x0020, 'PCB Over-temperature Fault', FaultLevel.MID),
-                            (0x0040, 'Gate Drive Board 1 Over-temperature Fault', FaultLevel.MID),
-                            (0x0080, 'Gate Drive Board 2 Over-temperature Fault', FaultLevel.MID),
-                            (0x0100, 'Gate Drive Board 3 Over-temperature Fault', FaultLevel.MID),
-                            (0x0200, 'Current Sensor Fault', FaultLevel.MID),
-                            (0x4000, 'Resolver Not Connected', FaultLevel.MID)
-                        ]
+    fault_set = set()
+    # run faults (low byte) dict
+    run_lo_fault_dict = {
+                            0x0001: ('Motor Over-speed Fault', FaultLevel.LOW),
+                            0x0002: ('Over-current Fault', FaultLevel.HIGH),
+                            0x0004: ('Over-voltage', FaultLevel.HIGH),
+                            0x0008: ('Inverter Over-temperature Fault', FaultLevel.MID),
+                            0x0010: ('Accelerator Input Shorted Fault', FaultLevel.MID),
+                            0x0020: ('Accelerator Input Open Fault', FaultLevel.MID),
+                            0x0080: ('Inverter Response Time-out Fault', FaultLevel.LOW),
+                            0x0100: ('Hardware Gate/Desaturation Fault', FaultLevel.HIGH),
+                            0x0200: ('Hardware Over-current Fault', FaultLevel.HIGH),
+                            0x0400: ('Under-voltage Fault', FaultLevel.MID),
+                            0x0800: ('CAN Command Message Lost Fault', FaultLevel.MID),
+                            0x1000: ('Motor Over-temerature Fault', FaultLevel.MID)
+                        }
+
+    # run faults (high byte) dict
+    run_hi_fault_dict = {
+                            0x0001: ('Brake Input Shorted Fault', FaultLevel.LOW),
+                            0x0002: ('Brake Input Open Fault', FaultLevel.LOW),
+                            0x0004: ('Module A Over-temperature Fault', FaultLevel.MID),
+                            0x0008: ('Module B Over-temperature Fualt', FaultLevel.MID),
+                            0x0010: ('Module C Over-temperature Fault', FaultLevel.MID),
+                            0x0020: ('PCB Over-temperature Fault', FaultLevel.MID),
+                            0x0040: ('Gate Drive Board 1 Over-temperature Fault', FaultLevel.MID),
+                            0x0080: ('Gate Drive Board 2 Over-temperature Fault', FaultLevel.MID),
+                            0x0100: ('Gate Drive Board 3 Over-temperature Fault', FaultLevel.MID),
+                            0x0200: ('Current Sensor Fault', FaultLevel.MID),
+                            0x4000: ('Resolver Not Connected', FaultLevel.MID)
+                        }
 
     def __init__(self, parent=None):
         super(Dash, self).__init__(parent)
@@ -234,7 +234,7 @@ class Dash(QMainWindow):
             self.startButton.emit(1)
         elif (type(event) == QKeyEvent and event.key() == Qt.Key_F):
             print("Fault detected")
-            self.errorSignal.emit(0, 0, 1, 0)
+            self.errorSignal.emit(0, 0, 1, 1)
         elif (type(event) == QKeyEvent and event.key() == Qt.Key_O):
             print("Fault has been fixed")
             self.errorSignal.emit(0, 0, 0, 0)
@@ -484,16 +484,39 @@ class Dash(QMainWindow):
         - Set the error message
         - let the state methods take care of changing the screen
         """
-        # append new fault to fault_list
-        for i in self.run_lo_fault_list:
-            if i[0] & v3 and i[1:2] not in self.fault_list:
-                self.fault_list.append(i[1:2])
+        post_lo_fault = v1
+        post_hi_fault = v2
+        run_lo_fault = v3
+        run_hi_fault = v4
+
+        for bit_loc, fault in self.run_lo_fault_dict.items():
+            # mask at bit_loc
+            if bit_loc & run_lo_fault:
+                # add fault if bit is high (1)
+                self.fault_set.add(fault)
                 # set new curr_fault
-                if i[2] >= self.curr_fault['level']:
-                    self.curr_fault['message'] = i[1]
-                    self.curr_fault['level'] = i[2]
+                if fault[1] >= self.curr_fault['level']:
+                    self.curr_fault['message'] = fault[0]
+                    self.curr_fault['level'] = fault[1]
                     self.run_fault_occurred = 1
-                    print(self.curr_fault)
+            else:
+                # remove fault if bit is low (0)
+                self.fault_set.discard(fault)
+        print(self.fault_set)
+        for bit_loc, fault in self.run_hi_fault_dict.items():
+            # mask at bit_loc
+            if bit_loc & run_hi_fault:
+                # add fault if bit is high (1)
+                self.fault_set.add(fault)
+                # set new curr_fault
+                if fault[1] >= self.curr_fault['level']:
+                    self.curr_fault['message'] = fault[0]
+                    self.curr_fault['level'] = fault[1]
+                    self.run_fault_occurred = 1
+            else:
+                # remove fault if bit is low (0)
+                self.fault_set.discard(fault)
+        print(self.fault_set)
 
         self.changeStates()
 
