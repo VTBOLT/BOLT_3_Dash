@@ -61,7 +61,6 @@ class Dash(QMainWindow):
         LOW = 0
         MID = 1
         HIGH = 2
-    curr_fault = {'message': 'No Fault', 'level': FaultLevel.LOW}
     fault_set = set()
     # run faults (low byte) dict
     run_lo_fault_dict = {
@@ -234,7 +233,7 @@ class Dash(QMainWindow):
             self.startButton.emit(1)
         elif (type(event) == QKeyEvent and event.key() == Qt.Key_F):
             print("Fault detected")
-            self.errorSignal.emit(0, 0, 1, 1)
+            self.errorSignal.emit(0, 0, 1, 4)
         elif (type(event) == QKeyEvent and event.key() == Qt.Key_O):
             print("Fault has been fixed")
             self.errorSignal.emit(0, 0, 0, 0)
@@ -399,7 +398,8 @@ class Dash(QMainWindow):
         p.setColor(self.foregroundRole(), Qt.white)
         self.setPalette(p)
 
-        self.title.setText(self.curr_fault['message'])
+        curr_fault = max(self.fault_set, key=lambda x:x[1])
+        self.title.setText(curr_fault[0])
         self.title.show()
 
     def post_fault_state(self):
@@ -480,45 +480,32 @@ class Dash(QMainWindow):
     @pyqtSlot(int, int, int, int)
     def updateFAULT(self, v1, v2, v3, v4):
         """TODO(mathew6)
-        - Set the error level (low or high)
-        - Set the error message
         - let the state methods take care of changing the screen
+        - should I put the fault stuff in its own file?
         """
+        self.run_fault_occurred = 1
+        self.fault_set.clear()
+
         post_lo_fault = v1
         post_hi_fault = v2
         run_lo_fault = v3
         run_hi_fault = v4
 
-        for bit_loc, fault in self.run_lo_fault_dict.items():
-            # mask at bit_loc
-            if bit_loc & run_lo_fault:
-                # add fault if bit is high (1)
-                self.fault_set.add(fault)
-                # set new curr_fault
-                if fault[1] >= self.curr_fault['level']:
-                    self.curr_fault['message'] = fault[0]
-                    self.curr_fault['level'] = fault[1]
-                    self.run_fault_occurred = 1
-            else:
-                # remove fault if bit is low (0)
-                self.fault_set.discard(fault)
-        print(self.fault_set)
-        for bit_loc, fault in self.run_hi_fault_dict.items():
-            # mask at bit_loc
-            if bit_loc & run_hi_fault:
-                # add fault if bit is high (1)
-                self.fault_set.add(fault)
-                # set new curr_fault
-                if fault[1] >= self.curr_fault['level']:
-                    self.curr_fault['message'] = fault[0]
-                    self.curr_fault['level'] = fault[1]
-                    self.run_fault_occurred = 1
-            else:
-                # remove fault if bit is low (0)
-                self.fault_set.discard(fault)
-        print(self.fault_set)
+        # get all high bits in 2-byte CAN data
+        for bit in self.high_bits(run_lo_fault):
+            # add faults based on high bit
+            self.fault_set.add(self.run_lo_fault_dict[bit])
+        for bit in self.high_bits(run_hi_fault):
+            # add faults based on high bit
+            self.fault_set.add(self.run_hi_fault_dict[bit])
 
         self.changeStates()
+
+    def high_bits(self, n):
+        while n:
+            b = n & (~n+1)
+            yield b
+            n ^= b
 
     @pyqtSlot(int)
     def updatePOST_FAULT(self, value):
