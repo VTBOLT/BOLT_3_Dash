@@ -68,6 +68,7 @@ if __name__ == '__main__':
         dash.ignitionPress.connect(dash.updateIGN_ON)
         dash.startButton.connect(dash.updateSTART_BUTTON)
         dash.errorSignal.connect(dash.updateFAULT) # for testing
+        dash.errorSignal.connect(dash.errorGauge.error_update) # for testing
         canWorker.errorSignal.connect(dash.updateFAULT)
 
         # gpio_reader.ignSignal.connect(dash.updateIGN_ON)

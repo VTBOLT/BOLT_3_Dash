@@ -233,7 +233,7 @@ class Dash(QMainWindow):
             self.startButton.emit(1)
         elif (type(event) == QKeyEvent and event.key() == Qt.Key_F):
             print("Fault detected")
-            self.errorSignal.emit(0, 0, 1, 4)
+            self.errorSignal.emit(0, 0, 1, 1)
         elif (type(event) == QKeyEvent and event.key() == Qt.Key_O):
             print("Fault has been fixed")
             self.errorSignal.emit(0, 0, 0, 0)
@@ -290,10 +290,11 @@ class Dash(QMainWindow):
 
         ## RUN_FAULT state transition logic
         elif self.current_state == 'RUN_FAULT':
-            self.run_fault_state()
             if not self.run_fault_occurred:
-                self.current_state = 'ACC_ON'
-                self.acc_on_state()
+                self.current_state = 'MOTOR_ENABLED'
+                self.motor_enabled_state()
+            else:
+                self.run_fault_state()
 
         ## INVERTER_DISABLED state transition logic
         elif self.current_state == 'INVERTER_DISABLED':
@@ -389,18 +390,49 @@ class Dash(QMainWindow):
         - go to interter_disabled_state if MC turned off, or if criticality is high
         - go back to interter_enabled_state if MC still running
         """
+        self.errorGauge.show()
+        # get highest fault
+        curr_fault = max(self.fault_set, key=lambda x:x[1])
+        # choose screen based on fault level
+        if curr_fault[1] == self.FaultLevel.HIGH:
+            self.show_high_fault_screen()
+        elif curr_fault[1] == self.FaultLevel.MID:
+            self.show_mid_fault_screen()
+        else:
+            self.show_low_fault_screen()
+
+    def show_high_fault_screen(self):
         #  clear screen
         self.socGauge.hide()
         self.rpmGauge.hide()
-        # blue screen of death
+        # red screen
+        p = self.palette()
+        p.setColor(self.backgroundRole(), Qt.red)
+        p.setColor(self.foregroundRole(), Qt.white)
+        self.setPalette(p)
+
+        self.title.setText(curr_fault[0])
+        self.title.show()
+    
+    def show_mid_fault_screen(self):
+        #  clear screen
+        self.socGauge.hide()
+        self.rpmGauge.hide()
+        # yellow screen
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.yellow)
         p.setColor(self.foregroundRole(), Qt.white)
         self.setPalette(p)
 
-        curr_fault = max(self.fault_set, key=lambda x:x[1])
         self.title.setText(curr_fault[0])
         self.title.show()
+
+    def show_low_fault_screen(self):
+        # blue screen
+        p = self.palette()
+        p.setColor(self.backgroundRole(), Qt.blue)
+        p.setColor(self.foregroundRole(), Qt.white)
+        self.setPalette(p)
 
     def post_fault_state(self):
         """TODO(chrise92):
@@ -480,17 +512,13 @@ class Dash(QMainWindow):
     @pyqtSlot(int, int, int, int)
     def updateFAULT(self, v1, v2, v3, v4):
         """TODO(mathew6)
-        - let the state methods take care of changing the screen
         - should I put the fault stuff in its own file?
         """
-        self.run_fault_occurred = 1
         self.fault_set.clear()
-
         post_lo_fault = v1
         post_hi_fault = v2
         run_lo_fault = v3
         run_hi_fault = v4
-
         # get all high bits in 2-byte CAN data
         for bit in self.high_bits(run_lo_fault):
             # add faults based on high bit
@@ -498,7 +526,11 @@ class Dash(QMainWindow):
         for bit in self.high_bits(run_hi_fault):
             # add faults based on high bit
             self.fault_set.add(self.run_hi_fault_dict[bit])
-
+        # check if there were any faults detected
+        if len(self.fault_set) > 0:
+            self.run_fault_occurred = 1
+        else:
+            self.run_fault_occurred = 0
         self.changeStates()
 
     def high_bits(self, n):
