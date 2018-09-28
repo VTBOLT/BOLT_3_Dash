@@ -384,16 +384,13 @@ class Dash(QMainWindow):
         self.debugGps.hide()
 
     def run_fault_state(self):
-        """TODO(chrise92):
-        - determine criticality of the fault
-        - report the fault
+        """TODO(mathew6):
         - go to interter_disabled_state if MC turned off, or if criticality is high
         - go back to interter_enabled_state if MC still running
         """
         self.errorGauge.show()
-        # get highest fault
+        # choose most critical fault
         curr_fault = max(self.fault_set, key=lambda x:x[1])
-        # choose screen based on fault level
         if curr_fault[1] == self.FaultLevel.HIGH:
             self.show_high_fault_screen()
         elif curr_fault[1] == self.FaultLevel.MID:
@@ -514,6 +511,7 @@ class Dash(QMainWindow):
         """TODO(mathew6)
         - should I put the fault stuff in its own file?
         """
+        # empty fault set
         self.fault_set.clear()
         post_lo_fault = v1
         post_hi_fault = v2
@@ -521,10 +519,8 @@ class Dash(QMainWindow):
         run_hi_fault = v4
         # get all high bits in 2-byte CAN data
         for bit in self.high_bits(run_lo_fault):
-            # add faults based on high bit
             self.fault_set.add(self.run_lo_fault_dict[bit])
         for bit in self.high_bits(run_hi_fault):
-            # add faults based on high bit
             self.fault_set.add(self.run_hi_fault_dict[bit])
         # check if there were any faults detected
         if len(self.fault_set) > 0:
