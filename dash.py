@@ -57,6 +57,7 @@ class Dash(QMainWindow):
     current_state = 'IDLE'
     next_state = 'IDLE'
     
+    fault_flag = False
     class FaultLevel(IntEnum):
         LOW = 0
         MID = 1
@@ -232,11 +233,24 @@ class Dash(QMainWindow):
             print("Start button pressed")
             self.startButton.emit(1)
         elif (type(event) == QKeyEvent and event.key() == Qt.Key_F):
+            self.fault_flag = True
             print("Fault detected")
-            self.errorSignal.emit(0, 0, 1, 1)
+        elif (type(event) == QKeyEvent and event.key() == Qt.Key_H):
+            if self.fault_flag:
+                self.errorSignal.emit(0, 0, 2, 0)
+                self.fault_flag = False
+        elif (type(event) == QKeyEvent and event.key() == Qt.Key_M):
+            if self.fault_flag:
+                self.errorSignal.emit(0, 0, 0, 0x0004)
+                self.fault_flag = False
+        elif (type(event) == QKeyEvent and event.key() == Qt.Key_L):
+            if self.fault_flag:
+                self.errorSignal.emit(0, 0, 0x0001, 0)
+                self.fault_flag = False
         elif (type(event) == QKeyEvent and event.key() == Qt.Key_O):
-            print("Fault has been fixed")
             self.errorSignal.emit(0, 0, 0, 0)
+            self.fault_flag = False
+            print("Fault has been fixed")
 
     def changeStates(self):
         """Checks conditions and determines next state"""
@@ -391,14 +405,15 @@ class Dash(QMainWindow):
         self.errorGauge.show()
         # choose most critical fault
         curr_fault = max(self.fault_set, key=lambda x:x[1])
+        print("faults present: ", self.fault_set)
         if curr_fault[1] == self.FaultLevel.HIGH:
-            self.show_high_fault_screen()
+            self.show_high_fault_screen(curr_fault)
         elif curr_fault[1] == self.FaultLevel.MID:
-            self.show_mid_fault_screen()
+            self.show_mid_fault_screen(curr_fault)
         else:
             self.show_low_fault_screen()
 
-    def show_high_fault_screen(self):
+    def show_high_fault_screen(self, curr_fault):
         #  clear screen
         self.socGauge.hide()
         self.rpmGauge.hide()
@@ -411,7 +426,7 @@ class Dash(QMainWindow):
         self.title.setText(curr_fault[0])
         self.title.show()
     
-    def show_mid_fault_screen(self):
+    def show_mid_fault_screen(self, curr_fault):
         #  clear screen
         self.socGauge.hide()
         self.rpmGauge.hide()
