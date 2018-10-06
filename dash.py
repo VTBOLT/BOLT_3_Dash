@@ -106,9 +106,8 @@ class Dash(QMainWindow):
         self.setAutoFillBackground(True)
         self.arguments = Arg_Class()
         self.p = self.palette()
-        self.p.setColor(self.backgroundRole(), Qt.black)
-        self.p.setColor(self.foregroundRole(), QColor(255, 129, 0))
-        self.setPalette(self.p)
+        self.set_foreground(QColor(255, 129, 0))
+        self.set_background(Qt.black)
 
         # This is the logo widget
         pixmap = QPixmap("BOLT3.png")
@@ -310,8 +309,7 @@ class Dash(QMainWindow):
     def idle_state(self):
         """TODO(chrise92):Show 'Turn on Accessory Switch' screen
         and wait for acc GPIO pin to go HI"""
-        self.p.setColor(self.foregroundRole(), QColor(255, 129, 0))
-        self.setPalette(self.p)
+        self.set_foreground(QColor(255, 129, 0))
 
         self.msg.setText("Turn on Accessory Switch")
 
@@ -332,8 +330,7 @@ class Dash(QMainWindow):
         - check for all required signals, ACC, PRESSURE_OK, IMD_OK, BMS_DE
         - display errors if they exist
         """
-        self.p.setColor(self.foregroundRole(), QColor(255, 129, 0))
-        self.setPalette(self.p)
+        self.set_foreground(QColor(255, 129, 0))
 
         self.msg.setText("Turn on Ignition Switch")
 
@@ -354,8 +351,7 @@ class Dash(QMainWindow):
         - if CAN does say MC on say 'Precharge complete! Press Start Button'
         - if there is a POST FAULT, go to POST_FAULT_STATE
         """
-        self.p.setColor(self.foregroundRole(), QColor(255, 129, 0))
-        self.setPalette(self.p)
+        self.set_foreground(QColor(255, 129, 0))
 
         self.msg.setText("Press the start button")
 
@@ -376,8 +372,8 @@ class Dash(QMainWindow):
         - check for faults
         - go to run_fault_state if one is found
         """
-        self.p.setColor(self.foregroundRole(), Qt.white)
-        self.setPalette(self.p)
+        self.set_foreground(Qt.white)
+        self.set_background(Qt.black)
 
         self.logo.hide()
         self.msg.hide()
@@ -408,27 +404,24 @@ class Dash(QMainWindow):
             self.show_low_fault_screen()
 
     def show_high_fault_screen(self, curr_fault):
-        p = self.palette()
-        p.setColor(self.backgroundRole(), Qt.red)
-        p.setColor(self.foregroundRole(), Qt.black)
-        self.setPalette(p)
+        self.set_foreground(Qt.black)
+        self.set_background(Qt.red)
 
         self.errorGauge.show()
         self.title.setText(curr_fault[0])
         self.title.show()
     
     def show_mid_fault_screen(self, curr_fault):
-        p = self.palette()
-        p.setColor(self.backgroundRole(), Qt.yellow)
-        p.setColor(self.foregroundRole(), Qt.black)
-        self.setPalette(p)
+        self.set_foreground(Qt.black)
+        self.set_background(Qt.yellow)
 
         self.errorGauge.show()
         self.title.setText(curr_fault[0])
         self.title.show()
 
     def show_low_fault_screen(self):
-        self.black_background()
+        self.set_foreground(Qt.white)
+        self.set_background(Qt.black)
         self.errorGauge.show()
         self.show_running_widgets()
 
@@ -448,16 +441,18 @@ class Dash(QMainWindow):
         self.socGauge.hide()
         self.rpmGauge.hide()
         # blue screen of death
-        p = self.palette()
-        p.setColor(self.backgroundRole(), Qt.blue)
-        p.setColor(self.foregroundRole(), Qt.white)
-        self.setPalette(p)
+        self.set_background(Qt.blue)
+        self.set_foreground(Qt.white)
 
         self.title.setText("INVERTER_DISABLED_STATE: TODO")
         self.title.show()
 
-    def black_background(self):
-        self.p.setColor(self.backgroundRole(), Qt.black)
+    def set_foreground(self, qt_color):
+        self.p.setColor(self.foregroundRole(), qt_color)
+        self.setPalette(self.p)
+
+    def set_background(self, qt_color):
+        self.p.setColor(self.backgroundRole(), qt_color)
         self.setPalette(self.p)
 
     def hide_widgets(self):
