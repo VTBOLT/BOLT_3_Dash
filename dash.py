@@ -310,19 +310,11 @@ class Dash(QMainWindow):
         """TODO(chrise92):Show 'Turn on Accessory Switch' screen
         and wait for acc GPIO pin to go HI"""
         self.set_foreground(QColor(255, 129, 0))
-
+        self.set_background(Qt.black)
         self.msg.setText("Turn on Accessory Switch")
 
-        self.logo.show()
-        self.msg.show()
-
-        self.title.hide()
-        self.socGauge.hide()
-        self.tempGauge.hide()
-        self.rpmGauge.hide()
-        self.errorGauge.hide()
-        self.debug.hide()
-        self.debugGps.hide()
+        self.hide_widgets()
+        self.show_startup_widgets()
 
     def acc_on_state(self):
         """TODO(chrise92): Show "Pump Good, BMS Good, Turn on Ignition Switch' screen
@@ -331,19 +323,11 @@ class Dash(QMainWindow):
         - display errors if they exist
         """
         self.set_foreground(QColor(255, 129, 0))
-
+        self.set_background(Qt.black)
         self.msg.setText("Turn on Ignition Switch")
 
-        self.logo.show()
-        self.msg.show()
-
-        self.title.hide()
-        self.socGauge.hide()
-        self.tempGauge.hide()
-        self.rpmGauge.hide()
-        self.errorGauge.hide()
-        self.debug.hide()
-        self.debugGps.hide()
+        self.hide_widgets()
+        self.show_startup_widgets()
 
     def ign_on_state(self):
         """TODO(chrise92):
@@ -352,19 +336,11 @@ class Dash(QMainWindow):
         - if there is a POST FAULT, go to POST_FAULT_STATE
         """
         self.set_foreground(QColor(255, 129, 0))
-
+        self.set_background(Qt.black)
         self.msg.setText("Press the start button")
 
-        self.logo.show()
-        self.msg.show()
-
-        self.title.hide()
-        self.socGauge.hide()
-        self.tempGauge.hide()
-        self.rpmGauge.hide()
-        self.errorGauge.hide()
-        self.debug.hide()
-        self.debugGps.hide()
+        self.hide_widgets()
+        self.show_startup_widgets()
 
     def motor_enabled_state(self):
         """TODO(chrise92):
@@ -375,16 +351,8 @@ class Dash(QMainWindow):
         self.set_foreground(Qt.white)
         self.set_background(Qt.black)
 
-        self.logo.hide()
-        self.msg.hide()
-
-        self.title.hide()
-        self.socGauge.show()
-        self.tempGauge.hide()
-        self.rpmGauge.show()
-        self.errorGauge.hide()
-        self.debug.hide()
-        self.debugGps.hide()
+        self.hide_widgets()
+        self.show_running_widgets()
 
     def run_fault_state(self):
         """TODO(mathew6):
@@ -422,6 +390,7 @@ class Dash(QMainWindow):
     def show_low_fault_screen(self):
         self.set_foreground(Qt.white)
         self.set_background(Qt.black)
+
         self.errorGauge.show()
         self.show_running_widgets()
 
