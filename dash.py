@@ -57,6 +57,7 @@ class Dash(QMainWindow):
     current_state = 'IDLE'
     next_state = 'IDLE'
     
+    """Faults"""
     fault_flag = False
     class FaultLevel(IntEnum):
         LOW = 0
@@ -357,7 +358,7 @@ class Dash(QMainWindow):
     def run_fault_state(self):
         """TODO(mathew6):
         - go to interter_disabled_state if MC turned off, or if criticality is high
-        - go back to interter_enabled_state if MC still running
+        - go back to inverter_enabled_state if MC still running
         """
         # clear screen
         self.hide_widgets()
@@ -444,6 +445,12 @@ class Dash(QMainWindow):
         self.logo.show()
         self.msg.show()
 
+    def high_bits(self, n):
+        while n:
+            b = n & (~n+1)
+            yield b
+            n ^= b
+
     # @pyqtSlot()
     # def race(self):
     #     #self.stateMachine.hide()
@@ -496,16 +503,9 @@ class Dash(QMainWindow):
         self.changeStates()
 
     @pyqtSlot(int, int, int, int)
-    def updateFAULT(self, v1, v2, v3, v4):
-        """TODO(mathew6)
-        - should I put the fault stuff in its own file?
-        """
+    def updateFAULT(self, post_lo_fault, post_hi_fault, run_lo_fault, run_hi_fault):
         # empty fault set
         self.fault_set.clear()
-        post_lo_fault = v1
-        post_hi_fault = v2
-        run_lo_fault = v3
-        run_hi_fault = v4
         # get all high bits in 2-byte CAN data
         for bit in self.high_bits(run_lo_fault):
             self.fault_set.add(self.run_lo_fault_dict[bit])
@@ -517,12 +517,6 @@ class Dash(QMainWindow):
         else:
             self.run_fault_occurred = 0
         self.changeStates()
-
-    def high_bits(self, n):
-        while n:
-            b = n & (~n+1)
-            yield b
-            n ^= b
 
     @pyqtSlot(int)
     def updatePOST_FAULT(self, value):
