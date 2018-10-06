@@ -22,6 +22,10 @@ class Error(QWidget):
 
         self.arguments = Arg_Class()
 
+        p = self.palette()
+        p.setColor(self.foregroundRole(), Qt.blue)
+        self.setPalette(p)
+
         self.rpmCutValue = 0
         self.rpmCutValuePrev = 0
         self.cutFlag = 0

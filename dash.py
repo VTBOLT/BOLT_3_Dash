@@ -160,15 +160,8 @@ class Dash(QMainWindow):
         if self.arguments.Args.debug:
             self.debug.show()
 
-        self.logo.show()
-        self.title.hide()
-        self.msg.show()
-        self.rpmGauge.hide()
-        self.socGauge.hide()
-        self.tempGauge.hide()
-        self.debug.hide()
-        self.debugGps.hide()
-        self.errorGauge.hide()
+        self.hide_widgets()
+        self.show_startup_widgets()
 
         #### if an error is thrown enter error state machine defined here
 
@@ -402,7 +395,8 @@ class Dash(QMainWindow):
         - go to interter_disabled_state if MC turned off, or if criticality is high
         - go back to interter_enabled_state if MC still running
         """
-        self.errorGauge.show()
+        # clear screen
+        self.hide_widgets()
         # choose most critical fault
         curr_fault = max(self.fault_set, key=lambda x:x[1])
         print("faults present: ", self.fault_set)
@@ -414,37 +408,29 @@ class Dash(QMainWindow):
             self.show_low_fault_screen()
 
     def show_high_fault_screen(self, curr_fault):
-        #  clear screen
-        self.socGauge.hide()
-        self.rpmGauge.hide()
-        # red screen
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.red)
-        p.setColor(self.foregroundRole(), Qt.white)
+        p.setColor(self.foregroundRole(), Qt.black)
         self.setPalette(p)
 
+        self.errorGauge.show()
         self.title.setText(curr_fault[0])
         self.title.show()
     
     def show_mid_fault_screen(self, curr_fault):
-        #  clear screen
-        self.socGauge.hide()
-        self.rpmGauge.hide()
-        # yellow screen
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.yellow)
-        p.setColor(self.foregroundRole(), Qt.white)
+        p.setColor(self.foregroundRole(), Qt.black)
         self.setPalette(p)
 
+        self.errorGauge.show()
         self.title.setText(curr_fault[0])
         self.title.show()
 
     def show_low_fault_screen(self):
-        # blue screen
-        p = self.palette()
-        p.setColor(self.backgroundRole(), Qt.blue)
-        p.setColor(self.foregroundRole(), Qt.white)
-        self.setPalette(p)
+        self.black_background()
+        self.errorGauge.show()
+        self.show_running_widgets()
 
     def post_fault_state(self):
         """TODO(chrise92):
@@ -469,6 +455,29 @@ class Dash(QMainWindow):
 
         self.title.setText("INVERTER_DISABLED_STATE: TODO")
         self.title.show()
+
+    def black_background(self):
+        self.p.setColor(self.backgroundRole(), Qt.black)
+        self.setPalette(self.p)
+
+    def hide_widgets(self):
+        self.logo.hide()
+        self.title.hide()
+        self.msg.hide()
+        self.rpmGauge.hide()
+        self.socGauge.hide()
+        self.tempGauge.hide()
+        self.debug.hide()
+        self.debugGps.hide()
+        self.errorGauge.hide()
+
+    def show_running_widgets(self):
+        self.rpmGauge.show()
+        self.socGauge.show()
+
+    def show_startup_widgets(self):
+        self.logo.show()
+        self.msg.show()
 
     @pyqtSlot()
     def race(self):
