@@ -352,7 +352,7 @@ class Dash(QMainWindow):
         self.set_background(Qt.black)
 
         self.hide_widgets()
-        self.show_running_widgets()
+        self.show_race_widgets()
 
     def run_fault_state(self):
         """TODO(mathew6):
@@ -392,7 +392,7 @@ class Dash(QMainWindow):
         self.set_background(Qt.black)
 
         self.errorGauge.show()
-        self.show_running_widgets()
+        self.show_race_widgets()
 
     def post_fault_state(self):
         """TODO(chrise92):
@@ -435,21 +435,22 @@ class Dash(QMainWindow):
         self.debugGps.hide()
         self.errorGauge.hide()
 
-    def show_running_widgets(self):
+    def show_race_widgets(self):
         self.rpmGauge.show()
         self.socGauge.show()
+        self.tempGauge.show()
 
     def show_startup_widgets(self):
         self.logo.show()
         self.msg.show()
 
-    @pyqtSlot()
-    def race(self):
-        #self.stateMachine.hide()
-        self.rpmGauge.show()
-        self.socGauge.show()
-        self.tempGauge.show()
-        self.errorGauge.show()
+    # @pyqtSlot()
+    # def race(self):
+    #     #self.stateMachine.hide()
+    #     self.rpmGauge.show()
+    #     self.socGauge.show()
+    #     self.tempGauge.show()
+    #     self.errorGauge.show()
 
     @pyqtSlot()
     def temp_close(self):
