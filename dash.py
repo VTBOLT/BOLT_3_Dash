@@ -95,6 +95,43 @@ class Dash(QMainWindow):
                             0x4000: ('Resolver Not Connected', FaultLevel.MID)
                         }
 
+    # post faults (low byte) dict
+    post_lo_fault_dict = {
+                            0x0001: ('Hardware Gate/Desaturation Fault', FaultLevel.LOW),
+                            0x0002: ('HW Over-current Fault', FaultLevel.MID),
+                            0x0004: ('Accelerator Shorted', FaultLevel.HIGH),
+                            0x0008: ('Accelerator Open', FaultLevel.HIGH),
+                            0x0010: ('Current Sensor Low', FaultLevel.LOW),
+                            0x0020: ('Current Sensor High', FaultLevel.LOW),
+                            0x0040: ('Module Temperature Low', FaultLevel.LOW),
+                            0x0080: ('Module Temperature High', FaultLevel.LOW),
+                            0x0100: ('Control PCB Temperature Low', FaultLevel.LOW),
+                            0x0200: ('Control PCB Temperature High', FaultLevel.LOW),
+                            0x0400: ('Gate Drive PCB Temperature Low', FaultLevel.LOW),
+                            0x0800: ('Gate Drive PCB Temperature High', FaultLevel.LOW),
+                            0x1000: ('5V Sense Voltage Low', FaultLevel.LOW),
+                            0x2000: ('5V Sense Voltage High', FaultLevel.LOW),
+                            0x4000: ('12V Sense Voltage Low', FaultLevel.LOW),
+                            0x8000: ('12V Sense Voltage High', FaultLevel.LOW)
+                        }
+
+    # post faults (low byte) dict
+    post_hi_fault_dict = {
+                            0x0001: ('2.5V Sense Voltage Low', FaultLevel.LOW),
+                            0x0002: ('2.5V Sense Voltage High', FaultLevel.LOW),
+                            0x0004: ('1.5V Sense Voltage Low', FaultLevel.LOW),
+                            0x0008: ('1.5V Sense Voltage High', FaultLevel.LOW),
+                            0x0010: ('DC Bus Voltage High', FaultLevel.LOW),
+                            0x0020: ('DC Bus Voltage Low', FaultLevel.LOW),
+                            0x0040: ('Pre-charge Timeout', FaultLevel.MID),
+                            0x0080: ('Pre-charge Voltage Failure', FaultLevel.LOW),
+                            0x0100: ('EEPROM Checksum Invalid', FaultLevel.LOW),
+                            0x0200: ('EEPROM Data Out of Range', FaultLevel.LOW),
+                            0x0400: ('EEPROM Update Required', FaultLevel.LOW),
+                            0x4000: ('Brake Shorted', FaultLevel.HIGH),
+                            0x8000: ('Brake Open', FaultLevel.HIGH)
+                        }
+
     def __init__(self, parent=None):
         super(Dash, self).__init__(parent)
 
@@ -230,15 +267,15 @@ class Dash(QMainWindow):
             print("Fault detected")
         elif (type(event) == QKeyEvent and event.key() == Qt.Key_H):
             if self.fault_flag:
-                self.errorSignal.emit(0, 0, 2, 0)
+                self.errorSignal.emit(0, 0x80, 0, 0)
                 self.fault_flag = False
         elif (type(event) == QKeyEvent and event.key() == Qt.Key_M):
             if self.fault_flag:
-                self.errorSignal.emit(0, 0, 0, 0x0004)
+                self.errorSignal.emit(0, 0, 0, 0x04)
                 self.fault_flag = False
         elif (type(event) == QKeyEvent and event.key() == Qt.Key_L):
             if self.fault_flag:
-                self.errorSignal.emit(0, 0, 0x0001, 0)
+                self.errorSignal.emit(0, 0x01, 0, 0)
                 self.fault_flag = False
         elif (type(event) == QKeyEvent and event.key() == Qt.Key_O):
             self.errorSignal.emit(0, 0, 0, 0)
@@ -511,6 +548,11 @@ class Dash(QMainWindow):
             self.fault_set.add(self.run_lo_fault_dict[bit])
         for bit in self.high_bits(run_hi_fault):
             self.fault_set.add(self.run_hi_fault_dict[bit])
+        for bit in self.high_bits(post_lo_fault):
+            self.fault_set.add(self.post_lo_fault_dict[bit])
+        for bit in self.high_bits(post_hi_fault):
+            self.fault_set.add(self.post_hi_fault_dict[bit])
+
         # check if there were any faults detected
         if len(self.fault_set) > 0:
             self.run_fault_occurred = 1
