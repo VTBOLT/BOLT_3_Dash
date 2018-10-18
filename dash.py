@@ -10,7 +10,6 @@
 
 import sys
 import time
-from enum import IntEnum
 from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QFrame, QAction, QPushButton, QLabel, QGridLayout
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, Qt, QThread, pyqtSlot
 from PyQt5.QtGui import QKeyEvent, QPixmap, QFont, QColor
@@ -57,80 +56,8 @@ class Dash(QMainWindow):
     current_state = 'IDLE'
     next_state = 'IDLE'
     
-    """Faults"""
+    # fault occurrence flag
     fault_flag = False
-    class FaultLevel(IntEnum):
-        LOW = 0
-        MID = 1
-        HIGH = 2
-    fault_set = set()
-    # run faults (low byte) dict
-    run_lo_fault_dict = {
-                            0x0001: ('Motor Over-speed Fault', FaultLevel.LOW),
-                            0x0002: ('Over-current Fault', FaultLevel.HIGH),
-                            0x0004: ('Over-voltage', FaultLevel.HIGH),
-                            0x0008: ('Inverter Over-temperature Fault', FaultLevel.MID),
-                            0x0010: ('Accelerator Input Shorted Fault', FaultLevel.MID),
-                            0x0020: ('Accelerator Input Open Fault', FaultLevel.MID),
-                            0x0080: ('Inverter Response Time-out Fault', FaultLevel.LOW),
-                            0x0100: ('Hardware Gate/Desaturation Fault', FaultLevel.HIGH),
-                            0x0200: ('Hardware Over-current Fault', FaultLevel.HIGH),
-                            0x0400: ('Under-voltage Fault', FaultLevel.MID),
-                            0x0800: ('CAN Command Message Lost Fault', FaultLevel.MID),
-                            0x1000: ('Motor Over-temerature Fault', FaultLevel.MID)
-                        }
-
-    # run faults (high byte) dict
-    run_hi_fault_dict = {
-                            0x0001: ('Brake Input Shorted Fault', FaultLevel.LOW),
-                            0x0002: ('Brake Input Open Fault', FaultLevel.LOW),
-                            0x0004: ('Module A Over-temperature Fault', FaultLevel.MID),
-                            0x0008: ('Module B Over-temperature Fualt', FaultLevel.MID),
-                            0x0010: ('Module C Over-temperature Fault', FaultLevel.MID),
-                            0x0020: ('PCB Over-temperature Fault', FaultLevel.MID),
-                            0x0040: ('Gate Drive Board 1 Over-temperature Fault', FaultLevel.MID),
-                            0x0080: ('Gate Drive Board 2 Over-temperature Fault', FaultLevel.MID),
-                            0x0100: ('Gate Drive Board 3 Over-temperature Fault', FaultLevel.MID),
-                            0x0200: ('Current Sensor Fault', FaultLevel.MID),
-                            0x4000: ('Resolver Not Connected', FaultLevel.MID)
-                        }
-
-    # post faults (low byte) dict
-    post_lo_fault_dict = {
-                            0x0001: ('Hardware Gate/Desaturation Fault', FaultLevel.LOW),
-                            0x0002: ('HW Over-current Fault', FaultLevel.MID),
-                            0x0004: ('Accelerator Shorted', FaultLevel.HIGH),
-                            0x0008: ('Accelerator Open', FaultLevel.HIGH),
-                            0x0010: ('Current Sensor Low', FaultLevel.LOW),
-                            0x0020: ('Current Sensor High', FaultLevel.LOW),
-                            0x0040: ('Module Temperature Low', FaultLevel.LOW),
-                            0x0080: ('Module Temperature High', FaultLevel.LOW),
-                            0x0100: ('Control PCB Temperature Low', FaultLevel.LOW),
-                            0x0200: ('Control PCB Temperature High', FaultLevel.LOW),
-                            0x0400: ('Gate Drive PCB Temperature Low', FaultLevel.LOW),
-                            0x0800: ('Gate Drive PCB Temperature High', FaultLevel.LOW),
-                            0x1000: ('5V Sense Voltage Low', FaultLevel.LOW),
-                            0x2000: ('5V Sense Voltage High', FaultLevel.LOW),
-                            0x4000: ('12V Sense Voltage Low', FaultLevel.LOW),
-                            0x8000: ('12V Sense Voltage High', FaultLevel.LOW)
-                        }
-
-    # post faults (low byte) dict
-    post_hi_fault_dict = {
-                            0x0001: ('2.5V Sense Voltage Low', FaultLevel.LOW),
-                            0x0002: ('2.5V Sense Voltage High', FaultLevel.LOW),
-                            0x0004: ('1.5V Sense Voltage Low', FaultLevel.LOW),
-                            0x0008: ('1.5V Sense Voltage High', FaultLevel.LOW),
-                            0x0010: ('DC Bus Voltage High', FaultLevel.LOW),
-                            0x0020: ('DC Bus Voltage Low', FaultLevel.LOW),
-                            0x0040: ('Pre-charge Timeout', FaultLevel.MID),
-                            0x0080: ('Pre-charge Voltage Failure', FaultLevel.LOW),
-                            0x0100: ('EEPROM Checksum Invalid', FaultLevel.LOW),
-                            0x0200: ('EEPROM Data Out of Range', FaultLevel.LOW),
-                            0x0400: ('EEPROM Update Required', FaultLevel.LOW),
-                            0x4000: ('Brake Shorted', FaultLevel.HIGH),
-                            0x8000: ('Brake Open', FaultLevel.HIGH)
-                        }
 
     def __init__(self, parent=None):
         super(Dash, self).__init__(parent)
@@ -400,11 +327,11 @@ class Dash(QMainWindow):
         # clear screen
         self.hide_widgets()
         # choose most critical fault
-        curr_fault = max(self.fault_set, key=lambda x:x[1])
-        print("faults present: ", self.fault_set)
-        if curr_fault[1] == self.FaultLevel.HIGH:
+        curr_fault = max(self.errorGauge.fault_set, key=lambda x:x[1])
+        print("faults present: ", self.errorGauge.fault_set)
+        if curr_fault[1] == self.errorGauge.FaultLevel.HIGH:
             self.show_high_fault_screen(curr_fault)
-        elif curr_fault[1] == self.FaultLevel.MID:
+        elif curr_fault[1] == self.errorGauge.FaultLevel.MID:
             self.show_mid_fault_screen(curr_fault)
         else:
             self.show_low_fault_screen()
@@ -542,19 +469,19 @@ class Dash(QMainWindow):
     @pyqtSlot(int, int, int, int)
     def updateFAULT(self, post_lo_fault, post_hi_fault, run_lo_fault, run_hi_fault):
         # empty fault set
-        self.fault_set.clear()
+        self.errorGauge.fault_set.clear()
         # get all high bits in 2-byte CAN data
         for bit in self.high_bits(run_lo_fault):
-            self.fault_set.add(self.run_lo_fault_dict[bit])
+            self.errorGauge.fault_set.add(self.errorGauge.run_lo_fault_dict[bit])
         for bit in self.high_bits(run_hi_fault):
-            self.fault_set.add(self.run_hi_fault_dict[bit])
+            self.errorGauge.fault_set.add(self.errorGauge.run_hi_fault_dict[bit])
         for bit in self.high_bits(post_lo_fault):
-            self.fault_set.add(self.post_lo_fault_dict[bit])
+            self.errorGauge.fault_set.add(self.errorGauge.post_lo_fault_dict[bit])
         for bit in self.high_bits(post_hi_fault):
-            self.fault_set.add(self.post_hi_fault_dict[bit])
+            self.errorGauge.fault_set.add(self.errorGauge.post_hi_fault_dict[bit])
 
         # check if there were any faults detected
-        if len(self.fault_set) > 0:
+        if len(self.errorGauge.fault_set) > 0:
             self.run_fault_occurred = 1
         else:
             self.run_fault_occurred = 0
