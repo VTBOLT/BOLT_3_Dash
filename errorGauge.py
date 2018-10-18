@@ -31,10 +31,6 @@ class Error(QWidget):
         self.cutFlag = 0
         
         self.DCLValue = 0
-        self.errorCodePL = 0 # post low
-        self.errorCodePH = 0 # post high
-        self.errorCodeRL = 0 # run low
-        self.errorCodeRH = 0 # run high
         
         self.DCLGauge = QLCDNumber(self)
         self.DCLGauge.display(str(self.DCLValue).zfill(1))
@@ -47,33 +43,62 @@ class Error(QWidget):
         self.DCLlabel.setText("DCL: ")
         self.DCLlabel.move(200,0)
 
-        self.PLErrorGauge = QLCDNumber(self)
-        self.PLErrorGauge.display(str(self.errorCodePL).zfill(1))
-        self.PLErrorGauge.move(0,0)
-        self.PLErrorGauge.resize(80,80)
-        self.PLErrorGauge.setFrameShape(QFrame.NoFrame)
-        self.PLErrorGauge.setSegmentStyle(QLCDNumber.Flat)
+        self.PL1ErrorGauge = QLCDNumber(self)
+        self.PL1ErrorGauge.display(str(0).zfill(1))
+        self.PL1ErrorGauge.move(0,0)
+        self.PL1ErrorGauge.resize(80,80)
+        self.PL1ErrorGauge.setFrameShape(QFrame.NoFrame)
+        self.PL1ErrorGauge.setSegmentStyle(QLCDNumber.Flat)
+        
+        self.PL2ErrorGauge = QLCDNumber(self)
+        self.PL2ErrorGauge.display(str(0).zfill(1))
+        self.PL2ErrorGauge.move(20,0)
+        self.PL2ErrorGauge.resize(80,80)
+        self.PL2ErrorGauge.setFrameShape(QFrame.NoFrame)
+        self.PL2ErrorGauge.setSegmentStyle(QLCDNumber.Flat)
 
-        self.PHErrorGauge = QLCDNumber(self)
-        self.PHErrorGauge.display(str(self.errorCodePH).zfill(1))
-        self.PHErrorGauge.move(20,0)
-        self.PHErrorGauge.resize(80,80)
-        self.PHErrorGauge.setFrameShape(QFrame.NoFrame)
-        self.PHErrorGauge.setSegmentStyle(QLCDNumber.Flat)
+        self.PH1ErrorGauge = QLCDNumber(self)
+        self.PH1ErrorGauge.display(str(0).zfill(1))
+        self.PH1ErrorGauge.move(40,0)
+        self.PH1ErrorGauge.resize(80,80)
+        self.PH1ErrorGauge.setFrameShape(QFrame.NoFrame)
+        self.PH1ErrorGauge.setSegmentStyle(QLCDNumber.Flat)
 
-        self.RLErrorGauge = QLCDNumber(self)
-        self.RLErrorGauge.display(str(self.errorCodeRL).zfill(1))
-        self.RLErrorGauge.move(40,0)
-        self.RLErrorGauge.resize(80,80)
-        self.RLErrorGauge.setFrameShape(QFrame.NoFrame)
-        self.RLErrorGauge.setSegmentStyle(QLCDNumber.Flat)
+        self.PH2ErrorGauge = QLCDNumber(self)
+        self.PH2ErrorGauge.display(str(0).zfill(1))
+        self.PH2ErrorGauge.move(60,0)
+        self.PH2ErrorGauge.resize(80,80)
+        self.PH2ErrorGauge.setFrameShape(QFrame.NoFrame)
+        self.PH2ErrorGauge.setSegmentStyle(QLCDNumber.Flat)
 
-        self.RHErrorGauge = QLCDNumber(self)
-        self.RHErrorGauge.display(str(self.errorCodeRH).zfill(1))
-        self.RHErrorGauge.move(60,0)
-        self.RHErrorGauge.resize(80,80)
-        self.RHErrorGauge.setFrameShape(QFrame.NoFrame)
-        self.RHErrorGauge.setSegmentStyle(QLCDNumber.Flat)
+        self.RL1ErrorGauge = QLCDNumber(self)
+        self.RL1ErrorGauge.display(str(0).zfill(1))
+        self.RL1ErrorGauge.move(0,25)
+        self.RL1ErrorGauge.resize(80,80)
+        self.RL1ErrorGauge.setFrameShape(QFrame.NoFrame)
+        self.RL1ErrorGauge.setSegmentStyle(QLCDNumber.Flat)
+
+        self.RL2ErrorGauge = QLCDNumber(self)
+        self.RL2ErrorGauge.display(str(0).zfill(1))
+        self.RL2ErrorGauge.move(20,25)
+        self.RL2ErrorGauge.resize(80,80)
+        self.RL2ErrorGauge.setFrameShape(QFrame.NoFrame)
+        self.RL2ErrorGauge.setSegmentStyle(QLCDNumber.Flat)
+
+        self.RH1ErrorGauge = QLCDNumber(self)
+        self.RH1ErrorGauge.display(str(0).zfill(1))
+        self.RH1ErrorGauge.move(40,25)
+        self.RH1ErrorGauge.resize(80,80)
+        self.RH1ErrorGauge.setFrameShape(QFrame.NoFrame)
+        self.RH1ErrorGauge.setSegmentStyle(QLCDNumber.Flat)
+
+        self.RH2ErrorGauge = QLCDNumber(self)
+        self.RH2ErrorGauge.display(str(0).zfill(1))
+        self.RH2ErrorGauge.move(60,25)
+        self.RH2ErrorGauge.resize(80,80)
+        self.RH2ErrorGauge.setFrameShape(QFrame.NoFrame)
+        self.RH2ErrorGauge.setSegmentStyle(QLCDNumber.Flat)
+        # self.RH2ErrorGauge.setDigitCount(4)
         
         self.errorlabel = QLabel(self)
         self.errorlabel.setText("Error code: ")
@@ -112,8 +137,12 @@ class Error(QWidget):
 
     @pyqtSlot(int, int, int, int)
     def error_update(self, value1, value2, value3, value4):
-        self.PLErrorGauge.display(value1)
-        self.PHErrorGauge.display(value2)
-        self.RLErrorGauge.display(value3)
-        self.RHErrorGauge.display(value4)
+        self.PL1ErrorGauge.display(value1 >> 8)
+        self.PL2ErrorGauge.display(value1 & 0xFF)
+        self.PH1ErrorGauge.display(value2 >> 8)
+        self.PH2ErrorGauge.display(value2 & 0xFF)
+        self.RL1ErrorGauge.display(value3 >> 8)
+        self.RL2ErrorGauge.display(value3 & 0xFF)
+        self.RH1ErrorGauge.display(value4 >> 8)
+        self.RH2ErrorGauge.display(value4 & 0xFF)
         
