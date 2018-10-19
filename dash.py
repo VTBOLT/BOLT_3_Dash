@@ -48,8 +48,7 @@ class Dash(QMainWindow):
     pressure_ok = True
     ign_on = False
     start_button_pressed = False
-    post_fault_occurred = False
-    run_fault_occurred = False
+    fault_occurred = False
     motor_enabled = False
     inverter_disabled = False
 
@@ -255,17 +254,17 @@ class Dash(QMainWindow):
             elif not self.ign_on:
                 self.current_state = 'ACC_ON'
                 self.acc_on_state()
-            elif self.run_fault_occurred:
-                self.current_state = 'RUN_FAULT'
-                self.run_fault_state()
+            elif self.fault_occurred:
+                self.current_state = 'FAULT'
+                self.fault_state()
 
-        ## RUN_FAULT state transition logic
-        elif self.current_state == 'RUN_FAULT':
-            if not self.run_fault_occurred:
+        ## FAULT state transition logic
+        elif self.current_state == 'FAULT':
+            if not self.fault_occurred:
                 self.current_state = 'MOTOR_ENABLED'
                 self.motor_enabled_state()
             else:
-                self.run_fault_state()
+                self.fault_state()
 
         ## INVERTER_DISABLED state transition logic
         elif self.current_state == 'INVERTER_DISABLED':
@@ -298,7 +297,6 @@ class Dash(QMainWindow):
         """TODO(chrise92):
         - if CAN does not say MC on say 'Precharging...''
         - if CAN does say MC on say 'Precharge complete! Press Start Button'
-        - if there is a POST FAULT, go to POST_FAULT_STATE
         """
         self.set_foreground(QColor(255, 129, 0))
         self.set_background(Qt.black)
@@ -308,22 +306,13 @@ class Dash(QMainWindow):
         self.show_startup_widgets()
 
     def motor_enabled_state(self):
-        """TODO(chrise92):
-        - show racing screen
-        - check for faults
-        - go to run_fault_state if one is found
-        """
         self.set_foreground(Qt.white)
         self.set_background(Qt.black)
 
         self.hide_widgets()
         self.show_race_widgets()
 
-    def run_fault_state(self):
-        """TODO(mathew6):
-        - go to interter_disabled_state if MC turned off, or if criticality is high
-        - go back to inverter_enabled_state if MC still running
-        """
+    def fault_state(self):
         # clear screen
         self.hide_widgets()
         # choose most critical fault
@@ -359,27 +348,22 @@ class Dash(QMainWindow):
         self.errorGauge.show()
         self.show_race_widgets()
 
-    def post_fault_state(self):
-        """TODO(chrise92):
-        - report fault and go to inverter_disabled_state
-        """
-        pass
+    # TODO Figure out if a separate inverter disabled state is necessary
+    # def inverter_disabled_state(self):
+    #     """
+    #     - Show blue screen of death, display error, and instruct rider for next actions
+    #     depending on reason for disabled state
+    #     - Go back to acc_on state once ignition is switched off
+    #     """
+    #     #  clear screen
+    #     self.socGauge.hide()
+    #     self.rpmGauge.hide()
+    #     # blue screen of death
+    #     self.set_background(Qt.blue)
+    #     self.set_foreground(Qt.white)
 
-    def inverter_disabled_state(self):
-        """TODO(chrise92)
-        - Show blue screen of death, display error, and instruct rider for next actions
-        depending on reason for disabled state
-        - Go back to acc_on state once ignition is switched off
-        """
-        #  clear screen
-        self.socGauge.hide()
-        self.rpmGauge.hide()
-        # blue screen of death
-        self.set_background(Qt.blue)
-        self.set_foreground(Qt.white)
-
-        self.title.setText("INVERTER_DISABLED_STATE: TODO")
-        self.title.show()
+    #     self.title.setText("INVERTER_DISABLED_STATE: TODO")
+    #     self.title.show()
 
     def set_foreground(self, qt_color):
         self.p.setColor(self.foregroundRole(), qt_color)
@@ -414,14 +398,6 @@ class Dash(QMainWindow):
             b = n & (~n+1)
             yield b
             n ^= b
-
-    # @pyqtSlot()
-    # def race(self):
-    #     #self.stateMachine.hide()
-    #     self.rpmGauge.show()
-    #     self.socGauge.show()
-    #     self.tempGauge.show()
-    #     self.errorGauge.show()
 
     @pyqtSlot()
     def temp_close(self):
@@ -482,23 +458,15 @@ class Dash(QMainWindow):
 
         # check if there were any faults detected
         if len(self.errorGauge.fault_set) > 0:
-            self.run_fault_occurred = 1
+            self.fault_occurred = 1
+            curr_fault = max(self.errorGauge.fault_set, key=lambda x:x[1])
+            self.errorGauge.currErrorLabel.setText(curr_fault[0])
         else:
-            self.run_fault_occurred = 0
+            self.fault_occurred = 0
         self.changeStates()
 
-    @pyqtSlot(int)
-    def updatePOST_FAULT(self, value):
-        self.post_fault_occurred = value
-        self.changeStates()
-
-    @pyqtSlot(int)
-    def updateRUN_FAULT(self, value):
-        self.run_fault_occurred = value
-        self.changeStates()
-
-        
-    @pyqtSlot(int)
-    def updateINVERTER_DISABLED(self, value):
-        self.inverter_disabled = value
-        self.changeStates()
+    # TODO Figure out if a separate Inverter Disabled state is necessary 
+    # @pyqtSlot(int)
+    # def updateINVERTER_DISABLED(self, value):
+    #     self.inverter_disabled = value
+    #     self.changeStates()

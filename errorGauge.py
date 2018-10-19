@@ -154,8 +154,3 @@ class Error(QWidget):
             self.rpmCutGauge.show()
             self.rpmCutLabel.show()
             self.cutFlag = 1
-
-    @pyqtSlot()
-    def error_update(self):
-        curr_fault = max(self.fault_set, key=lambda x:x[1])
-        self.currErrorLabel.setText(curr_fault[0])        
