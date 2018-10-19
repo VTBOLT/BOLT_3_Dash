@@ -194,7 +194,7 @@ class Dash(QMainWindow):
             print("Fault detected")
         elif (type(event) == QKeyEvent and event.key() == Qt.Key_H):
             if self.fault_flag:
-                self.errorSignal.emit(0, 0x80, 0, 0)
+                self.errorSignal.emit(0, 0x8000, 0, 0)
                 self.fault_flag = False
         elif (type(event) == QKeyEvent and event.key() == Qt.Key_M):
             if self.fault_flag:
