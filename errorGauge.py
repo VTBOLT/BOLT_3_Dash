@@ -9,6 +9,7 @@
 ##############################################################################################
 
 import sys
+from enum import IntEnum
 from PyQt5.QtWidgets import QWidget, QPushButton, QLCDNumber, QLabel, QAction, QFrame
 from PyQt5.QtGui import QIcon, QPainter, QColor, QPen
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, Qt
@@ -16,21 +17,93 @@ from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal, Qt
 from args import Arg_Class
 
 class Error(QWidget):
+    class FaultLevel(IntEnum):
+        LOW = 0
+        MID = 1
+        HIGH = 2
+    fault_set = set()
+    # run faults (low byte) dict
+    run_lo_fault_dict = {
+                        0x0001: ('Motor Over-speed Fault', FaultLevel.LOW),
+                        0x0002: ('Over-current Fault', FaultLevel.HIGH),
+                        0x0004: ('Over-voltage', FaultLevel.HIGH),
+                        0x0008: ('Inverter Over-temperature Fault', FaultLevel.MID),
+                        0x0010: ('Accelerator Input Shorted Fault', FaultLevel.MID),
+                        0x0020: ('Accelerator Input Open Fault', FaultLevel.MID),
+                        0x0080: ('Inverter Response Time-out Fault', FaultLevel.LOW),
+                        0x0100: ('Hardware Gate/Desaturation Fault', FaultLevel.HIGH),
+                        0x0200: ('Hardware Over-current Fault', FaultLevel.HIGH),
+                        0x0400: ('Under-voltage Fault', FaultLevel.MID),
+                        0x0800: ('CAN Command Message Lost Fault', FaultLevel.MID),
+                        0x1000: ('Motor Over-temerature Fault', FaultLevel.MID)
+                    }
+
+    # run faults (high byte) dict
+    run_hi_fault_dict = {
+                        0x0001: ('Brake Input Shorted Fault', FaultLevel.LOW),
+                        0x0002: ('Brake Input Open Fault', FaultLevel.LOW),
+                        0x0004: ('Module A Over-temperature Fault', FaultLevel.MID),
+                        0x0008: ('Module B Over-temperature Fualt', FaultLevel.MID),
+                        0x0010: ('Module C Over-temperature Fault', FaultLevel.MID),
+                        0x0020: ('PCB Over-temperature Fault', FaultLevel.MID),
+                        0x0040: ('Gate Drive Board 1 Over-temperature Fault', FaultLevel.MID),
+                        0x0080: ('Gate Drive Board 2 Over-temperature Fault', FaultLevel.MID),
+                        0x0100: ('Gate Drive Board 3 Over-temperature Fault', FaultLevel.MID),
+                        0x0200: ('Current Sensor Fault', FaultLevel.MID),
+                        0x4000: ('Resolver Not Connected', FaultLevel.MID)
+                    }
+
+    # post faults (low byte) dict
+    post_lo_fault_dict = {
+                        0x0001: ('Hardware Gate/Desaturation Fault', FaultLevel.LOW),
+                        0x0002: ('HW Over-current Fault', FaultLevel.MID),
+                        0x0004: ('Accelerator Shorted', FaultLevel.HIGH),
+                        0x0008: ('Accelerator Open', FaultLevel.HIGH),
+                        0x0010: ('Current Sensor Low', FaultLevel.LOW),
+                        0x0020: ('Current Sensor High', FaultLevel.LOW),
+                        0x0040: ('Module Temperature Low', FaultLevel.LOW),
+                        0x0080: ('Module Temperature High', FaultLevel.LOW),
+                        0x0100: ('Control PCB Temperature Low', FaultLevel.LOW),
+                        0x0200: ('Control PCB Temperature High', FaultLevel.LOW),
+                        0x0400: ('Gate Drive PCB Temperature Low', FaultLevel.LOW),
+                        0x0800: ('Gate Drive PCB Temperature High', FaultLevel.LOW),
+                        0x1000: ('5V Sense Voltage Low', FaultLevel.LOW),
+                        0x2000: ('5V Sense Voltage High', FaultLevel.LOW),
+                        0x4000: ('12V Sense Voltage Low', FaultLevel.LOW),
+                        0x8000: ('12V Sense Voltage High', FaultLevel.LOW)
+                    }
+
+    # post faults (low byte) dict
+    post_hi_fault_dict = {
+                        0x0001: ('2.5V Sense Voltage Low', FaultLevel.LOW),
+                        0x0002: ('2.5V Sense Voltage High', FaultLevel.LOW),
+                        0x0004: ('1.5V Sense Voltage Low', FaultLevel.LOW),
+                        0x0008: ('1.5V Sense Voltage High', FaultLevel.LOW),
+                        0x0010: ('DC Bus Voltage High', FaultLevel.LOW),
+                        0x0020: ('DC Bus Voltage Low', FaultLevel.LOW),
+                        0x0040: ('Pre-charge Timeout', FaultLevel.MID),
+                        0x0080: ('Pre-charge Voltage Failure', FaultLevel.LOW),
+                        0x0100: ('EEPROM Checksum Invalid', FaultLevel.LOW),
+                        0x0200: ('EEPROM Data Out of Range', FaultLevel.LOW),
+                        0x0400: ('EEPROM Update Required', FaultLevel.LOW),
+                        0x4000: ('Brake Shorted', FaultLevel.HIGH),
+                        0x8000: ('Brake Open', FaultLevel.HIGH)
+                    }
     def __init__(self, parent):
 
         super(Error, self).__init__(parent)
 
         self.arguments = Arg_Class()
 
+        p = self.palette()
+        p.setColor(self.foregroundRole(), Qt.blue)
+        self.setPalette(p)
+
         self.rpmCutValue = 0
         self.rpmCutValuePrev = 0
         self.cutFlag = 0
         
         self.DCLValue = 0
-        self.errorCodePL = 0 # post low
-        self.errorCodePH = 0 # post high
-        self.errorCodeRL = 0 # run low
-        self.errorCodeRH = 0 # run high
         
         self.DCLGauge = QLCDNumber(self)
         self.DCLGauge.display(str(self.DCLValue).zfill(1))
@@ -43,37 +116,13 @@ class Error(QWidget):
         self.DCLlabel.setText("DCL: ")
         self.DCLlabel.move(200,0)
 
-        self.PLErrorGauge = QLCDNumber(self)
-        self.PLErrorGauge.display(str(self.errorCodePL).zfill(1))
-        self.PLErrorGauge.move(0,0)
-        self.PLErrorGauge.resize(80,80)
-        self.PLErrorGauge.setFrameShape(QFrame.NoFrame)
-        self.PLErrorGauge.setSegmentStyle(QLCDNumber.Flat)
-
-        self.PHErrorGauge = QLCDNumber(self)
-        self.PHErrorGauge.display(str(self.errorCodePH).zfill(1))
-        self.PHErrorGauge.move(20,0)
-        self.PHErrorGauge.resize(80,80)
-        self.PHErrorGauge.setFrameShape(QFrame.NoFrame)
-        self.PHErrorGauge.setSegmentStyle(QLCDNumber.Flat)
-
-        self.RLErrorGauge = QLCDNumber(self)
-        self.RLErrorGauge.display(str(self.errorCodeRL).zfill(1))
-        self.RLErrorGauge.move(40,0)
-        self.RLErrorGauge.resize(80,80)
-        self.RLErrorGauge.setFrameShape(QFrame.NoFrame)
-        self.RLErrorGauge.setSegmentStyle(QLCDNumber.Flat)
-
-        self.RHErrorGauge = QLCDNumber(self)
-        self.RHErrorGauge.display(str(self.errorCodeRH).zfill(1))
-        self.RHErrorGauge.move(60,0)
-        self.RHErrorGauge.resize(80,80)
-        self.RHErrorGauge.setFrameShape(QFrame.NoFrame)
-        self.RHErrorGauge.setSegmentStyle(QLCDNumber.Flat)
-        
         self.errorlabel = QLabel(self)
-        self.errorlabel.setText("Error code: ")
+        self.errorlabel.setText("Error: ")
         self.errorlabel.move(0,0)
+
+        self.currErrorLabel = QLabel(self)
+        self.currErrorLabel.setText("\t\t\t\t")
+        self.currErrorLabel.move(0,20)
 
         self.rpmCutGauge = QLCDNumber(self)
         self.rpmCutGauge.display(str(self.DCLValue).zfill(1))
@@ -105,11 +154,3 @@ class Error(QWidget):
             self.rpmCutGauge.show()
             self.rpmCutLabel.show()
             self.cutFlag = 1
-
-    @pyqtSlot(int, int, int, int)
-    def error_update(self, value1, value2, value3, value4):
-        self.PLErrorGauge.display(value1)
-        self.PHErrorGauge.display(value2)
-        self.RLErrorGauge.display(value3)
-        self.RHErrorGauge.display(value4)
-        

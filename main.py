@@ -19,7 +19,7 @@ from gpsReader import GpsReader
 from debug import Debug
 from args import Arg_Class
 from fileWriter import FileWriter
-from gpioReader import GPIOThread
+#from gpioReader import GPIOThread
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
@@ -27,8 +27,8 @@ if __name__ == '__main__':
 
     dash = Dash()
 
-    gpio_reader = GPIOThread()
-    gpio_reader.start()
+    # gpio_reader = GPIOThread()
+    # gpio_reader.start()
 
     print("Dash thread started:", app.instance().thread())
     if arguments.Args.fullscreen:
@@ -50,8 +50,6 @@ if __name__ == '__main__':
         canWorker.highCellTempUpdateValue.connect(dash.tempGauge.highCellTemp_update)
         canWorker.lowCellTempUpdateValue.connect(dash.tempGauge.lowCellTemp_update)
 
-        canWorker.errorSignal.connect(dash.error_update)
-        canWorker.errorSignal.connect(dash.errorGauge.error_update)
         canWorker.rpmUpdateValue.connect(dash.errorGauge.RPMCut_update)
 
         #signal/slot connections for debug screen
@@ -68,12 +66,14 @@ if __name__ == '__main__':
         dash.accessoryPress.connect(dash.updateACC_ON)
         dash.ignitionPress.connect(dash.updateIGN_ON)
         dash.startButton.connect(dash.updateSTART_BUTTON)
+        dash.errorSignal.connect(dash.updateFAULT) # for testing
+        canWorker.errorSignal.connect(dash.updateFAULT)
 
-        gpio_reader.ignSignal.connect(dash.updateIGN_ON)
-        gpio_reader.imdSignal.connect(dash.updateIMD_OK)
-        gpio_reader.presSignal.connect(dash.updateACC_ON)
-        gpio_reader.presSignal.connect(dash.updatePRESSURE_OK)
-        gpio_reader.bmsdeSignal.connect(dash.updateBMS_DE)
+        # gpio_reader.ignSignal.connect(dash.updateIGN_ON)
+        # gpio_reader.imdSignal.connect(dash.updateIMD_OK)
+        # gpio_reader.presSignal.connect(dash.updateACC_ON)
+        # gpio_reader.presSignal.connect(dash.updatePRESSURE_OK)
+        # gpio_reader.bmsdeSignal.connect(dash.updateBMS_DE)
 
         # TODO read start button value
 
