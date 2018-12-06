@@ -421,7 +421,7 @@ class Dash(QMainWindow):
     @pyqtSlot(int)
     def updateACC_ON(self, value):
         print("Emitted ACC_ON ", value)
-        accDashValue.emit(self.acc_on)
+        accChanged.emit(self.acc_on)
         self.acc_on = value
         self.changeStates()
 
