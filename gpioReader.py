@@ -28,7 +28,6 @@ class GPIOThread(QThread):
 	bmsdeSignal = pyqtSignal(int)
         #estop = pyqtSignal(int)
 	def __init__(self):
-		time.sleep(3)
 		self.IGN_FLAG = False
 		self.IMD_FLAG = False
 		self.PRES_FLAG = False

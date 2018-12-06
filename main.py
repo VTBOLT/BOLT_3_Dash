@@ -34,6 +34,7 @@ if __name__ == '__main__':
         dash.show()
     # sleep(3)
     gpio_reader = GPIOThread()
+    gpio_reader.msleep(3000)
     gpio_reader.start()
     if arguments.Args.canoff == True:
         canWorker =CanReader()
