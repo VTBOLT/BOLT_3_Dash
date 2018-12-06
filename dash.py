@@ -24,6 +24,7 @@ from args import Arg_Class
 from debugGps import DebugGPS
 from fileWriter import FileWriter
 from errorGauge import Error
+from gpioReader import GPIOThread
 
 DASH_WIDTH = 800
 DASH_HEIGHT = 420
@@ -170,7 +171,8 @@ class Dash(QMainWindow):
             #self.debug.show()
             self.debugGps.show()
 
-
+        gpio_reader = GPIOThread()
+        gpio_reader.start()
         #if self.arguments.Args.log:
             #self.fileWriter = FileWriter(self)
 
