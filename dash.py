@@ -435,6 +435,7 @@ class Dash(QMainWindow):
 
     @pyqtSlot(int)
     def updatePRESSURE_OK(self, value):
+        print("Emitted PRESSURE_OK", value)
         self.pressure_ok = value
         self.changeStates()
 
