@@ -27,16 +27,14 @@ if __name__ == '__main__':
     arguments = Arg_Class()
 
     dash = Dash()
-    sleep(3)
-    gpio_reader = GPIOThread()
-    gpio_reader.start()
-
     print("Dash thread started:", app.instance().thread())
     if arguments.Args.fullscreen:
         dash.showFullScreen()
     else:
         dash.show()
-
+    sleep(3)
+    gpio_reader = GPIOThread()
+    gpio_reader.start()
     if arguments.Args.canoff == True:
         canWorker =CanReader()
         canWorker.start()
