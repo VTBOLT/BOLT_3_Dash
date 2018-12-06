@@ -33,7 +33,7 @@ class GPIOThread(QThread):
 		self.PRES_FLAG = False
 		self.BMSDE_FLAG = False
 		QThread.__init__(self)
-		self.msleep(3000)
+		self.currentThread().msleep(3000)
 	def run(self):
 		print("GPIO Thread Started", self.currentThread())
 		while(True):
