@@ -27,6 +27,9 @@ if __name__ == '__main__':
     arguments = Arg_Class()
 
     dash = Dash()
+    gpio_reader = GPIOThread()
+    gpio_reader.start()
+    
     print("Dash thread started:", app.instance().thread())
     if arguments.Args.fullscreen:
         dash.showFullScreen()
