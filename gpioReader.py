@@ -28,12 +28,14 @@ class GPIOThread(QThread):
 	bmsdeSignal = pyqtSignal(int)
         #estop = pyqtSignal(int)
 	def __init__(self):
+		x = 0
+		while x < 9999999:
+			x += 1
 		self.IGN_FLAG = False
 		self.IMD_FLAG = False
 		self.PRES_FLAG = False
 		self.BMSDE_FLAG = False
 		QThread.__init__(self)
-		self.currentThread().msleep(3000)
 	def run(self):
 		print("GPIO Thread Started", self.currentThread())
 		while(True):
