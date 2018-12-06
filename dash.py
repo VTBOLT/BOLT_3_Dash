@@ -43,6 +43,7 @@ class Dash(QMainWindow):
     errorSignal = pyqtSignal(int, int, int, int)
     prechargeUpdateValue = pyqtSignal(int)
 
+    accChanged = pyqtSignal(int)
     """Initialize state transition variables"""
     acc_on = False
     bms_de = True
@@ -171,8 +172,6 @@ class Dash(QMainWindow):
             #self.debug.show()
             self.debugGps.show()
 
-        gpio_reader = GPIOThread()
-        gpio_reader.start()
         #if self.arguments.Args.log:
             #self.fileWriter = FileWriter(self)
 
@@ -422,6 +421,7 @@ class Dash(QMainWindow):
     @pyqtSlot(int)
     def updateACC_ON(self, value):
         print("Emitted ACC_ON ", value)
+        accDashValue.emit(self.acc_on)
         self.acc_on = value
         self.changeStates()
 

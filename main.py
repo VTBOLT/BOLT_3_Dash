@@ -67,6 +67,7 @@ if __name__ == '__main__':
         canWorker.errorSignal.connect(dash.updateFAULT)
         dash.prechargeUpdateValue.connect(dash.updatePRECHARGE)
         canWorker.prechargeUpdateValue.connect(dash.updatePRECHARGE)
+        dash.accChanged.connect(gpio_reader.accValueCheck)
 
         gpio_reader.ignSignal.connect(dash.updateIGN_ON)
         gpio_reader.imdSignal.connect(dash.updateIMD_OK)

@@ -20,6 +20,7 @@ GPIO.setup(IGN_SWITCH, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(DASH_IMD, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(DASH_PRES, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(DASH_BMSDE, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+accDashValue = 0
 
 class GPIOThread(QThread):
 	ignSignal = pyqtSignal(int)
@@ -55,7 +56,8 @@ class GPIOThread(QThread):
 			if GPIO.input(DASH_PRES) and not self.PRES_FLAG:
 				print("DASH_PRES ON")
 				self.presSignal.emit(1)
-				self.PRES_FLAG = True
+				if accDashValue:
+					self.PRES_FLAG = True
 			elif not GPIO.input(DASH_PRES) and self.PRES_FLAG:
 				print("DASH_PRES OFF")
 				self.presSignal.emit(0)
@@ -78,3 +80,8 @@ class GPIOThread(QThread):
        #@pyqtSlot(int)
        #def vsmUpdate(self, value):
            #self.vsmState = value
+
+
+@pyqtSlot(int)
+def accValueCheck(self, value):
+	accDashValue = value
