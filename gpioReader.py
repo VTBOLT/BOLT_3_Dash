@@ -82,6 +82,6 @@ class GPIOThread(QThread):
            #self.vsmState = value
 
 
-@pyqtSlot(int)
-def accValueCheck(self, value):
-	accDashValue = value
+	@pyqtSlot(int)
+	def accValueCheck(self, value):
+		accDashValue = value
