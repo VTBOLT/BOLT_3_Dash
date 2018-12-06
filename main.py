@@ -20,13 +20,14 @@ from debug import Debug
 from args import Arg_Class
 from fileWriter import FileWriter
 from gpioReader import GPIOThread
+from time import sleep
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     arguments = Arg_Class()
 
     dash = Dash()
-
+    sleep(3)
     gpio_reader = GPIOThread()
     gpio_reader.start()
 

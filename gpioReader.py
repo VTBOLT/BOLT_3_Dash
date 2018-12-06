@@ -10,7 +10,6 @@ import RPi.GPIO as GPIO
 import sys, time
 from enum import Enum
 from PyQt5.QtCore import QThread, pyqtSlot, pyqtSignal, Qt
-from dash import acc_on
 
 IGN_SWITCH = 26
 DASH_IMD = 19
@@ -56,8 +55,7 @@ class GPIOThread(QThread):
 			if GPIO.input(DASH_PRES) and not self.PRES_FLAG:
 				print("DASH_PRES ON")
 				self.presSignal.emit(1)
-				if dash.acc_on:
-					self.PRES_FLAG = True
+				self.PRES_FLAG = True
 			elif not GPIO.input(DASH_PRES) and self.PRES_FLAG:
 				print("DASH_PRES OFF")
 				self.presSignal.emit(0)
