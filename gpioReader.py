@@ -52,7 +52,7 @@ class GPIOThread(QThread):
 				print("DASH_IMD OFF")
 				self.imdSignal.emit(0)
 				self.IMD_FLAG = False
-			if GPIO.input(DASH_PRES) and not self.PRES_FLAG:
+			if GPIO.input(DASH_PRES):
 				print("DASH_PRES ON")
 				self.presSignal.emit(1)
 				self.PRES_FLAG = True
