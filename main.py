@@ -19,7 +19,7 @@ from gpsReader import GpsReader
 from debug import Debug
 from args import Arg_Class
 from fileWriter import FileWriter
-#from gpioReader import GPIOThread
+from gpioReader import GPIOThread
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
@@ -27,8 +27,8 @@ if __name__ == '__main__':
 
     dash = Dash()
 
-    # gpio_reader = GPIOThread()
-    # gpio_reader.start()
+    gpio_reader = GPIOThread()
+    gpio_reader.start()
 
     print("Dash thread started:", app.instance().thread())
     if arguments.Args.fullscreen:
@@ -71,11 +71,11 @@ if __name__ == '__main__':
         dash.prechargeUpdateValue.connect(dash.updatePRECHARGE)
         canWorker.prechargeUpdateValue.connect(dash.updatePRECHARGE)
 
-        # gpio_reader.ignSignal.connect(dash.updateIGN_ON)
-        # gpio_reader.imdSignal.connect(dash.updateIMD_OK)
-        # gpio_reader.presSignal.connect(dash.updateACC_ON)
-        # gpio_reader.presSignal.connect(dash.updatePRESSURE_OK)
-        # gpio_reader.bmsdeSignal.connect(dash.updateBMS_DE)
+        gpio_reader.ignSignal.connect(dash.updateIGN_ON)
+        gpio_reader.imdSignal.connect(dash.updateIMD_OK)
+        gpio_reader.presSignal.connect(dash.updateACC_ON)
+        gpio_reader.presSignal.connect(dash.updatePRESSURE_OK)
+        gpio_reader.bmsdeSignal.connect(dash.updateBMS_DE)
 
         # TODO read start button value
 
