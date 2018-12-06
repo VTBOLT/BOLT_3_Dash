@@ -223,6 +223,7 @@ class Dash(QMainWindow):
         if self.current_state == 'IDLE':
             self.start_button_pressed = False
             self.idle_state()
+            print("In Idle State, ", self.acc_on)
             if self.acc_on:
                 self.current_state = 'ACC_ON'
                 self.acc_on_state()
@@ -232,6 +233,7 @@ class Dash(QMainWindow):
             self.start_button_pressed = False
             self.acc_on_state()
             if not self.acc_on:
+                print("In ACC On, ", self.acc_on)
                 self.ign_on = False
                 self.current_state = 'IDLE'
                 self.idle_state()
