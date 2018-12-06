@@ -40,6 +40,7 @@ class Dash(QMainWindow):
     ignitionPress = pyqtSignal(int)
     startButton = pyqtSignal(int)
     errorSignal = pyqtSignal(int, int, int, int)
+    prechargeUpdateValue = pyqtSignal(int)
 
     """Initialize state transition variables"""
     acc_on = False
@@ -51,6 +52,7 @@ class Dash(QMainWindow):
     fault_occurred = False
     motor_enabled = False
     inverter_disabled = False
+    precharge_ok = False
 
     current_state = 'IDLE'
     next_state = 'IDLE'
@@ -182,6 +184,12 @@ class Dash(QMainWindow):
         elif (type(event) == QKeyEvent and event.key() == Qt.Key_I):
             print("Ign On")
             self.ignitionPress.emit(1)
+        elif (type(event) == QKeyEvent and event.key() == Qt.Key_P):
+            print("Precharge Ok")
+            self.prechargeUpdateValue.emit(3)
+        elif (type(event) == QKeyEvent and event.key() == Qt.Key_Q):
+            print("Precharge Not Ok")
+            self.prechargeUpdateValue.emit(1)
         elif (type(event) == QKeyEvent and event.key() == Qt.Key_K):
             print("Ign Off")
             self.ignitionPress.emit(0)
@@ -227,7 +235,7 @@ class Dash(QMainWindow):
                 self.ign_on = False
                 self.current_state = 'IDLE'
                 self.idle_state()
-            elif self.ign_on:
+            elif self.ign_on and self.precharge_ok:
                 self.current_state = 'IGN_ON'
                 self.ign_on_state()
 
@@ -237,7 +245,7 @@ class Dash(QMainWindow):
                 self.ign_on = False
                 self.current_state = 'IDLE'
                 self.idle_state()
-            elif not self.ign_on:
+            elif not self.ign_on or not self.precharge_ok:
                 self.current_state = 'ACC_ON'
                 self.acc_on_state()
             elif self.start_button_pressed:
@@ -251,7 +259,7 @@ class Dash(QMainWindow):
                 self.ign_on = False
                 self.current_state = 'IDLE'
                 self.idle_state()
-            elif not self.ign_on:
+            elif not self.ign_on or not self.precharge_ok:
                 self.current_state = 'ACC_ON'
                 self.acc_on_state()
             elif self.fault_occurred:
@@ -463,6 +471,14 @@ class Dash(QMainWindow):
             self.errorGauge.currErrorLabel.setText(curr_fault[0])
         else:
             self.fault_occurred = 0
+        self.changeStates()
+
+    @pyqtSlot(int)
+    def updatePRECHARGE(self, VSM_state):
+        if VSM_state == 2 or VSM_state == 3:
+            self.precharge_ok = True
+        else:
+            self.precharge_ok = False
         self.changeStates()
 
     # TODO Figure out if a separate Inverter Disabled state is necessary 

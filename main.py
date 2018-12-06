@@ -68,6 +68,8 @@ if __name__ == '__main__':
         dash.startButton.connect(dash.updateSTART_BUTTON)
         dash.errorSignal.connect(dash.updateFAULT) # for testing
         canWorker.errorSignal.connect(dash.updateFAULT)
+        dash.prechargeUpdateValue.connect(dash.updatePRECHARGE)
+        canWorker.prechargeUpdateValue.connect(dash.updatePRECHARGE)
 
         # gpio_reader.ignSignal.connect(dash.updateIGN_ON)
         # gpio_reader.imdSignal.connect(dash.updateIMD_OK)

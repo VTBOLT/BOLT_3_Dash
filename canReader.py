@@ -25,7 +25,7 @@ class CanReader(QThread):
     highCellTempUpdateValue = pyqtSignal(float)
     lowCellTempUpdateValue = pyqtSignal(float)
     errorSignal = pyqtSignal(int, int, int, int)
-    vsmUpdateValue = pyqtSignal(int)
+    prechargeUpdateValue = pyqtSignal(int)
     highMotorTemp = 0
 
     def __init__(self):
@@ -104,8 +104,7 @@ class CanReader(QThread):
                             self.lowCellTempUpdateValue.emit(float(lowCellTemp))
                         elif buf.split(':')[0] == 'states':
                             VSM_state = buf.split(':')[1]
-                            if VSM_state == 2 or VSM_state == 3:
-                                self.vsmUpdateValue.emit(int(VSM_state))
+                            self.prechargeUpdateValue.emit(int(VSM_state))
                             inverter_state = buf.split(':')[2]
                             relay_state = buf.split(':')[3]
                             inverter_run_state = buf.split(':')[4]
